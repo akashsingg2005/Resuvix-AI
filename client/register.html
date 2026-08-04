@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO -->
+    <title>Create Account • Resuvix AI</title>
+    <meta name="description"
+        content="Create your Resuvix AI account and build ATS-friendly resumes with AI assistance.">
+
+    <!-- Favicon -->
+    <link rel="icon" href="./assets/logo/favicon.png">
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Remix Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css"
+        rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="./css/global.css">
+    <link rel="stylesheet" href="./css/components.css">
+    <link rel="stylesheet" href="./css/auth.css">
+
+</head>
+
+<body>
+
+    <!-- Animated Background -->
+    <div class="gradient-bg"></div>
+    <div class="gradient-bg bg2"></div>
+    <div class="gradient-bg bg3"></div>
+
+    <section class="auth-wrapper">
+
+        <!-- ==========================================
+             LEFT SIDE
+        =========================================== -->
+
+        <div class="auth-left">
+
+            <!-- Logo -->
+
+            <a href="index.html" class="auth-logo">
+
+                <img
+                    src="./assets/logo/logo.png"
+                    alt="Resuvix AI Logo">
+
+            </a>
+
+            <!-- Hero -->
+
+            <div class="hero-content">
+
+                <span class="badge">
+
+                    <i class="ri-user-add-line"></i>
+
+                    Join Thousands Of Job Seekers
+
+                </span>
+
+                <h1>
+
+                    Start Your Career.
+
+                    <span>Create Your AI Resume Today.</span>
+
+                </h1>
+
+                <p>
+
+                    Build ATS-friendly resumes, analyse your resume,
+                    prepare for interviews, and land your dream job—
+                    all from one AI-powered platform.
+
+                </p>
+
+            </div>
+
+            <!-- Features -->
+
+            <div class="feature-list">
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+
+                        <i class="ri-file-list-3-line"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h4>Professional Resume Builder</h4>
+
+                        <p>Create beautiful resumes within minutes.</p>
+
+                    </div>
+
+                </div>
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+
+                        <i class="ri-bar-chart-box-line"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h4>AI ATS Score Checker</h4>
+
+                        <p>Increase your chances of getting shortlisted.</p>
+
+                    </div>
+
+                </div>
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+
+                        <i class="ri-robot-2-line"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h4>AI Interview Preparation</h4>
+
+                        <p>Practice real interview questions with AI.</p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ==========================================
+             RIGHT SIDE
+        =========================================== -->
+
+        <div class="auth-right">
+
+            <div class="auth-card">
+
+                <div class="auth-header">
+
+                    <h2>Create Account 🚀</h2>
+
+                    <p>
+
+                        Join Resuvix AI and start building professional
+                        resumes with AI assistance.
+
+                    </p>
+
+                </div>
+
+                <!-- Register Form -->
+
+                <form
+                    id="registerForm"
+                    class="auth-form">
+
+                    <!-- Full Name -->
+
+                    <div class="input-group">
+
+                        <label for="fullName">
+
+                            Full Name
+
+                        </label>
+
+                        <div class="input-box">
+
+                            <i class="ri-user-line"></i>
+
+                            <input
+                                type="text"
+                                id="fullName"
+                                name="fullName"
+                                placeholder="Enter your full name"
+                                autocomplete="name"
+                                required>
+
+                        </div>
+
+                        <small
+                            class="error-text"
+                            id="fullNameError"></small>
+
+                    </div>
+
+                    <!-- Email -->
+
+                    <div class="input-group">
+
+                        <label for="email">
+
+                            Email Address
+
+                        </label>
+
+                        <div class="input-box">
+
+                            <i class="ri-mail-line"></i>
+
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                placeholder="Enter your email"
+                                autocomplete="email"
+                                required>
+
+                        </div>
+
+                        <small
+                            class="error-text"
+                            id="emailError"></small>
+
+                    </div>
+
+                    <!-- Password -->
+
+                    <div class="input-group">
+
+                        <label for="password">
+
+                            Password
+
+                        </label>
+
+                        <div class="input-box">
+
+                            <i class="ri-lock-password-line"></i>
+
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="Create a password"
+                                autocomplete="new-password"
+                                required>
+
+                            <button
+                                type="button"
+                                class="toggle-password"
+                                data-target="password">
+
+                                <i class="ri-eye-line"></i>
+
+                            </button>
+
+                        </div>
+
+                        <small
+                            class="error-text"
+                            id="passwordError"></small>
+
+                    </div>
+
+                    <!-- Password Strength -->
+
+                    <div class="password-strength">
+
+                        <div class="strength-bar">
+
+                            <div
+                                class="strength-fill"
+                                id="strengthFill">
+
+                            </div>
+
+                        </div>
+
+                        <small id="strengthText">
+
+                            Password Strength
+
+                        </small>
+
+                    </div>
+                                        <!-- Confirm Password -->
+
+                    <div class="input-group">
+
+                        <label for="confirmPassword">
+
+                            Confirm Password
+
+                        </label>
+
+                        <div class="input-box">
+
+                            <i class="ri-lock-password-line"></i>
+
+                            <input
+                                type="password"
+                                id="confirmPassword"
+                                name="confirmPassword"
+                                placeholder="Confirm your password"
+                                autocomplete="new-password"
+                                required>
+
+                            <button
+                                type="button"
+                                class="toggle-password"
+                                data-target="confirmPassword">
+
+                                <i class="ri-eye-line"></i>
+
+                            </button>
+
+                        </div>
+
+                        <small
+                            class="error-text"
+                            id="confirmPasswordError"></small>
+
+                    </div>
+
+                    <!-- Terms -->
+
+                    <div class="auth-options">
+
+                        <label class="remember-me">
+
+                            <input
+                                type="checkbox"
+                                id="terms"
+                                required>
+
+                            <span>
+
+                                I agree to the
+
+                                <a href="terms.html">
+
+                                    Terms of Service
+
+                                </a>
+
+                                &
+
+                                <a href="privacy.html">
+
+                                    Privacy Policy
+
+                                </a>
+
+                            </span>
+
+                        </label>
+
+                    </div>
+
+                    <!-- Register Button -->
+
+                    <button
+                        type="submit"
+                        class="btn-primary auth-btn"
+                        id="registerBtn">
+
+                        <span class="btn-text">
+
+                            Create Account
+
+                        </span>
+
+                        <span
+                            class="btn-loader"
+                            id="registerLoader">
+
+                            <i class="ri-loader-4-line"></i>
+
+                        </span>
+
+                    </button>
+
+                </form>
+
+                <!-- Divider -->
+
+                <div class="divider">
+
+                    <span>
+
+                        OR
+
+                    </span>
+
+                </div>
+
+                <!-- Google Sign Up -->
+
+                <button
+                    class="google-btn"
+                    type="button"
+                    disabled>
+
+                    <img
+                        src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                        alt="Google">
+
+                    Continue with Google
+
+                    <small>(Coming Soon)</small>
+
+                </button>
+
+                <!-- Footer -->
+
+                <div class="auth-footer">
+
+                    <p>
+
+                        Already have an account?
+
+                        <a href="login.html">
+
+                            Sign In
+
+                        </a>
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- Scripts -->
+
+    <script src="./js/config.js"></script>
+    <script src="./js/storage.js"></script>
+    <script src="./js/validator.js"></script>
+    <script src="./js/utils.js"></script>
+    <script src="./js/toast.js"></script>
+    <script src="./js/api.js"></script>
+    <script src="./js/auth.js"></script>
+
+</body>
+
+</html>

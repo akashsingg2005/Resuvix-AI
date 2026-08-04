@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <!-- =========================================================
+         META
+    ========================================================== -->
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard • Resuvix AI</title>
+
+    <meta
+        name="description"
+        content="Resuvix AI — AI Powered Career Platform Dashboard">
+
+    <!-- =========================================================
+         FAVICON
+    ========================================================== -->
+
+    <link
+        rel="icon"
+        href="../assets/logo/favicon.png">
+
+    <!-- =========================================================
+         GOOGLE FONT
+    ========================================================== -->
+
+    <link rel="preconnect"
+        href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- =========================================================
+         REMIX ICONS
+    ========================================================== -->
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css"
+        rel="stylesheet">
+
+    <!-- =========================================================
+         CSS
+    ========================================================== -->
+
+    <link rel="stylesheet"
+        href="../css/global.css">
+
+    <link rel="stylesheet"
+        href="../css/components.css">
+
+    <link rel="stylesheet"
+        href="../css/dashboard.css">
+
+</head>
+
+<body>
+
+    <!-- =========================================================
+         FLOATING BACKGROUND
+    ========================================================== -->
+
+    <div class="gradient-bg"></div>
+    <div class="gradient-bg bg2"></div>
+    <div class="gradient-bg bg3"></div>
+
+    <!-- =========================================================
+         DASHBOARD LAYOUT
+    ========================================================== -->
+
+    <div class="dashboard-layout">
+
+        <!-- =====================================================
+             SIDEBAR
+        ====================================================== -->
+
+        <aside
+            class="sidebar"
+            id="sidebar">
+
+            <div class="sidebar-scroll">
+
+                <nav class="sidebar-nav">
+
+                    <a
+                        href="#"
+                        class="active">
+
+                        <i class="ri-dashboard-fill"></i>
+                        <span>Dashboard</span>
+
+                    </a>
+
+                    <a href="#resume-builder">
+
+                        <i class="ri-file-list-3-line"></i>
+                        <span>Resume Builder</span>
+
+                    </a>
+
+                    <a href="#templates">
+
+                        <i class="ri-layout-grid-line"></i>
+                        <span>Templates</span>
+
+                    </a>
+
+                    <a href="#ats">
+
+                        <i class="ri-bar-chart-box-line"></i>
+                        <span>ATS Checker</span>
+
+                    </a>
+
+                    <a href="#interview">
+
+                        <i class="ri-robot-2-line"></i>
+                        <span>AI Interview</span>
+
+                    </a>
+
+                    <a href="#cover-letter">
+
+                        <i class="ri-file-paper-line"></i>
+                        <span>Cover Letter</span>
+
+                    </a>
+
+                    <a href="#history">
+
+                        <i class="ri-history-line"></i>
+                        <span>Resume History</span>
+
+                    </a>
+
+                    <a href="#tracker">
+
+                        <i class="ri-briefcase-4-line"></i>
+                        <span>Job Tracker</span>
+
+                    </a>
+
+                    <a href="#analytics">
+
+                        <i class="ri-line-chart-line"></i>
+                        <span>Analytics</span>
+
+                    </a>
+
+                    <a href="#premium">
+
+                        <i class="ri-vip-crown-line"></i>
+                        <span>Premium</span>
+
+                    </a>
+
+                    <a href="#settings">
+
+                        <i class="ri-settings-3-line"></i>
+                        <span>Settings</span>
+
+                    </a>
+
+                </nav>
+
+            </div>
+
+            <!-- Fixed Bottom Profile -->
+
+            <div class="sidebar-footer">
+
+                <div class="user-card">
+
+                    <div class="user-avatar">
+
+                        <img
+                            id="userAvatar"
+                            src="../assets/images/default-avatar.png"
+                            alt="User">
+
+                    </div>
+
+                    <div class="user-info">
+
+                        <h4 id="userName">
+                            Loading...
+                        </h4>
+
+                        <p id="userEmail">
+                            loading@email.com
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <button
+                    id="logoutBtn"
+                    class="sidebar-logout">
+
+                    <i class="ri-logout-box-r-line"></i>
+
+                    <span>Logout</span>
+
+                </button>
+
+            </div>
+
+        </aside>
+
+        <!-- =====================================================
+             MAIN CONTENT
+        ====================================================== -->
+
+        <main class="main-content">
+
+            <!-- =================================================
+                 TOP NAVBAR
+            ================================================== -->
+
+            <header class="dashboard-navbar">
+
+                <div class="navbar-left">
+
+                    <button
+                        id="menuToggle"
+                        class="icon-btn">
+
+                        <i class="ri-menu-2-line"></i>
+
+                    </button>
+
+                    <a
+                        href="../index.html"
+                        class="logo">
+
+                        <img
+                            src="../assets/logo/logo.png"
+                            alt="Resuvix AI">
+
+                    </a>
+
+                </div>
+
+                <div class="navbar-center">
+
+                    <div class="search-box">
+
+                        <i class="ri-search-line"></i>
+
+                        <input
+                            type="text"
+                            placeholder="Search resumes, templates, AI tools...">
+
+                    </div>
+
+                </div>
+
+                <div class="navbar-right">
+
+                    <button class="icon-btn">
+
+                        <i class="ri-notification-3-line"></i>
+
+                    </button>
+
+                    <button class="profile-dropdown">
+
+                        <img
+                            id="navAvatar"
+                            src="../assets/images/default-avatar.png"
+                            alt="Profile">
+
+                        <i class="ri-arrow-down-s-line"></i>
+
+                    </button>
+
+                </div>
+
+            </header>
+
+            <!-- =================================================
+                 HERO SECTION
+            ================================================== -->
+
+            <section class="dashboard-hero">
+
+                <div class="hero-left">
+
+                    <span class="hero-badge">
+
+                        <i class="ri-sparkling-2-fill"></i>
+
+                        AI Career Workspace
+
+                    </span>
+
+                    <h1>
+
+                        <span id="greetingText">
+                            Good Morning
+                        </span>
+
+                        <br>
+
+                        <span id="heroUserName">
+                            Loading...
+                        </span>
+
+                    </h1>
+
+                    <p>
+
+                        Build resumes, improve ATS score, prepare for interviews,
+                        and manage your complete career journey from one AI-powered
+                        dashboard.
+
+                    </p>
+
+                </div>
+
+                <div class="hero-right">
+
+                    <button class="btn-gradient">
+
+                        <i class="ri-add-circle-line"></i>
+
+                        New Resume
+
+                    </button>
+
+                </div>
+
+            </section>
+
+            <!-- Continue from the opening dashboard grid in Part 2 -->

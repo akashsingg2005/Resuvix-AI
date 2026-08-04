@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>
+
+        Verify OTP • Resuvix AI
+
+    </title>
+
+    <meta
+        name="description"
+        content="Verify your email using the OTP sent by Resuvix AI.">
+
+    <link
+        rel="icon"
+        href="./assets/logo/favicon.png">
+
+    <!-- Google Font -->
+
+    <link rel="preconnect"
+        href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Remix Icons -->
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css"
+        rel="stylesheet">
+
+    <!-- CSS -->
+
+    <link
+        rel="stylesheet"
+        href="./css/global.css">
+
+    <link
+        rel="stylesheet"
+        href="./css/components.css">
+
+    <link
+        rel="stylesheet"
+        href="./css/auth.css">
+
+</head>
+
+<body>
+
+<div class="gradient-bg"></div>
+<div class="gradient-bg bg2"></div>
+<div class="gradient-bg bg3"></div>
+
+<section class="auth-wrapper">
+
+    <!-- LEFT -->
+
+    <div class="auth-left">
+
+        <a
+            href="index.html"
+            class="auth-logo">
+
+            <img
+                src="./assets/logo/logo.png"
+                alt="Resuvix AI Logo">
+
+        </a>
+
+        <div class="hero-content">
+
+            <span class="badge">
+
+                <i class="ri-shield-check-line"></i>
+
+                Email Verification
+
+            </span>
+
+            <h1>
+
+                Verify Your Identity.
+
+                <span>
+
+                    Secure Access To Your Account.
+
+                </span>
+
+            </h1>
+
+            <p>
+
+                We've sent a 6-digit verification code
+                to your registered email address.
+                Enter it below to continue resetting
+                your password.
+
+            </p>
+
+        </div>
+
+        <div class="feature-list">
+
+            <div class="feature">
+
+                <div class="feature-icon">
+
+                    <i class="ri-mail-check-line"></i>
+
+                </div>
+
+                <div>
+
+                    <h4>Secure OTP</h4>
+
+                    <p>
+
+                        One-time verification code.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="feature">
+
+                <div class="feature-icon">
+
+                    <i class="ri-timer-line"></i>
+
+                </div>
+
+                <div>
+
+                    <h4>10 Minute Validity</h4>
+
+                    <p>
+
+                        OTP expires automatically.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="feature">
+
+                <div class="feature-icon">
+
+                    <i class="ri-lock-star-line"></i>
+
+                </div>
+
+                <div>
+
+                    <h4>Encrypted Verification</h4>
+
+                    <p>
+
+                        Your account stays protected.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- RIGHT -->
+
+    <div class="auth-right">
+
+        <div class="auth-card">
+
+            <div class="auth-header">
+
+                <h2>
+
+                    Verify OTP 🔐
+
+                </h2>
+
+                <p>
+
+                    Enter the 6-digit code sent to your email.
+
+                </p>
+
+            </div>
+
+            <form
+                id="otpForm"
+                class="auth-form">
+
+                <div class="otp-container">
+
+                    <input
+                        class="otp-input"
+                        maxlength="1"
+                        type="text">
+
+                    <input
+                        class="otp-input"
+                        maxlength="1"
+                        type="text">
+
+                    <input
+                        class="otp-input"
+                        maxlength="1"
+                        type="text">
+
+                    <input
+                        class="otp-input"
+                        maxlength="1"
+                        type="text">
+
+                    <input
+                        class="otp-input"
+                        maxlength="1"
+                        type="text">
+
+                    <input
+                        class="otp-input"
+                        maxlength="1"
+                        type="text">
+
+                </div>
+
+                <div
+                    class="otp-timer"
+                    id="otpTimer">
+
+                    Resend available in
+                    <strong>60s</strong>
+
+                </div>
+                                <button
+                    type="submit"
+                    class="btn-primary auth-btn"
+                    id="verifyBtn">
+
+                    <span class="btn-text">
+
+                        Verify OTP
+
+                    </span>
+
+                    <span
+                        class="btn-loader"
+                        id="verifyLoader">
+
+                        <i class="ri-loader-4-line"></i>
+
+                    </span>
+
+                </button>
+
+                <div
+                    class="auth-footer">
+
+                    <p>
+
+                        Didn't receive the code?
+
+                        <a
+                            href="#"
+                            id="resendOTP">
+
+                            Resend OTP
+
+                        </a>
+
+                    </p>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- Scripts -->
+
+<script src="./js/config.js"></script>
+<script src="./js/storage.js"></script>
+<script src="./js/validator.js"></script>
+<script src="./js/utils.js"></script>
+<script src="./js/toast.js"></script>
+<script src="./js/api.js"></script>
+
+<script>
+
+const inputs =
+document.querySelectorAll(".otp-input");
+
+const form =
+document.getElementById("otpForm");
+
+const timer =
+document.getElementById("otpTimer");
+
+const resend =
+document.getElementById("resendOTP");
+
+const email =
+sessionStorage.getItem("resetEmail");
+
+if(!email){
+
+    window.location.href="forgot-password.html";
+
+}
+
+/* =====================================
+   Auto Focus
+===================================== */
+
+inputs.forEach((input,index)=>{
+
+input.addEventListener("input",e=>{
+
+e.target.value=
+e.target.value.replace(/\D/g,"");
+
+if(e.target.value && index<5){
+
+inputs[index+1].focus();
+
+}
+
+});
+
+input.addEventListener("keydown",e=>{
+
+if(
+
+e.key==="Backspace" &&
+
+!input.value &&
+
+index>0
+
+){
+
+inputs[index-1].focus();
+
+}
+
+});
+
+});
+
+/* =====================================
+   Paste OTP
+===================================== */
+
+inputs[0].addEventListener(
+
+"paste",
+
+e=>{
+
+e.preventDefault();
+
+const paste =
+e.clipboardData
+.getData("text")
+.trim();
+
+if(!/^\d{6}$/.test(paste)) return;
+
+paste.split("").forEach(
+
+(num,index)=>{
+
+inputs[index].value=num;
+
+}
+
+);
+
+inputs[5].focus();
+
+}
+
+);
+
+/* =====================================
+   Countdown
+===================================== */
+
+let seconds=60;
+
+resend.style.pointerEvents="none";
+
+const interval=setInterval(()=>{
+
+seconds--;
+
+timer.innerHTML=
+`Resend available in <strong>${seconds}s</strong>`;
+
+if(seconds<=0){
+
+clearInterval(interval);
+
+timer.innerHTML="";
+
+resend.style.pointerEvents="auto";
+
+}
+
+},1000);
+
+/* =====================================
+   Verify OTP
+===================================== */
+
+form.addEventListener(
+
+"submit",
+
+async(e)=>{
+
+e.preventDefault();
+
+const otp=[
+
+...inputs
+
+]
+
+.map(i=>i.value)
+
+.join("");
+
+if(otp.length!==6){
+
+toast.error(
+
+"Enter complete OTP."
+
+);
+
+return;
+
+}
+
+const button=
+document.getElementById("verifyBtn");
+
+const loader=
+document.getElementById("verifyLoader");
+
+const text=
+button.querySelector(".btn-text");
+
+button.disabled=true;
+
+loader.style.display="inline-flex";
+
+text.style.opacity="0";
+
+try{
+
+await api.post(
+
+`${CONFIG.API.AUTH}/verify-otp`,
+
+{
+
+email,
+
+otp
+
+}
+
+);
+
+toast.success(
+
+"OTP Verified."
+
+);
+
+sessionStorage.setItem(
+
+"verifiedOTP",
+
+otp
+
+);
+
+setTimeout(()=>{
+
+window.location.href=
+"./reset-password.html";
+
+},800);
+
+}
+
+catch(error){
+
+toast.error(
+
+error.message
+
+);
+
+}
+
+finally{
+
+button.disabled=false;
+
+loader.style.display="none";
+
+text.style.opacity="1";
+
+}
+
+});
+
+/* =====================================
+   Resend OTP
+===================================== */
+
+resend.addEventListener(
+
+"click",
+
+async(e)=>{
+
+e.preventDefault();
+
+try{
+
+await api.post(
+
+`${CONFIG.API.AUTH}/forgot-password`,
+
+{
+
+email
+
+}
+
+);
+
+toast.success(
+
+"OTP Sent Again."
+
+);
+
+location.reload();
+
+}
+
+catch(error){
+
+toast.error(
+
+error.message
+
+);
+
+}
+
+});
+
+</script>
+
+</body>
+
+</html>
