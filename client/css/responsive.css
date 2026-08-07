@@ -177,7 +177,7 @@
 
     .nav-buttons .btn-outline{
 
-        display:none;
+        display:inline-flex !important;
 
     }
 

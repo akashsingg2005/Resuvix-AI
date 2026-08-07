@@ -22,6 +22,8 @@ const env = {
   RAZORPAY_KEY_ID: process.env.RAZORPAY_KEY_ID,
   RAZORPAY_KEY_SECRET: process.env.RAZORPAY_KEY_SECRET,
 
+  GEMINI_API_KEY: process.env.GEMINI_API_KEY,
+
   // ==========================
   // MAIL CONFIGURATION
   // ==========================

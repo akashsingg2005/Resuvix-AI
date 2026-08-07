@@ -2,14 +2,12 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- SEO -->
     <title>Create Account • Resuvix AI</title>
-    <meta name="description"
-        content="Create your Resuvix AI account and build ATS-friendly resumes with AI assistance.">
+    <meta name="description" content="Create your Resuvix AI account and build ATS-friendly resumes with AI assistance.">
 
     <!-- Favicon -->
     <link rel="icon" href="./assets/logo/favicon.png">
@@ -17,19 +15,68 @@
     <!-- Google Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Remix Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css"
-        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
 
     <!-- CSS -->
     <link rel="stylesheet" href="./css/global.css">
     <link rel="stylesheet" href="./css/components.css">
     <link rel="stylesheet" href="./css/auth.css">
 
+    <style>
+        /* Fresh Modern Registration Custom Styles */
+        .register-step-card {
+            transition: all 0.35s ease;
+        }
+        .otp-digit-box {
+            letter-spacing: 6px;
+            font-size: 20px;
+            font-weight: 800;
+            text-align: center;
+            color: var(--primary);
+        }
+        .step-indicator-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            background: rgba(108, 99, 255, 0.1);
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 12px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(108, 99, 255, 0.2);
+        }
+        .btn-otp-send {
+            width: 100%;
+            height: 52px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 15px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 10px 25px rgba(108, 99, 255, 0.25);
+            transition: all 0.3s ease;
+        }
+        .btn-otp-send:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(108, 99, 255, 0.35);
+        }
+        .btn-otp-send:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -42,422 +89,437 @@
     <section class="auth-wrapper">
 
         <!-- ==========================================
-             LEFT SIDE
+             LEFT SIDE HERO & BENEFITS
         =========================================== -->
-
         <div class="auth-left">
 
             <!-- Logo -->
-
             <a href="index.html" class="auth-logo">
-
-                <img
-                    src="./assets/logo/logo.png"
-                    alt="Resuvix AI Logo">
-
+                <img src="./assets/logo/logo.png" alt="Resuvix AI Logo">
             </a>
 
-            <!-- Hero -->
-
+            <!-- Hero Text -->
             <div class="hero-content">
-
                 <span class="badge">
-
-                    <i class="ri-user-add-line"></i>
-
-                    Join Thousands Of Job Seekers
-
+                    <i class="ri-user-add-line"></i> Join 51,000+ Job Seekers Hired Globally
                 </span>
-
                 <h1>
-
                     Start Your Career.
-
                     <span>Create Your AI Resume Today.</span>
-
                 </h1>
-
                 <p>
-
-                    Build ATS-friendly resumes, analyse your resume,
-                    prepare for interviews, and land your dream job—
-                    all from one AI-powered platform.
-
+                    Build ATS-optimized resumes, scan your formatting against ATS algorithms, prepare for interviews with AI viva questions, and generate tailored cover letters—100% free to start.
                 </p>
-
             </div>
 
-            <!-- Features -->
-
+            <!-- Core Feature Highlights -->
             <div class="feature-list">
-
                 <div class="feature">
-
                     <div class="feature-icon">
-
-                        <i class="ri-file-list-3-line"></i>
-
+                        <i class="ri-sparkling-fill"></i>
                     </div>
-
                     <div>
-
-                        <h4>Professional Resume Builder</h4>
-
-                        <p>Create beautiful resumes within minutes.</p>
-
+                        <h4>AI Resume Generator</h4>
+                        <p>Draft professional resumes in under 2 minutes.</p>
                     </div>
-
                 </div>
 
                 <div class="feature">
-
                     <div class="feature-icon">
-
                         <i class="ri-bar-chart-box-line"></i>
-
                     </div>
-
                     <div>
-
-                        <h4>AI ATS Score Checker</h4>
-
-                        <p>Increase your chances of getting shortlisted.</p>
-
+                        <h4>Free ATS Score Scanner</h4>
+                        <p>Check ATS compatibility & recruiter callback rates.</p>
                     </div>
-
                 </div>
 
                 <div class="feature">
-
                     <div class="feature-icon">
-
-                        <i class="ri-robot-2-line"></i>
-
+                        <i class="ri-user-voice-line"></i>
                     </div>
-
                     <div>
-
-                        <h4>AI Interview Preparation</h4>
-
-                        <p>Practice real interview questions with AI.</p>
-
+                        <h4>AI Mock Interview Prep</h4>
+                        <p>Practice technical questions tailored to your resume.</p>
                     </div>
-
                 </div>
-
             </div>
 
         </div>
 
         <!-- ==========================================
-             RIGHT SIDE
+             RIGHT SIDE REGISTRATION FORM
         =========================================== -->
-
         <div class="auth-right">
-
-            <div class="auth-card">
+            <div class="auth-card register-step-card">
 
                 <div class="auth-header">
-
-                    <h2>Create Account 🚀</h2>
-
-                    <p>
-
-                        Join Resuvix AI and start building professional
-                        resumes with AI assistance.
-
-                    </p>
-
+                    <span class="step-indicator-pill" id="stepPill">
+                        <i class="ri-shield-check-line"></i> Step 1 of 2: Account Details
+                    </span>
+                    <h2 id="authTitle">Create Account 🚀</h2>
+                    <p id="authSub">Enter your details to receive an email verification OTP code.</p>
                 </div>
 
-                <!-- Register Form -->
+                <!-- Registration Form -->
+                <form id="freshRegisterForm" class="auth-form" onsubmit="return false;">
 
-                <form
-                    id="registerForm"
-                    class="auth-form">
+                    <!-- STEP 1: Account Information -->
+                    <div id="registerStep1">
 
-                    <!-- Full Name -->
-
-                    <div class="input-group">
-
-                        <label for="fullName">
-
-                            Full Name
-
-                        </label>
-
-                        <div class="input-box">
-
-                            <i class="ri-user-line"></i>
-
-                            <input
-                                type="text"
-                                id="fullName"
-                                name="fullName"
-                                placeholder="Enter your full name"
-                                autocomplete="name"
-                                required>
-
-                        </div>
-
-                        <small
-                            class="error-text"
-                            id="fullNameError"></small>
-
-                    </div>
-
-                    <!-- Email -->
-
-                    <div class="input-group">
-
-                        <label for="email">
-
-                            Email Address
-
-                        </label>
-
-                        <div class="input-box">
-
-                            <i class="ri-mail-line"></i>
-
-                            <input
-                                type="email"
-                                id="email"
-                                name="email"
-                                placeholder="Enter your email"
-                                autocomplete="email"
-                                required>
-
-                        </div>
-
-                        <small
-                            class="error-text"
-                            id="emailError"></small>
-
-                    </div>
-
-                    <!-- Password -->
-
-                    <div class="input-group">
-
-                        <label for="password">
-
-                            Password
-
-                        </label>
-
-                        <div class="input-box">
-
-                            <i class="ri-lock-password-line"></i>
-
-                            <input
-                                type="password"
-                                id="password"
-                                name="password"
-                                placeholder="Create a password"
-                                autocomplete="new-password"
-                                required>
-
-                            <button
-                                type="button"
-                                class="toggle-password"
-                                data-target="password">
-
-                                <i class="ri-eye-line"></i>
-
-                            </button>
-
-                        </div>
-
-                        <small
-                            class="error-text"
-                            id="passwordError"></small>
-
-                    </div>
-
-                    <!-- Password Strength -->
-
-                    <div class="password-strength">
-
-                        <div class="strength-bar">
-
-                            <div
-                                class="strength-fill"
-                                id="strengthFill">
-
+                        <!-- Full Name -->
+                        <div class="input-group">
+                            <label for="regFullName">Full Name</label>
+                            <div class="input-box">
+                                <i class="ri-user-line"></i>
+                                <input type="text" id="regFullName" placeholder="Enter your full name" autocomplete="name" required>
                             </div>
-
+                            <small class="error-text" id="fullNameError"></small>
                         </div>
 
-                        <small id="strengthText">
+                        <!-- Email Address -->
+                        <div class="input-group">
+                            <label for="regEmail">Email Address</label>
+                            <div class="input-box">
+                                <i class="ri-mail-line"></i>
+                                <input type="email" id="regEmail" placeholder="name@example.com" autocomplete="email" required>
+                            </div>
+                            <small class="error-text" id="emailError"></small>
+                        </div>
 
-                            Password Strength
+                        <!-- Password -->
+                        <div class="input-group">
+                            <label for="regPassword">Password</label>
+                            <div class="input-box">
+                                <i class="ri-lock-password-line"></i>
+                                <input type="password" id="regPassword" placeholder="Create a strong password (min 8 chars)" autocomplete="new-password" required>
+                                <button type="button" class="toggle-password" data-target="regPassword">
+                                    <i class="ri-eye-line"></i>
+                                </button>
+                            </div>
+                            <small class="error-text" id="passwordError"></small>
+                        </div>
 
-                        </small>
+                        <!-- Password Strength Bar -->
+                        <div class="password-strength">
+                            <div class="strength-bar">
+                                <div class="strength-fill" id="strengthFill"></div>
+                            </div>
+                            <small id="strengthText">Password Strength</small>
+                        </div>
+
+                        <!-- Confirm Password -->
+                        <div class="input-group">
+                            <label for="regConfirmPassword">Confirm Password</label>
+                            <div class="input-box">
+                                <i class="ri-lock-password-line"></i>
+                                <input type="password" id="regConfirmPassword" placeholder="Confirm your password" autocomplete="new-password" required>
+                                <button type="button" class="toggle-password" data-target="regConfirmPassword">
+                                    <i class="ri-eye-line"></i>
+                                </button>
+                            </div>
+                            <small class="error-text" id="confirmPasswordError"></small>
+                        </div>
+
+                        <!-- Terms Checkbox -->
+                        <div class="auth-options" style="margin-bottom: 20px;">
+                            <label class="remember-me">
+                                <input type="checkbox" id="termsCheck" checked required>
+                                <span>I agree to the <a href="terms.html">Terms</a> & <a href="privacy.html">Privacy Policy</a></span>
+                            </label>
+                        </div>
+
+                        <!-- Step 1 Button: Send OTP -->
+                        <button type="button" class="btn-otp-send" id="btnRequestOtp">
+                            <span>Send Verification OTP Code</span>
+                            <i class="ri-arrow-right-line"></i>
+                        </button>
 
                     </div>
-                                        <!-- Confirm Password -->
 
-                    <div class="input-group">
+                    <!-- STEP 2: Email OTP Verification (Hidden Initially) -->
+                    <div id="registerStep2" style="display: none;">
 
-                        <label for="confirmPassword">
+                        <div style="background: rgba(108, 99, 255, 0.08); padding: 20px; border-radius: 20px; border: 1px solid rgba(108, 99, 255, 0.25); text-align: center; margin-bottom: 24px;">
+                            <div style="width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 12px;">
+                                <i class="ri-mail-check-line"></i>
+                            </div>
+                            <h4 style="font-size: 1.1rem; font-weight: 800; color: var(--text);">Check Your Email Inbox</h4>
+                            <p style="font-size: 13px; color: var(--text-light); margin-top: 4px;">We sent a 6-digit verification code to <strong id="sentEmailDisplay" style="color: var(--primary);">your email</strong>.</p>
+                        </div>
 
-                            Confirm Password
+                        <div class="input-group">
+                            <label for="regOtpCode" style="font-weight: 800; color: var(--primary);">Enter 6-Digit Verification Code</label>
+                            <div class="input-box">
+                                <i class="ri-key-2-line"></i>
+                                <input type="text" id="regOtpCode" class="otp-digit-box" placeholder="123456" maxlength="6" autocomplete="one-time-code">
+                            </div>
+                            <small class="error-text" id="otpError"></small>
+                        </div>
 
-                        </label>
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; font-size: 13px;">
+                            <span style="color: var(--text-light);" id="timerText">Resend available in 60s</span>
+                            <button type="button" id="btnResendOtpCode" style="background: none; border: none; color: var(--primary); font-weight: 800; cursor: pointer;" disabled>Resend Code</button>
+                        </div>
 
-                        <div class="input-box">
-
-                            <i class="ri-lock-password-line"></i>
-
-                            <input
-                                type="password"
-                                id="confirmPassword"
-                                name="confirmPassword"
-                                placeholder="Confirm your password"
-                                autocomplete="new-password"
-                                required>
-
-                            <button
-                                type="button"
-                                class="toggle-password"
-                                data-target="confirmPassword">
-
-                                <i class="ri-eye-line"></i>
-
+                        <div style="display: flex; gap: 12px;">
+                            <button type="button" class="btn-outline" id="btnBackToStep1" style="padding: 14px 20px; border-radius: 14px;">
+                                <i class="ri-arrow-left-line"></i> Back
                             </button>
-
+                            <button type="button" class="btn-primary auth-btn" id="btnCompleteRegister" style="flex: 1; height: 52px; border-radius: 14px;">
+                                <span class="btn-text">Verify & Create Account</span>
+                                <span class="btn-loader" id="registerLoader" style="display: none;">
+                                    <i class="ri-loader-4-line"></i>
+                                </span>
+                            </button>
                         </div>
 
-                        <small
-                            class="error-text"
-                            id="confirmPasswordError"></small>
-
                     </div>
-
-                    <!-- Terms -->
-
-                    <div class="auth-options">
-
-                        <label class="remember-me">
-
-                            <input
-                                type="checkbox"
-                                id="terms"
-                                required>
-
-                            <span>
-
-                                I agree to the
-
-                                <a href="terms.html">
-
-                                    Terms of Service
-
-                                </a>
-
-                                &
-
-                                <a href="privacy.html">
-
-                                    Privacy Policy
-
-                                </a>
-
-                            </span>
-
-                        </label>
-
-                    </div>
-
-                    <!-- Register Button -->
-
-                    <button
-                        type="submit"
-                        class="btn-primary auth-btn"
-                        id="registerBtn">
-
-                        <span class="btn-text">
-
-                            Create Account
-
-                        </span>
-
-                        <span
-                            class="btn-loader"
-                            id="registerLoader">
-
-                            <i class="ri-loader-4-line"></i>
-
-                        </span>
-
-                    </button>
 
                 </form>
 
                 <!-- Divider -->
-
                 <div class="divider">
-
-                    <span>
-
-                        OR
-
-                    </span>
-
+                    <span>OR</span>
                 </div>
 
                 <!-- Google Sign Up -->
-
-                <button
-                    class="google-btn"
-                    type="button"
-                    disabled>
-
-                    <img
-                        src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
-                        alt="Google">
-
-                    Continue with Google
-
-                    <small>(Coming Soon)</small>
-
+                <button class="google-btn" type="button" disabled>
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+                    Continue with Google <small>(Coming Soon)</small>
                 </button>
 
                 <!-- Footer -->
-
                 <div class="auth-footer">
-
-                    <p>
-
-                        Already have an account?
-
-                        <a href="login.html">
-
-                            Sign In
-
-                        </a>
-
-                    </p>
-
+                    <p>Already have an account? <a href="login.html">Sign In</a></p>
                 </div>
 
             </div>
-
         </div>
 
     </section>
 
     <!-- Scripts -->
-
     <script src="./js/config.js"></script>
     <script src="./js/storage.js"></script>
     <script src="./js/validator.js"></script>
-    <script src="./js/utils.js"></script>
     <script src="./js/toast.js"></script>
     <script src="./js/api.js"></script>
-    <script src="./js/auth.js"></script>
 
+    <!-- Registration Handler Script -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+
+            // Elements
+            const step1 = document.getElementById("registerStep1");
+            const step2 = document.getElementById("registerStep2");
+            const stepPill = document.getElementById("stepPill");
+            const authTitle = document.getElementById("authTitle");
+            const authSub = document.getElementById("authSub");
+
+            const fullNameInput = document.getElementById("regFullName");
+            const emailInput = document.getElementById("regEmail");
+            const passwordInput = document.getElementById("regPassword");
+            const confirmPasswordInput = document.getElementById("regConfirmPassword");
+            const otpInput = document.getElementById("regOtpCode");
+
+            const btnRequestOtp = document.getElementById("btnRequestOtp");
+            const btnCompleteRegister = document.getElementById("btnCompleteRegister");
+            const btnBackToStep1 = document.getElementById("btnBackToStep1");
+            const btnResendOtpCode = document.getElementById("btnResendOtpCode");
+            const timerText = document.getElementById("timerText");
+            const sentEmailDisplay = document.getElementById("sentEmailDisplay");
+            const registerLoader = document.getElementById("registerLoader");
+
+            // Password Toggle Buttons
+            document.querySelectorAll(".toggle-password").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const targetId = btn.dataset.target;
+                    const input = document.getElementById(targetId);
+                    if (input) {
+                        const isPass = input.type === "password";
+                        input.type = isPass ? "text" : "password";
+                        const icon = btn.querySelector("i");
+                        if (icon) {
+                            icon.className = isPass ? "ri-eye-off-line" : "ri-eye-line";
+                        }
+                    }
+                });
+            });
+
+            // Password Strength Indicator
+            if (passwordInput) {
+                passwordInput.addEventListener("input", () => {
+                    const fill = document.getElementById("strengthFill");
+                    const text = document.getElementById("strengthText");
+                    const val = passwordInput.value;
+                    let score = 0;
+                    if (val.length >= 8) score++;
+                    if (/[A-Z]/.test(val)) score++;
+                    if (/[a-z]/.test(val)) score++;
+                    if (/\d/.test(val)) score++;
+                    if (/[@$!%*?&^#()_\-+=]/.test(val)) score++;
+
+                    if (fill) fill.style.width = (score * 20) + "%";
+                    if (text) {
+                        if (val.length === 0) text.textContent = "Password Strength";
+                        else if (score <= 2) { fill.style.background = "#EF4444"; text.textContent = "Weak"; }
+                        else if (score === 3) { fill.style.background = "#F59E0B"; text.textContent = "Medium"; }
+                        else { fill.style.background = "#22C55E"; text.textContent = "Strong"; }
+                    }
+                });
+            }
+
+            let countdownTimer = null;
+
+            function startResendCountdown() {
+                let seconds = 60;
+                if (btnResendOtpCode) btnResendOtpCode.disabled = true;
+                if (timerText) timerText.textContent = `Resend available in 60s`;
+
+                if (countdownTimer) clearInterval(countdownTimer);
+
+                countdownTimer = setInterval(() => {
+                    seconds--;
+                    if (timerText) timerText.textContent = `Resend available in ${seconds}s`;
+                    if (seconds <= 0) {
+                        clearInterval(countdownTimer);
+                        if (timerText) timerText.textContent = "Didn't receive code?";
+                        if (btnResendOtpCode) {
+                            btnResendOtpCode.disabled = false;
+                            btnResendOtpCode.textContent = "Resend Code Now";
+                        }
+                    }
+                }, 1000);
+            }
+
+            // STEP 1: Request OTP Code
+            async function requestOTP() {
+                const name = fullNameInput.value.trim();
+                const email = emailInput.value.trim();
+                const pass = passwordInput.value;
+                const confirmPass = confirmPasswordInput.value;
+
+                const isEmailValid = (e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+
+                if (!name || name.length < 3) {
+                    toast.error("Please enter your full name (min 3 characters).");
+                    fullNameInput.focus();
+                    return;
+                }
+                if (!email || !isEmailValid(email)) {
+                    toast.error("Please enter a valid email address.");
+                    emailInput.focus();
+                    return;
+                }
+                if (!pass || pass.length < 8) {
+                    toast.error("Password must be at least 8 characters long.");
+                    passwordInput.focus();
+                    return;
+                }
+                if (pass !== confirmPass) {
+                    toast.error("Passwords do not match. Please check again.");
+                    confirmPasswordInput.focus();
+                    return;
+                }
+
+                try {
+                    btnRequestOtp.disabled = true;
+                    btnRequestOtp.innerHTML = `<i class="ri-loader-4-line ri-spin"></i> Sending OTP...`;
+                    toast.info(`Sending email verification code to ${email}...`);
+
+                    const res = await AuthAPI.sendRegisterOTP(email);
+                    toast.success(res.message || "OTP code sent to your email!");
+
+                    // Switch to Step 2
+                    if (sentEmailDisplay) sentEmailDisplay.textContent = email;
+                    step1.style.display = "none";
+                    step2.style.display = "block";
+                    stepPill.innerHTML = `<i class="ri-key-2-line"></i> Step 2 of 2: Verify OTP Code`;
+                    authTitle.textContent = "Verify Email Address 📩";
+                    authSub.textContent = `Enter the 6-digit code sent to ${email}.`;
+
+                    if (otpInput) {
+                        otpInput.value = "";
+                        otpInput.focus();
+                    }
+
+                    startResendCountdown();
+
+                } catch (err) {
+                    console.error("OTP Error:", err);
+                    toast.error(err.message || "Failed to send verification OTP.");
+                } finally {
+                    btnRequestOtp.disabled = false;
+                    btnRequestOtp.innerHTML = `<span>Send Verification OTP Code</span> <i class="ri-arrow-right-line"></i>`;
+                }
+            }
+
+            if (btnRequestOtp) btnRequestOtp.addEventListener("click", requestOTP);
+            if (btnResendOtpCode) btnResendOtpCode.addEventListener("click", requestOTP);
+
+            if (btnBackToStep1) {
+                btnBackToStep1.addEventListener("click", () => {
+                    step2.style.display = "none";
+                    step1.style.display = "block";
+                    stepPill.innerHTML = `<i class="ri-shield-check-line"></i> Step 1 of 2: Account Details`;
+                    authTitle.textContent = "Create Account 🚀";
+                    authSub.textContent = "Enter your details to receive an email verification OTP code.";
+                });
+            }
+
+            // STEP 2: Complete Registration with Verified OTP
+            if (btnCompleteRegister) {
+                btnCompleteRegister.addEventListener("click", async () => {
+                    const otpCode = otpInput.value.trim();
+
+                    if (!otpCode || otpCode.length !== 6) {
+                        toast.error("Please enter the complete 6-digit OTP code.");
+                        otpInput.focus();
+                        return;
+                    }
+
+                    try {
+                        btnCompleteRegister.disabled = true;
+                        if (registerLoader) registerLoader.style.display = "inline-block";
+
+                        const response = await AuthAPI.register({
+                            fullName: fullNameInput.value.trim(),
+                            email: emailInput.value.trim(),
+                            password: passwordInput.value,
+                            otp: otpCode
+                        });
+
+                        Storage.saveUser(response.user);
+                        Storage.saveAccessToken(response.accessToken);
+
+                        toast.success("🎉 Email Verified & Account Created Successfully!");
+
+                        setTimeout(() => {
+                            const params = new URLSearchParams(window.location.search);
+                            const redirect = params.get("redirect");
+                            const hasPending = typeof sessionStorage !== "undefined" && sessionStorage.getItem("resuvix_pending_ats_report");
+
+                            if (redirect === "ats-checker" || hasPending) {
+                                window.location.href = "ats-checker.html";
+                            } else if (response.user.role === "admin") {
+                                window.location.href = "pages/admin.html";
+                            } else {
+                                window.location.href = "pages/dashboard.html";
+                            }
+                        }, 800);
+
+                    } catch (error) {
+                        toast.error(error.message || "Registration failed. Invalid or expired OTP.");
+                    } finally {
+                        btnCompleteRegister.disabled = false;
+                        if (registerLoader) registerLoader.style.display = "none";
+                    }
+                });
+            }
+
+        });
+    </script>
 </body>
 
 </html>

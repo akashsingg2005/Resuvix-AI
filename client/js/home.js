@@ -20,6 +20,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     initCompanySlider();
 
+    initFAQAccordion();
+
+    fetchDatabasePricing();
+
 });
 
 
@@ -649,8 +653,61 @@ window.addEventListener("load",()=>{
 
 
 /* ==========================================================
-   FINAL MESSAGE
+   INTERACTIVE FAQ ACCORDION
 ========================================================== */
+
+function initFAQAccordion() {
+    const faqItems = document.querySelectorAll(".faq-item-accordion");
+    faqItems.forEach(item => {
+        const header = item.querySelector(".faq-header");
+        const body = item.querySelector(".faq-body");
+        const icon = item.querySelector(".faq-icon i");
+
+        if (header && body) {
+            header.addEventListener("click", () => {
+                const isOpen = item.classList.contains("active");
+
+                // Close all other accordions smoothly
+                faqItems.forEach(other => {
+                    other.classList.remove("active");
+                    const otherBody = other.querySelector(".faq-body");
+                    const otherIcon = other.querySelector(".faq-icon i");
+                    if (otherBody) otherBody.style.maxHeight = null;
+                    if (otherIcon) otherIcon.className = "ri-add-line";
+                });
+
+                if (!isOpen) {
+                    item.classList.add("active");
+                    body.style.maxHeight = body.scrollHeight + "px";
+                    if (icon) icon.className = "ri-subtract-line";
+                }
+            });
+        }
+    });
+}
+
+/* ==========================================================
+   DYNAMIC DATABASE PRICING FETCH
+========================================================== */
+
+async function fetchDatabasePricing() {
+    try {
+        const baseUrl = typeof API_CONFIG !== "undefined" ? API_CONFIG.BASE_URL : "http://localhost:5000";
+        const res = await fetch(`${baseUrl}/api/v1/payment/pricing`);
+        if (!res.ok) return;
+
+        const data = await res.json();
+        if (data && data.success && data.pricing) {
+            const singlePrice = data.pricing.singlePrice || 199;
+            const proPrice = data.pricing.proPrice || 499;
+
+            document.querySelectorAll(".val-single-price").forEach(el => el.textContent = singlePrice);
+            document.querySelectorAll(".val-pro-price").forEach(el => el.textContent = proPrice);
+        }
+    } catch (e) {
+        console.log("Using default fallback pricing:", e.message);
+    }
+}
 
 console.log(
 

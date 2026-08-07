@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { protect } from "../middleware/auth.middleware.js"; // Change the path if your filename is different
-
+import { protect } from "../middleware/auth.middleware.js";
 import {
   getKey,
+  getPricing,
   createOrder,
   verifyPayment,
 } from "../controllers/payment.controller.js";
@@ -10,10 +10,11 @@ import {
 const router = Router();
 
 router.get("/key", getKey);
+router.get("/pricing", getPricing);
 
-// Only logged-in users can pay
+// Protected payment routes
 router.post("/create-order", protect, createOrder);
-
 router.post("/verify", protect, verifyPayment);
+router.post("/verify-payment", protect, verifyPayment);
 
 export default router;

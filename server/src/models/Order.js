@@ -11,7 +11,7 @@ const orderSchema = new mongoose.Schema(
     resume: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Resume",
-        required: true
+        default: null
     },
 
     coupon: {

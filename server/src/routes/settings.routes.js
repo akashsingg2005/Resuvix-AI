@@ -3,11 +3,12 @@ import {
   getSettings,
   updateSettings,
 } from "../controllers/settings.controller.js";
+import { protect, adminOnly } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
 router.get("/", getSettings);
 
-router.patch("/", updateSettings);
+router.patch("/", protect, adminOnly, updateSettings);
 
 export default router;

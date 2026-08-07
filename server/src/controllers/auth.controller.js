@@ -3,6 +3,7 @@ import ApiResponse from "../utils/ApiResponse.js";
 
 import {
   registerUser,
+  sendRegisterOTP,
   loginUser,
   logoutUser,
   refreshAccessToken,
@@ -20,6 +21,18 @@ const cookieOptions = {
   secure: process.env.NODE_ENV === "production",
   sameSite: "strict",
 };
+
+/**
+ * Send Register OTP
+ */
+export const sendRegisterOTPController = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    return res.status(400).json(new ApiResponse(400, "Email is required."));
+  }
+  const result = await sendRegisterOTP(email.trim());
+  res.status(200).json(new ApiResponse(200, result.message, result));
+});
 
 /**
  * Register

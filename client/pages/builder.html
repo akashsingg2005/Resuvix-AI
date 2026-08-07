@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATS Resume Builder | Resuvix AI</title>
+    <meta name="description" content="Customizable ATS-friendly resume builder with Google Gemini AI auto-fill skills and summary generation.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Remix Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../assets/logo/favicon.png">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/builder.css">
+</head>
+
+<body class="builder-body">
+
+    <!-- Header Navigation -->
+    <header class="builder-header">
+        <div class="builder-header-left">
+            <a href="dashboard.html" class="btn-back-dash">
+                <i class="ri-arrow-left-line"></i> Dashboard
+            </a>
+            <div class="builder-title-badge">
+                <span class="dot"></span> Resume Builder
+            </div>
+        </div>
+
+        <div class="builder-header-center">
+            <div class="ats-live-score-pill">
+                <i class="ri-shield-check-fill"></i> ATS Score: <span id="atsScoreValue">98%</span> (Optimal)
+            </div>
+        </div>
+
+        <div class="builder-header-right">
+
+            <!-- Font Size Adjuster -->
+            <div class="font-stepper">
+                <button id="btnFontDec" title="Decrease Font Size">A-</button>
+                <span id="fontSizeLabel">14px</span>
+                <button id="btnFontInc" title="Increase Font Size">A+</button>
+            </div>
+
+            <!-- Template Switcher Pills -->
+            <div class="template-selector-pills" id="templateSelectorPills">
+                <button class="tpl-pill active" data-template="latex-classic">Classic Latex ATS</button>
+                <button class="tpl-pill" data-template="silicon-executive">Silicon Executive</button>
+                <button class="tpl-pill" data-template="linear-sleek">Linear Minimalist</button>
+                <button class="tpl-pill" data-template="stripe-enterprise">Stripe Corporate</button>
+            </div>
+
+            <button class="btn-export-pdf" id="btnExportPDF">
+                <i class="ri-file-download-line"></i> Export PDF
+            </button>
+
+            <button class="btn-save-resume" id="btnSaveResume">
+                <i class="ri-save-3-line"></i> Save
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Workspace Grid -->
+    <div class="builder-layout">
+
+        <!-- Left Form Pane -->
+        <div class="builder-form-pane">
+
+            <!-- Dedicated AI Auto-Fill Skills & Summary Card -->
+            <div class="card-ai-master" style="background: linear-gradient(135deg, rgba(108, 99, 255, 0.06), rgba(6, 182, 212, 0.08)); border: 1px solid rgba(108, 99, 255, 0.3); border-radius: 20px; padding: 20px; margin-bottom: 20px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                    <div>
+                        <h3 style="font-size: 1.1rem; font-weight: 800; color: #0F172A; margin: 0;">✨ AI Auto-Fill Skills & Summary</h3>
+                        <p style="font-size: 13px; color: #64748B; margin: 2px 0 0 0;">Enter target job role to auto-generate role-based skills & professional summary using AI.</p>
+                    </div>
+                    <button class="btn-ai-generate-master" id="btnAutoFillAISkillsSummary" style="padding: 8px 18px; border-radius: 999px; background: linear-gradient(135deg, #6C63FF, #06B6D4); color: #ffffff; font-weight: 800; font-size: 13px; border: none; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                        <i class="ri-sparkling-fill"></i> Auto-Fill AI Skills & Summary
+                    </button>
+                </div>
+                <div class="form-grid-2">
+                    <div class="form-field" style="grid-column: span 2; margin-bottom: 0;">
+                        <label>Target Job Role Applying For</label>
+                        <input type="text" id="inpJobTitle" placeholder="Enter target job role (e.g. Full Stack Developer)">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 1. Contact & Header -->
+            <div class="form-section-card">
+                <div class="section-card-title">
+                    <i class="ri-user-3-line"></i> Personal & Contact Info
+                </div>
+                <div class="form-grid-2">
+                    <div class="form-field">
+                        <label>Full Name</label>
+                        <input type="text" id="inpFullName" placeholder="Enter your full name">
+                    </div>
+                    <div class="form-field">
+                        <label>Location / Address</label>
+                        <input type="text" id="inpLocation" placeholder="Enter your location / address">
+                    </div>
+                    <div class="form-field">
+                        <label>Phone Number</label>
+                        <input type="text" id="inpPhone" placeholder="Enter your mobile number">
+                    </div>
+                    <div class="form-field">
+                        <label>Email Address</label>
+                        <input type="email" id="inpEmail" placeholder="Enter your email address">
+                    </div>
+                    <div class="form-field">
+                        <label>LinkedIn Link</label>
+                        <input type="text" id="inpLinkedin" placeholder="Enter your LinkedIn profile link">
+                    </div>
+                    <div class="form-field">
+                        <label>GitHub Link</label>
+                        <input type="text" id="inpGithub" placeholder="Enter your GitHub profile link">
+                    </div>
+                    <div class="form-field" style="grid-column: span 2;">
+                        <label>Portfolio / Personal Link</label>
+                        <input type="text" id="inpWebsite" placeholder="Enter your portfolio / personal website link">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Professional Summary -->
+            <div class="form-section-card">
+                <div class="section-card-title">
+                    <i class="ri-article-line"></i> Professional Summary
+                </div>
+                <div class="form-field">
+                    <textarea id="inpSummary" rows="4" placeholder="Enter your professional summary or auto-fill using AI"></textarea>
+                </div>
+            </div>
+
+            <!-- 3. Technical Skills -->
+            <div class="form-section-card">
+                <div class="section-card-title">
+                    <i class="ri-tools-line"></i> Technical Skills
+                </div>
+                <div class="form-field">
+                    <label>Skills List (Categorized or Comma-separated)</label>
+                    <textarea id="inpSkills" rows="5" placeholder="Enter your technical skills (categorized or comma-separated)"></textarea>
+                </div>
+            </div>
+
+            <!-- 4. Key Projects -->
+            <div class="form-section-card">
+                <div class="section-card-title">
+                    <i class="ri-rocket-line"></i> Projects
+                </div>
+                <div id="projectEntriesContainer"></div>
+                <button type="button" class="btn-add-item" id="btnAddProject">
+                    <i class="ri-add-line"></i> Add Project Entry
+                </button>
+            </div>
+
+            <!-- 5. Work Experience -->
+            <div class="form-section-card">
+                <div class="section-card-title">
+                    <i class="ri-briefcase-line"></i> Experience
+                </div>
+                <div id="experienceEntriesContainer"></div>
+                <button type="button" class="btn-add-item" id="btnAddExperience">
+                    <i class="ri-add-line"></i> Add Experience Entry
+                </button>
+            </div>
+
+            <!-- 6. Education -->
+            <div class="form-section-card">
+                <div class="section-card-title">
+                    <i class="ri-graduation-cap-line"></i> Education
+                </div>
+                <div id="educationEntriesContainer"></div>
+                <button type="button" class="btn-add-item" id="btnAddEducation">
+                    <i class="ri-add-line"></i> Add Education Entry
+                </button>
+            </div>
+
+            <!-- 7. Achievements -->
+            <div class="form-section-card">
+                <div class="section-card-title">
+                    <i class="ri-award-line"></i> Achievements
+                </div>
+                <div id="customSectionsContainer"></div>
+                <button type="button" class="btn-add-item" id="btnAddCustomSection">
+                    <i class="ri-add-line"></i> Add Custom Section
+                </button>
+            </div>
+
+        </div>
+
+        <!-- Right Preview Pane -->
+        <div class="builder-preview-pane">
+
+            <div class="preview-toolbar">
+                <span>📄 Live Auto-Paginated A4 Canvas</span>
+                <button class="btn-refetch-server" id="btnRefetchData">
+                    <i class="ri-refresh-line"></i> Refetch Saved Data
+                </button>
+            </div>
+
+            <div class="pages-container" id="pagesContainer">
+                <!-- Resume rendered dynamically -->
+            </div>
+
+        </div>
+
+    <!-- Mobile Desktop View Recommendation Modal Overlay -->
+    <div class="mobile-desktop-notice-overlay" id="mobileDesktopNoticeOverlay">
+        <div class="mobile-desktop-card">
+            <div class="notice-icon"><i class="ri-computer-line"></i></div>
+            <h2>Desktop View Recommended</h2>
+            <p>The ATS Resume Builder & Side-by-Side Live Paper Preview is designed for Desktop & Laptop screens. Please switch your mobile browser to <strong>"Desktop Site"</strong> mode for the optimal editing experience.</p>
+            <div class="notice-actions">
+                <button class="btn-gradient" id="btnDismissMobileNotice" style="width:100%; padding:12px 20px;">
+                    Continue to Mobile Workspace
+                </button>
+                <a href="dashboard.html" class="btn-outline" style="display:block; text-decoration:none; text-align:center; padding:12px 20px;">
+                    Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/config.js"></script>
+    <script src="../js/storage.js"></script>
+    <script src="../js/toast.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/builder.js"></script>
+</body>
+
+</html>

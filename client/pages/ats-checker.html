@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI ATS Resume Reviewer & Career Coach | Resuvix AI</title>
+    <meta name="description" content="Professional AI ATS Resume Analyzer, Career Coach, and Technical Recruiter audit with 100-point exact weighting system and 15-section report.">
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Remix Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../assets/logo/favicon.png">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/home.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+
+    <style>
+        .user-dropdown-menu {
+            position: absolute;
+            top: 70px;
+            right: 0;
+            width: 220px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            padding: 12px;
+            box-shadow: var(--shadow-lg);
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            z-index: 1500;
+        }
+        .user-dropdown-menu.show {
+            display: flex;
+        }
+        .dropdown-item-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-light);
+            transition: all 0.2s ease;
+            width: 100%;
+            text-align: left;
+        }
+        .dropdown-item-btn:hover {
+            background: rgba(108, 99, 255, 0.08);
+            color: var(--primary);
+        }
+
+        /* ATS Auditor Glass UI */
+        .ats-hero-card {
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 24px;
+            padding: 36px;
+            box-shadow: 0 20px 45px rgba(108, 99, 255, 0.06);
+            margin-bottom: 36px;
+        }
+
+        .input-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .input-field-wrap label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 800;
+            font-size: 14px;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .modern-glass-input {
+            width: 100%;
+            padding: 16px 20px;
+            border-radius: 16px;
+            border: 1.5px solid rgba(226, 232, 240, 0.9);
+            background: rgba(248, 250, 252, 0.85);
+            font-family: inherit;
+            font-size: 14.5px;
+            color: var(--text);
+            outline: none;
+            transition: all 0.25s ease;
+            box-sizing: border-box;
+        }
+
+        .modern-glass-textarea {
+            width: 100%;
+            padding: 16px 20px;
+            border-radius: 16px;
+            border: 1.5px solid rgba(226, 232, 240, 0.9);
+            background: rgba(248, 250, 252, 0.85);
+            font-family: inherit;
+            font-size: 14px;
+            color: var(--text);
+            outline: none;
+            transition: all 0.25s ease;
+            box-sizing: border-box;
+            resize: vertical;
+        }
+
+        .dropzone-area {
+            border: 2px dashed rgba(108, 99, 255, 0.35);
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.03), rgba(6, 182, 212, 0.04));
+            border-radius: 20px;
+            padding: 32px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dropzone-area:hover {
+            border-color: #6C63FF;
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.08), rgba(6, 182, 212, 0.12));
+        }
+
+        .file-selected-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(34, 197, 94, 0.12);
+            color: #166534;
+            border: 1.5px solid #22C55E;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 13px;
+            margin-top: 10px;
+        }
+
+        /* Clean Mobile Divider */
+        .modern-divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 24px 0;
+            width: 100%;
+        }
+        .divider-line {
+            flex: 1;
+            height: 1px;
+            background: rgba(226, 232, 240, 0.9);
+        }
+        .divider-text {
+            font-size: 11.5px;
+            font-weight: 800;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        /* 15-Section Dynamic Report Cards */
+        .ats-results-dashboard {
+            display: none;
+            animation: fadeIn 0.4s ease;
+            position: relative;
+        }
+
+        .score-hero-container {
+            background: linear-gradient(135deg, #0F172A, #1E293B);
+            color: #ffffff;
+            border-radius: 24px;
+            padding: 36px;
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 32px;
+            align-items: center;
+            margin-bottom: 28px;
+            box-shadow: 0 20px 45px rgba(15, 23, 42, 0.15);
+        }
+
+        .score-gauge-ring {
+            width: 170px;
+            height: 170px;
+            border-radius: 50%;
+            background: conic-gradient(var(--gauge-color, #22C55E) calc(var(--score-pct, 86) * 1%), rgba(255, 255, 255, 0.1) 0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+
+        .score-gauge-center {
+            width: 132px;
+            height: 132px;
+            border-radius: 50%;
+            background: #0F172A;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .score-main-val {
+            font-size: 2.8rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .report-section-card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 32px;
+            margin-bottom: 28px;
+            box-shadow: 0 15px 35px rgba(15, 23, 42, 0.04);
+        }
+
+        .report-section-card h3 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text);
+            margin: 0 0 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .report-section-card p.sub {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+
+        .weight-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+        }
+
+        .weight-card {
+            background: rgba(248, 250, 252, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 16px 20px;
+        }
+
+        .weight-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .weight-title {
+            font-size: 13.5px;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .weight-score {
+            font-weight: 800;
+            font-size: 15px;
+        }
+
+        .weight-reason {
+            font-size: 12.5px;
+            color: var(--text-light);
+            line-height: 1.4;
+        }
+
+        /* Scrollable Table Container for Mobile */
+        .table-responsive-container {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 16px;
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            margin-top: 10px;
+        }
+
+        .report-table {
+            width: 100%;
+            min-width: 600px;
+            border-collapse: collapse;
+        }
+
+        .report-table th, .report-table td {
+            padding: 14px 18px;
+            text-align: left;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            font-size: 13.5px;
+        }
+
+        .report-table th {
+            background: rgba(248, 250, 252, 0.95);
+            font-weight: 800;
+            color: var(--text);
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        .priority-card {
+            border-radius: 18px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border-left: 5px solid;
+            background: rgba(248, 250, 252, 0.85);
+        }
+
+        .priority-critical { border-color: #EF4444; background: rgba(254, 242, 242, 0.9); }
+        .priority-high { border-color: #F97316; background: rgba(255, 247, 237, 0.9); }
+        .priority-medium { border-color: #FACC15; background: rgba(254, 252, 232, 0.9); }
+        .priority-optional { border-color: #22C55E; background: rgba(240, 253, 244, 0.9); }
+
+        .rewrite-box {
+            background: rgba(248, 250, 252, 0.8);
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            border-radius: 18px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        /* Guest Lock Blur Overlay */
+        .guest-blurred-wrapper {
+            position: relative;
+            filter: blur(10px);
+            opacity: 0.55;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .guest-lock-card-overlay {
+            position: absolute;
+            top: 250px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 580px;
+            background: rgba(15, 23, 42, 0.94);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1.5px solid rgba(255, 255, 255, 0.25);
+            border-radius: 28px;
+            padding: 40px 32px;
+            text-align: center;
+            color: #ffffff;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+            z-index: 100;
+        }
+
+        .guest-lock-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6C63FF, #06B6D4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 20px;
+            color: #ffffff;
+            box-shadow: 0 10px 25px rgba(108, 99, 255, 0.4);
+        }
+
+        .guest-lock-btns {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        .guest-register-btn {
+            padding: 14px 28px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1.5px solid rgba(255, 255, 255, 0.4);
+            color: #ffffff !important;
+            font-weight: 800;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.25s ease;
+        }
+
+        .guest-register-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: #ffffff;
+        }
+
+        /* Complete Mobile & Tablet Responsive Enhancements */
+        @media (max-width: 768px) {
+            .dash-main {
+                padding-top: 90px !important;
+                padding-bottom: 40px !important;
+            }
+            .dash-container {
+                padding: 0 12px !important;
+            }
+            .ats-hero-card, .report-section-card {
+                padding: 20px 16px !important;
+                border-radius: 20px !important;
+            }
+            .score-hero-container {
+                grid-template-columns: 1fr !important;
+                padding: 24px 16px !important;
+                text-align: center !important;
+                gap: 20px !important;
+            }
+            .input-grid-2 {
+                grid-template-columns: 1fr !important;
+                gap: 16px !important;
+            }
+            .guest-lock-card-overlay {
+                width: 94% !important;
+                padding: 28px 18px !important;
+                top: 180px !important;
+            }
+            .guest-lock-btns {
+                flex-direction: column !important;
+                gap: 12px !important;
+            }
+            .guest-register-btn {
+                width: 100% !important;
+            }
+            .grid-2-col {
+                grid-template-columns: 1fr !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="dashboard-body">
+
+    <div class="gradient-bg"></div>
+    <div class="gradient-bg bg2"></div>
+    <div class="gradient-bg bg3"></div>
+
+    <!-- Header Navigation -->
+    <header class="dash-header">
+        <div class="dash-nav">
+            <div class="dash-nav-left">
+                <button class="drawer-trigger" id="drawerTrigger" title="Open Navigation Menu">
+                    <i class="ri-menu-2-line"></i>
+                </button>
+                <a href="../index.html" class="dash-logo">
+                    <img src="../assets/logo/logo.png" alt="Resuvix AI">
+                </a>
+            </div>
+
+            <div class="dash-nav-right" id="headerAuthNav">
+                <!-- Dynamic Auth Buttons or Profile Pill -->
+            </div>
+        </div>
+    </header>
+
+    <!-- Slide Drawer -->
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+
+    <aside class="chatgpt-drawer" id="chatgptDrawer">
+        <div class="drawer-top">
+            <div class="drawer-brand">
+                <a href="../index.html" class="logo">
+                    <img src="../assets/logo/logo.png" alt="Resuvix AI">
+                </a>
+                <button class="drawer-close" id="drawerClose">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+
+            <nav class="drawer-menu-list">
+                <a href="dashboard.html" class="drawer-item">
+                    <i class="ri-dashboard-3-line"></i> Dashboard
+                </a>
+                <a href="dashboard.html" class="drawer-item" id="navItemResumes">
+                    <i class="ri-file-list-3-line"></i> AI Resumes
+                </a>
+                <a href="ats-checker.html" class="drawer-item active" id="navItemATS">
+                    <i class="ri-bar-chart-box-line"></i> ATS Checker
+                </a>
+                <a href="dashboard.html" class="drawer-item" id="navItemInterview">
+                    <i class="ri-user-voice-line"></i> Interview Prep
+                </a>
+                <a href="dashboard.html" class="drawer-item" id="navItemCoverLetter">
+                    <i class="ri-draft-line"></i> Cover Letters
+                </a>
+                <a href="admin.html" class="drawer-item" id="navItemAdmin" style="display: none;">
+                    <i class="ri-shield-user-line"></i> Admin Panel
+                </a>
+            </nav>
+        </div>
+
+        <div class="drawer-bottom">
+            <div class="drawer-pro-card" id="drawerUpgradeCard">
+                <h4>🚀 Upgrade to Pro</h4>
+                <p>Unlock unlimited AI resume generation and advanced ATS reports.</p>
+                <button class="btn-drawer-upgrade" id="btnDrawerUpgrade">Upgrade Now</button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="dash-main">
+        <div class="dash-container">
+
+            <!-- Hero Welcome -->
+            <div class="dash-welcome" style="margin-bottom: 28px;">
+                <div class="dash-welcome-text">
+                    <h1>Free AI ATS Resume Auditor & Evaluator 🎯</h1>
+                    <p>Scan your resume instantly for a 100-point ATS score. No login required to view your score card and top recommendations!</p>
+                </div>
+                <div class="dash-actions-row">
+                    <a href="../index.html" class="btn-outline" style="padding: 10px 20px; text-decoration: none; border-radius: 999px;">
+                        <i class="ri-home-4-line"></i> Back to Home
+                    </a>
+                </div>
+            </div>
+
+            <!-- Upload Card -->
+            <div class="ats-hero-card">
+                <form id="atsUploadForm">
+
+                    <div class="input-grid-2">
+                        <div>
+                            <label><i class="ri-file-pdf-line" style="color:#6C63FF;"></i> 1. Candidate Resume (PDF / DOCX)</label>
+                            <div class="dropzone-area" id="dropzoneArea">
+                                <input type="file" id="pdfFileInput" accept=".pdf,.docx,.txt" style="display: none;">
+                                <div style="font-size: 32px; color: var(--primary); margin-bottom: 8px;"><i class="ri-upload-cloud-2-line"></i></div>
+                                <h4 style="font-size: 14.5px; font-weight: 800; color: var(--text);">Drop PDF Resume here or Click to Select</h4>
+                                <p style="font-size: 12px; color: var(--text-light);">Supports PDF & DOCX up to 10MB</p>
+                                <div id="fileSelectedBadge" style="display: none;"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label><i class="ri-briefcase-4-line" style="color:#6C63FF;"></i> 2. Target Job Role (Optional)</label>
+                            <input type="text" id="targetRoleInput" class="modern-glass-input" placeholder="e.g. Senior Full Stack Developer / Financial Accountant (Leave blank for General Audit)">
+
+                            <label style="margin-top: 14px;"><i class="ri-file-list-3-line" style="color:#6C63FF;"></i> Job Description (Optional - For Targeted JD Match)</label>
+                            <textarea id="jdTextInput" class="modern-glass-textarea" rows="3" placeholder="Paste target Job Description text here for role-specific keyword matching..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Clean Flexbox Divider -->
+                    <div class="modern-divider">
+                        <span class="divider-line"></span>
+                        <span class="divider-text">OR PASTE RESUME TEXT</span>
+                        <span class="divider-line"></span>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <label><i class="ri-file-text-line" style="color:#6C63FF;"></i> Plain Resume Content Text (Optional)</label>
+                        <textarea id="resumeTextInput" class="modern-glass-textarea" rows="3" placeholder="Paste your resume plain text if PDF file is not available on this device..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-scan-ats" id="btnScanATS" style="width: 100%; padding: 16px; font-size: 15px; border-radius: 16px; background: linear-gradient(135deg, #6C63FF, #06B6D4); color: white; border: none; font-weight: 800; cursor: pointer;">
+                        <i class="ri-sparkling-fill"></i> Check Free ATS Score Now
+                    </button>
+
+                </form>
+            </div>
+
+            <!-- Dynamic 15-Section AI Results Dashboard -->
+            <div class="ats-results-dashboard" id="atsResultsDashboard">
+
+                <!-- Section 1: Overall ATS Score Hero (100% VISIBLE FOR ALL) -->
+                <div class="score-hero-container">
+                    <div class="score-gauge-ring" id="scoreGaugeRing" style="--score-pct: 86; --gauge-color: #22C55E;">
+                        <div class="score-gauge-center">
+                            <span class="score-main-val" id="resScoreNum">86</span>
+                            <span style="font-size: 11px; font-weight: 800; color: #94A3B8; text-transform: uppercase;">OUT OF 100</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px; flex-wrap: wrap;">
+                            <span id="resMatchLevelBadge" style="padding: 6px 14px; border-radius: 999px; font-weight: 800; font-size: 12.5px; background: rgba(34, 197, 94, 0.2); color: #22C55E;">Good Match</span>
+                            <span id="resAnalysisTypeBadge" style="padding: 6px 14px; border-radius: 999px; font-weight: 700; font-size: 12px; background: rgba(255, 255, 255, 0.1); color: #CBD5E1;">General ATS Analysis</span>
+                        </div>
+                        <h2 style="font-size: 1.6rem; font-weight: 800; margin-bottom: 6px;" id="resTargetRoleHeading">ATS Compatibility Audit</h2>
+                        <p id="resSummaryFeedbackText" style="font-size: 14px; color: #CBD5E1; line-height: 1.5;"></p>
+                    </div>
+                </div>
+
+                <!-- Section 2: Score Breakdown (100-Point Exact Weighting System) (100% VISIBLE FOR ALL) -->
+                <div class="report-section-card">
+                    <h3><i class="ri-calculator-fill" style="color: var(--primary);"></i> 2. 100-Point Score Breakdown</h3>
+                    <p class="sub">Measurable criteria allocation across 8 core evaluation categories. Deductions explained below.</p>
+
+                    <div class="weight-grid" id="scoreBreakdownGrid"></div>
+                </div>
+
+                <!-- Preview Section 3: Top 2 Initial Suggestions (100% VISIBLE FOR ALL) -->
+                <div class="report-section-card">
+                    <h3><i class="ri-lightbulb-fill" style="color: #F59E0B;"></i> Key Preview Actionable Recommendations</h3>
+                    <p class="sub">Top priority fixes identified by our AI Technical Recruiter.</p>
+                    <div id="previewRecommendationsContainer"></div>
+                </div>
+
+                <!-- GUEST BLUR OVERLAY CONTAINER FOR SECTIONS 4-15 -->
+                <div id="guestBlurWrapper">
+
+                    <!-- Section 4 & 5: Strengths & Critical Issues -->
+                    <div class="grid-2-col" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 28px;">
+                        <div class="report-section-card" style="margin-bottom: 0;">
+                            <h3><i class="ri-checkbox-circle-fill" style="color: #22C55E;"></i> 4. Resume Strengths</h3>
+                            <p class="sub">Key document highlights passing ATS algorithms.</p>
+                            <ul id="resumeStrengthsList" style="padding-left: 20px; font-size: 14px; color: var(--text-light); line-height: 1.7;"></ul>
+                        </div>
+
+                        <div class="report-section-card" style="margin-bottom: 0;">
+                            <h3><i class="ri-error-warning-fill" style="color: #EF4444;"></i> 5. Critical Issues</h3>
+                            <p class="sub">Primary bottlenecks causing recruiter rejections.</p>
+                            <ul id="criticalIssuesList" style="padding-left: 20px; font-size: 14px; color: #991B1B; line-height: 1.7;"></ul>
+                        </div>
+                    </div>
+
+                    <!-- Section 6: Missing Keywords Table -->
+                    <div class="report-section-card">
+                        <h3><i class="ri-key-2-line" style="color: #EF4444;"></i> 6. Missing Role Keywords</h3>
+                        <p class="sub">High-value skills & competencies missing from candidate text.</p>
+                        <div class="table-responsive-container">
+                            <table class="report-table">
+                                <thead>
+                                    <tr>
+                                        <th>Keyword</th>
+                                        <th>Status</th>
+                                        <th>Importance</th>
+                                        <th>Actionable Recommendation</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="missingKeywordsTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Section 7: Matched Keywords Table -->
+                    <div class="report-section-card">
+                        <h3><i class="ri-check-double-line" style="color: #22C55E;"></i> 7. Matched Keywords</h3>
+                        <p class="sub">Verbatim technical skills successfully detected in your PDF.</p>
+                        <div class="table-responsive-container">
+                            <table class="report-table">
+                                <thead>
+                                    <tr>
+                                        <th>Keyword</th>
+                                        <th>Status</th>
+                                        <th>Importance</th>
+                                        <th>Recommendation</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="matchedKeywordsTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Section 8: Skills Gap Analysis -->
+                    <div class="report-section-card">
+                        <h3><i class="ri-mind-map" style="color: #6C63FF;"></i> 8. Skills Gap Analysis</h3>
+                        <p class="sub">Comparison of skills present vs missing vs recommended priority integration order.</p>
+
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px;">
+                            <div style="background: rgba(34, 197, 94, 0.06); padding: 18px; border-radius: 16px; border: 1px solid rgba(34, 197, 94, 0.2);">
+                                <h4 style="color: #166534; font-size: 13.5px; font-weight: 800; margin-bottom: 8px;">✅ Skills Present in PDF:</h4>
+                                <div id="skillsPresentBadges" style="display: flex; flex-wrap: wrap; gap: 6px;"></div>
+                            </div>
+                            <div style="background: rgba(239, 68, 68, 0.06); padding: 18px; border-radius: 16px; border: 1px solid rgba(239, 68, 68, 0.2);">
+                                <h4 style="color: #991B1B; font-size: 13.5px; font-weight: 800; margin-bottom: 8px;">❌ Skills Missing:</h4>
+                                <div id="skillsMissingBadges" style="display: flex; flex-wrap: wrap; gap: 6px;"></div>
+                            </div>
+                            <div style="background: rgba(108, 99, 255, 0.06); padding: 18px; border-radius: 16px; border: 1px solid rgba(108, 99, 255, 0.2);">
+                                <h4 style="color: var(--primary); font-size: 13.5px; font-weight: 800; margin-bottom: 8px;">🚀 Recommended Priority Order:</h4>
+                                <ol id="skillsPriorityOrderList" style="padding-left: 18px; font-size: 13px; color: var(--text); line-height: 1.6; margin: 0;"></ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 9: Section-Wise Feedback -->
+                    <div class="report-section-card">
+                        <h3><i class="ri-layout-grid-line" style="color: #06B6D4;"></i> 9. Section-Wise Feedback</h3>
+                        <p class="sub">Detailed audit for every core section with quality rating & expected score boost.</p>
+
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;" id="sectionWiseFeedbackGrid"></div>
+                    </div>
+
+                    <!-- Section 10: Project Review -->
+                    <div class="report-section-card">
+                        <h3><i class="ri-folder-code-line" style="color: #A855F7;"></i> 10. Project Review</h3>
+                        <p class="sub">Evaluation of project relevance, weaknesses, and quantified achievement bullet rewrites.</p>
+                        <div id="projectReviewContainer"></div>
+                    </div>
+
+                    <!-- Section 11: Experience Review -->
+                    <div class="report-section-card">
+                        <h3><i class="ri-sparkling-fill" style="color: #6C63FF;"></i> 11. Work Experience Executive Rewrites</h3>
+                        <p class="sub">Replaces passive wording with high-impact action verbs and metric indicators.</p>
+                        <div id="experienceReviewContainer"></div>
+                    </div>
+
+                    <!-- Section 12 & 13: Formatting & Grammar Review -->
+                    <div class="grid-2-col" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 28px;">
+                        <div class="report-section-card" style="margin-bottom: 0;">
+                            <h3><i class="ri-ruler-2-line" style="color: #F59E0B;"></i> 12. ATS Formatting Review</h3>
+                            <p class="sub">Layout, searchable text, tables, and section title scanability.</p>
+                            <div id="formattingReviewBox"></div>
+                        </div>
+
+                        <div class="report-section-card" style="margin-bottom: 0;">
+                            <h3><i class="ri-edit-2-line" style="color: #A855F7;"></i> 13. Grammar & Typography Review</h3>
+                            <p class="sub">Line-by-line spell check, brand capitalization, and readability score.</p>
+                            <div id="grammarReviewBox"></div>
+                        </div>
+                    </div>
+
+                    <!-- Section 14: Top 10 Prioritized Recommendations -->
+                    <div class="report-section-card">
+                        <h3><i class="ri-list-check-2" style="color: #F59E0B;"></i> 14. Top Prioritized Actionable Recommendations</h3>
+                        <p class="sub">Categorized into 🔴 Critical, 🟠 High Priority, 🟡 Medium Priority, and 🟢 Optional Improvements.</p>
+                        <div id="topRecommendationsContainer"></div>
+                    </div>
+
+                    <!-- Section 15: Estimated ATS Score After Improvements Callout -->
+                    <div style="background: linear-gradient(135deg, #0F172A, #1E293B); border-radius: 24px; padding: 36px; text-align: center; color: #ffffff; margin-bottom: 40px; box-shadow: 0 20px 45px rgba(15, 23, 42, 0.15);">
+                        <span style="padding: 6px 16px; border-radius: 999px; background: rgba(34, 197, 94, 0.2); color: #22C55E; font-weight: 800; font-size: 13px; text-transform: uppercase;">15. POTENTIAL ATS SCORE ESTIMATION</span>
+                        <h2 style="font-size: 2.2rem; font-weight: 800; margin: 12px 0 8px;">
+                            Current: <span id="currentScoreBadgeText" style="color: #EF4444;">86/100</span> ➔ Potential: <span id="potentialScoreBadgeText" style="color: #22C55E;">96/100</span>
+                        </h2>
+                        <p style="font-size: 14.5px; color: #CBD5E1; max-width: 600px; margin: 0 auto 24px;">Applying these recommendations will increase your ATS compatibility score by <strong id="potentialScoreBoostText" style="color: #38BDF8;">+10 Points</strong>, maximizing interview callback chances.</p>
+                    </div>
+
+                </div>
+
+                <!-- DYNAMIC GUEST LOCK CARD OVERLAY -->
+                <div class="guest-lock-card-overlay" id="guestLockCardOverlay" style="display: none;">
+                    <div class="guest-lock-icon"><i class="ri-lock-2-fill"></i></div>
+                    <h3 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 10px;">Unlock Full 15-Section AI ATS Audit Report</h3>
+                    <p style="font-size: 14px; color: #CBD5E1; line-height: 1.6; margin-bottom: 24px;">Log in or create a free account to unlock missing keywords tables, detailed section feedback, project rewrites, and prioritized recommendations.</p>
+                    <div class="guest-lock-btns">
+                        <a href="../login.html?redirect=ats-checker" class="btn-gradient" style="padding: 14px 28px; text-decoration: none; width: 100%;">Log In to Unlock Report</a>
+                        <a href="../register.html?redirect=ats-checker" class="guest-register-btn">Create Free Account</a>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="../js/config.js"></script>
+    <script src="../js/storage.js"></script>
+    <script src="../js/toast.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/ats-checker.js"></script>
+</body>
+
+</html>

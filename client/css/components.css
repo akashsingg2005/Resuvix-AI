@@ -51,7 +51,7 @@
 }
 
 .logo img{
-    width:165px;
+    width:210px;
     height:auto;
     display:block;
     object-fit:contain;
@@ -2163,3 +2163,86 @@ body{
     opacity:1;
     transform:translateY(0);
 }
+
+/* ===========================
+   FLOATING GLASS TOAST SYSTEM
+=========================== */
+.toast-container {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 999999;
+    pointer-events: none;
+}
+
+.toast {
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 320px;
+    max-width: 420px;
+    padding: 14px 20px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 16px;
+    box-shadow: 0 15px 35px rgba(15, 23, 42, 0.12);
+    transform: translateX(120%);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.toast.show {
+    transform: translateX(0);
+}
+
+.toast-icon {
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.toast.success .toast-icon { color: #22C55E; }
+.toast.error .toast-icon { color: #EF4444; }
+.toast.warning .toast-icon { color: #F59E0B; }
+.toast.info .toast-icon { color: #6C63FF; }
+
+.toast.success { border-left: 4px solid #22C55E; }
+.toast.error { border-left: 4px solid #EF4444; }
+.toast.warning { border-left: 4px solid #F59E0B; }
+.toast.info { border-left: 4px solid #6C63FF; }
+
+.toast-content {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.4;
+    flex: 1;
+}
+
+.toast-close {
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: var(--text-light);
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s ease;
+}
+
+.toast-close:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--text);
+}

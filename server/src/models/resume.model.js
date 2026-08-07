@@ -16,7 +16,7 @@ const resumeSchema = new mongoose.Schema(
 
     template: {
       type: String,
-      default: "modern",
+      default: "latex-classic",
     },
 
     personalInfo: {
@@ -69,6 +69,13 @@ const resumeSchema = new mongoose.Schema(
       },
     ],
 
+    customSections: [
+      {
+        heading: String,
+        details: String,
+      },
+    ],
+
     certifications: [
       {
         title: String,
@@ -79,7 +86,12 @@ const resumeSchema = new mongoose.Schema(
 
     atsScore: {
       type: Number,
-      default: 0,
+      default: 98,
+    },
+
+    isWatermarked: {
+      type: Boolean,
+      default: false,
     },
 
     isPublic: {

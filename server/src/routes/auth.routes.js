@@ -2,6 +2,7 @@ import express from "express";
 
 import {
   register,
+  sendRegisterOTPController,
   login,
   logout,
   refresh,
@@ -23,9 +24,10 @@ import {
 
 const router = express.Router();
 
+router.post("/send-register-otp", sendRegisterOTPController);
+
 router.post(
   "/register",
-  validate(registerSchema),
   register
 );
 

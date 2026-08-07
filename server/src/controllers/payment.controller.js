@@ -12,25 +12,45 @@ export const getKey = async (req, res) => {
   });
 };
 
-export const createOrder = async (req, res, next) => {
+export const getPricing = async (req, res, next) => {
   try {
-    const { resumeId, couponCode } = req.body;
-
-    if (!resumeId) {
-      return res.status(400).json({
-        success: false,
-        message: "Resume ID is required",
-      });
-    }
-
-    // Get settings
     let settings = await Settings.findOne();
 
     if (!settings) {
       settings = await Settings.create({});
     }
 
-    const originalAmount = settings.premiumDownloadPrice;
+    const singlePrice = settings.premiumDownloadPrice || 199;
+    const proPrice = settings.bulkDownloadPrice || 499;
+
+    res.status(200).json({
+      success: true,
+      pricing: {
+        freePrice: 0,
+        singlePrice,
+        proPrice,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const createOrder = async (req, res, next) => {
+  try {
+    const { resumeId, couponCode, plan } = req.body;
+
+    // Get settings dynamically from database
+    let settings = await Settings.findOne();
+
+    if (!settings) {
+      settings = await Settings.create({});
+    }
+
+    const singlePrice = settings.premiumDownloadPrice || 199;
+    const proPrice = settings.bulkDownloadPrice || 499;
+
+    const originalAmount = plan === "unlimited" ? proPrice : singlePrice;
 
     let discountAmount = 0;
     let finalAmount = originalAmount;
@@ -72,13 +92,9 @@ export const createOrder = async (req, res, next) => {
       }
 
       if (coupon.discountType === "percentage") {
-        discountAmount =
-          (originalAmount * coupon.discountValue) / 100;
+        discountAmount = (originalAmount * coupon.discountValue) / 100;
 
-        if (
-          coupon.maxDiscount > 0 &&
-          discountAmount > coupon.maxDiscount
-        ) {
+        if (coupon.maxDiscount > 0 && discountAmount > coupon.maxDiscount) {
           discountAmount = coupon.maxDiscount;
         }
       } else {
@@ -90,15 +106,15 @@ export const createOrder = async (req, res, next) => {
 
     // Create Razorpay order
     const razorpayOrder = await razorpay.orders.create({
-      amount: finalAmount * 100,
+      amount: Math.round(finalAmount * 100),
       currency: "INR",
-      receipt: `resume_${resumeId}`,
+      receipt: resumeId ? `resume_${resumeId}` : `sub_${Date.now()}`,
     });
 
     // Save order
     const order = await Order.create({
       user: req.user._id,
-      resume: resumeId,
+      resume: resumeId || null,
       coupon: coupon?._id || null,
       originalAmount,
       discountAmount,
@@ -123,14 +139,12 @@ export const createOrder = async (req, res, next) => {
   }
 };
 
-
 export const verifyPayment = async (req, res, next) => {
   try {
     const {
       razorpay_order_id,
       razorpay_payment_id,
       razorpay_signature,
-      resumeId,
     } = req.body;
 
     const generatedSignature = crypto
@@ -148,7 +162,6 @@ export const verifyPayment = async (req, res, next) => {
     const order = await Order.findOneAndUpdate(
       {
         razorpayOrderId: razorpay_order_id,
-        resume: resumeId,
         user: req.user._id,
       },
       {
@@ -163,17 +176,46 @@ export const verifyPayment = async (req, res, next) => {
     );
 
     if (order?.coupon) {
-  await Coupon.findByIdAndUpdate(order.coupon, {
-    $inc: {
-      usedCount: 1,
-    },
-  });
-}
+      await Coupon.findByIdAndUpdate(order.coupon, {
+        $inc: {
+          usedCount: 1,
+        },
+      });
+    }
+
+    // Set user as Premium and update plan access in database
+    const User = (await import("../models/user.model.js")).default;
+    let settings = await Settings.findOne();
+    const isProPlan = order.originalAmount === (settings?.bulkDownloadPrice || 499);
+
+    const updateData = {
+      premium: true,
+      planType: isProPlan ? "pro" : "single",
+    };
+
+    if (isProPlan) {
+      // 1 Year subscription expiry from today
+      const oneYearFromNow = new Date();
+      oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1);
+      updateData.subscriptionExpiresAt = oneYearFromNow;
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user._id,
+      isProPlan
+        ? updateData
+        : {
+            ...updateData,
+            $inc: { paidResumesCount: 1, paidInterviewsCount: 1 },
+          },
+      { new: true }
+    );
 
     return res.status(200).json({
       success: true,
-      message: "Payment verified successfully",
+      message: "Payment verified successfully. Premium access activated!",
       order,
+      user: updatedUser,
     });
   } catch (error) {
     next(error);

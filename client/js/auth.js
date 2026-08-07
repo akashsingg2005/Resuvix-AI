@@ -115,17 +115,79 @@ class AuthController {
         }
 
         if (this.registerForm) {
-
             this.registerForm.addEventListener(
-
                 "submit",
-
                 this.handleRegister.bind(this)
-
             );
 
+            const btnSendOtp = document.getElementById("btnSendOtp");
+            const btnResendOtp = document.getElementById("btnResendOtp");
+            if (btnSendOtp) btnSendOtp.addEventListener("click", () => this.handleSendRegisterOTP());
+            if (btnResendOtp) btnResendOtp.addEventListener("click", () => this.handleSendRegisterOTP());
         }
 
+    }
+
+    /**
+     * Handle Send Registration OTP
+     */
+    async handleSendRegisterOTP() {
+        const emailInput = document.getElementById("email");
+        const otpGroup = document.getElementById("otpGroup");
+        const btnSendOtp = document.getElementById("btnSendOtp");
+        const btnResendOtp = document.getElementById("btnResendOtp");
+        const otpStatusMsg = document.getElementById("otpStatusMsg");
+
+        if (!emailInput || !emailInput.value.trim()) {
+            toast.error("Please enter your email address first.");
+            if (emailInput) emailInput.focus();
+            return;
+        }
+
+        const email = emailInput.value.trim();
+        if (!Validator.isEmail(email)) {
+            toast.error("Please enter a valid email address.");
+            return;
+        }
+
+        try {
+            if (btnSendOtp) btnSendOtp.disabled = true;
+            if (btnResendOtp) btnResendOtp.disabled = true;
+            toast.info(`Sending verification OTP to ${email}...`);
+
+            const res = await AuthAPI.sendRegisterOTP(email);
+            toast.success(res.message || "OTP sent to your email!");
+
+            if (otpGroup) otpGroup.style.display = "block";
+            if (btnSendOtp) btnSendOtp.textContent = "Resend OTP";
+
+            // If debug OTP returned (e.g. dev mode), auto display for easy testing
+            if (res.debugOTP && otpStatusMsg) {
+                otpStatusMsg.innerHTML = `<span style="color: var(--success); font-weight: 700;">OTP Sent! Code: ${res.debugOTP}</span>`;
+            } else if (otpStatusMsg) {
+                otpStatusMsg.textContent = "6-digit OTP code sent to your email inbox.";
+            }
+
+            // Countdown on resend
+            let countdown = 60;
+            const interval = setInterval(() => {
+                countdown--;
+                if (btnResendOtp) btnResendOtp.textContent = `Resend in ${countdown}s`;
+                if (countdown <= 0) {
+                    clearInterval(interval);
+                    if (btnResendOtp) {
+                        btnResendOtp.disabled = false;
+                        btnResendOtp.textContent = "Resend OTP";
+                    }
+                    if (btnSendOtp) btnSendOtp.disabled = false;
+                }
+            }, 1000);
+
+        } catch (err) {
+            if (btnSendOtp) btnSendOtp.disabled = false;
+            if (btnResendOtp) btnResendOtp.disabled = false;
+            toast.error(err.message || "Failed to send verification OTP.");
+        }
     }
 
     /**
@@ -488,10 +550,15 @@ class AuthController {
             toast.success("Login successful.");
 
             setTimeout(() => {
+                const params = new URLSearchParams(window.location.search);
+                const redirect = params.get("redirect");
+                const hasPending = typeof sessionStorage !== "undefined" && sessionStorage.getItem("resuvix_pending_ats_report");
 
-                window.location.href =
-                    "./pages/dashboard.html";
-
+                if (redirect === "ats-checker" || hasPending) {
+                    window.location.href = "./pages/ats-checker.html";
+                } else {
+                    window.location.href = "./pages/dashboard.html";
+                }
             }, 800);
 
         }
@@ -546,6 +613,12 @@ class AuthController {
         const confirmPassword =
             document.getElementById("confirmPassword");
 
+        const registerOtp =
+            document.getElementById("registerOtp");
+
+        const otpGroup =
+            document.getElementById("otpGroup");
+
         let valid = true;
 
         valid &= this.validateField(fullName);
@@ -559,6 +632,17 @@ class AuthController {
 
             return;
 
+        }
+
+        if (!registerOtp || !registerOtp.value.trim() || registerOtp.value.trim().length !== 6) {
+            if (otpGroup && otpGroup.style.display === "none") {
+                toast.info("Click 'Send OTP' to verify your email first.");
+                await this.handleSendRegisterOTP();
+                return;
+            }
+            toast.error("Please enter the 6-digit OTP sent to your email.");
+            if (registerOtp) registerOtp.focus();
+            return;
         }
 
         this.setLoading(
@@ -579,7 +663,9 @@ class AuthController {
 
                 email: email.value.trim(),
 
-                password: password.value
+                password: password.value,
+
+                otp: registerOtp.value.trim()
 
             });
 
@@ -595,17 +681,18 @@ class AuthController {
 
             );
 
-            toast.success(
-
-                "Registration successful."
-
-            );
+            toast.success("Registration successful.");
 
             setTimeout(() => {
+                const params = new URLSearchParams(window.location.search);
+                const redirect = params.get("redirect");
+                const hasPending = typeof sessionStorage !== "undefined" && sessionStorage.getItem("resuvix_pending_ats_report");
 
-                window.location.href =
-                    "./pages/dashboard.html";
-
+                if (redirect === "ats-checker" || hasPending) {
+                    window.location.href = "./pages/ats-checker.html";
+                } else {
+                    window.location.href = "./pages/dashboard.html";
+                }
             }, 800);
 
         }
@@ -645,28 +732,17 @@ class AuthController {
      */
 
     async logout() {
-
         try {
-
             await AuthAPI.logout();
-
         }
-
         catch (error) {
-
             console.error(error);
-
         }
-
         finally {
-
             Storage.logout();
-
-            window.location.href =
-                "../login.html";
-
+            const isInPages = window.location.pathname.includes('/pages/');
+            window.location.href = isInPages ? "../login.html" : "./login.html";
         }
-
     }
 
     /**

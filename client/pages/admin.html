@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Resuvix AI</title>
+    <meta name="description" content="Admin Control Panel for Resuvix AI SaaS">
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Remix Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../assets/logo/favicon.png">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/home.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+
+    <style>
+        .admin-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 16px;
+        }
+        .admin-table th, .admin-table td {
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        .admin-table th {
+            background: rgba(108, 99, 255, 0.08);
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+        .admin-table th:first-child { border-top-left-radius: 16px; }
+        .admin-table th:last-child { border-top-right-radius: 16px; }
+        .admin-card {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow-sm);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        .form-control {
+            width: 100%;
+            padding: 12px 18px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+        }
+        .form-control:focus {
+            border-color: var(--primary);
+        }
+    </style>
+</head>
+
+<body class="dashboard-body">
+
+    <!-- Background -->
+    <div class="gradient-bg"></div>
+    <div class="gradient-bg bg2"></div>
+    <div class="gradient-bg bg3"></div>
+
+    <!-- Header -->
+    <header class="dash-header">
+        <div class="dash-nav">
+            <div class="dash-nav-left">
+                <a href="dashboard.html" class="drawer-trigger" title="Back to Dashboard" style="text-decoration: none;">
+                    <i class="ri-arrow-left-line"></i>
+                </a>
+                <a href="../index.html" class="dash-logo">
+                    <img src="../assets/logo/logo.png" alt="Resuvix AI">
+                </a>
+            </div>
+            <div class="dash-nav-right">
+                <span class="dash-badge-pro"><i class="ri-shield-flash-line"></i> Admin Panel</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="dash-main">
+        <div class="dash-container">
+            <div class="dash-welcome">
+                <div>
+                    <h1>System Admin Dashboard 🛡️</h1>
+                    <p>Manage pricing, generate coupons, inspect revenue metrics & configuration.</p>
+                </div>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon purple"><i class="ri-money-dollar-circle-line"></i></div>
+                    <div class="stat-info">
+                        <span>Total Revenue</span>
+                        <h2 id="admTotalRev">₹14,970</h2>
+                        <p class="text-primary">+24% this month</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon cyan"><i class="ri-user-star-line"></i></div>
+                    <div class="stat-info">
+                        <span>Premium Users</span>
+                        <h2 id="admPremUsers">42</h2>
+                        <p class="text-primary">Paid Subscriptions</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon green"><i class="ri-coupon-3-line"></i></div>
+                    <div class="stat-info">
+                        <span>Coupons Redeemed</span>
+                        <h2 id="admCouponsUsed">18</h2>
+                        <p style="color: var(--success);">Active Promos</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon amber"><i class="ri-ai-generate"></i></div>
+                    <div class="stat-info">
+                        <span>AI Generations</span>
+                        <h2 id="admGenCount">0</h2>
+                        <p style="color: var(--warning);">Gemini 2.0 Flash</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pricing & Platform Configuration -->
+            <div class="admin-card">
+                <div class="section-head">
+                    <h3>⚙️ Pricing & Global Settings</h3>
+                </div>
+                <form id="pricingSettingsForm" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;">
+                    <div class="form-group">
+                        <label>Platform Name</label>
+                        <input type="text" id="cfgSiteName" class="form-control" value="Resuvix AI">
+                    </div>
+                    <div class="form-group">
+                        <label>Single Resume Download Price (₹)</label>
+                        <input type="number" id="cfgSinglePrice" class="form-control" value="49">
+                    </div>
+                    <div class="form-group">
+                        <label>Pro Unlimited Pass Price (₹)</label>
+                        <input type="number" id="cfgPrice" class="form-control" value="499">
+                    </div>
+                    <div class="form-group">
+                        <label>AI Provider</label>
+                        <select id="cfgAIProvider" class="form-control">
+                            <option value="Gemini" selected>Google Gemini API</option>
+                            <option value="OpenAI">OpenAI GPT-4o</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <button type="submit" class="btn-gradient" style="padding: 14px 28px;">
+                            Save Settings
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Coupon Management -->
+            <div class="admin-card">
+                <div class="section-head" style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3>🎟️ Coupon Code Management</h3>
+                    <button class="btn-outline" id="btnOpenCreateCoupon" style="padding: 10px 20px;">
+                        <i class="ri-add-line"></i> Create Coupon
+                    </button>
+                </div>
+
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Type</th>
+                            <th>Discount</th>
+                            <th>Used / Limit</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="couponsTableBody">
+                        <!-- Loaded dynamically -->
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Create Coupon Modal -->
+    <div class="modal-overlay" id="couponModalOverlay">
+        <div class="premium-modal" style="max-width: 500px;">
+            <button class="modal-close-btn" id="couponModalClose">
+                <i class="ri-close-line"></i>
+            </button>
+            <h3 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 20px;">Create New Coupon</h3>
+            <form id="createCouponForm">
+                <div class="form-group">
+                    <label>Coupon Code</label>
+                    <input type="text" id="cpCode" class="form-control" placeholder="e.g. LAUNCH50" required style="text-transform: uppercase;">
+                </div>
+                <div class="form-group">
+                    <label>Discount Type</label>
+                    <select id="cpType" class="form-control">
+                        <option value="percentage">Percentage (%)</option>
+                        <option value="fixed">Fixed Amount (₹)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Discount Value</label>
+                    <input type="number" id="cpValue" class="form-control" placeholder="50" required>
+                </div>
+                <div class="form-group">
+                    <label>Usage Limit</label>
+                    <input type="number" id="cpLimit" class="form-control" value="100">
+                </div>
+                <div style="display: flex; gap: 12px; margin-top: 24px;">
+                    <button type="submit" class="btn-gradient" style="flex: 1;">Create</button>
+                    <button type="button" class="btn-outline" id="btnCancelCouponModal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/config.js"></script>
+    <script src="../js/storage.js"></script>
+    <script src="../js/toast.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/admin.js"></script>
+</body>
+
+</html>

@@ -9,13 +9,37 @@ import {
   duplicateResume,
 } from "../repositories/resume.repository.js";
 
+import User from "../models/user.model.js";
+
 /**
- * Create Resume
+ * Create New Resume with Permanent Free Quota Enforcement & Watermarking
+ * Allows saving multiple different resumes per user account.
  */
 export const createResumeService = async (userId, resumeData) => {
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  let isWatermarked = false;
+
+  if (!user.premium) {
+    if (!user.hasUsedFreeQuota) {
+      // First resume ever created for free user: unlocked PDF export
+      isWatermarked = false;
+      user.hasUsedFreeQuota = true;
+      await user.save();
+    } else {
+      // Second or subsequent resume for non-premium user: saved with watermark
+      isWatermarked = true;
+    }
+  }
+
+  // Create a new distinct resume document in MongoDB
   return await createResume({
     ...resumeData,
     user: userId,
+    isWatermarked,
   });
 };
 
@@ -65,7 +89,7 @@ export const updateResumeService = async (
 };
 
 /**
- * Delete Resume
+ * Delete Resume (Preserves user.hasUsedFreeQuota permanently in DB)
  */
 export const deleteResumeService = async (
   resumeId,
@@ -101,6 +125,8 @@ export const duplicateResumeService = async (
     throw new ApiError(403, "Access denied");
   }
 
+  const user = await User.findById(userId);
+
   const copiedResume = resume.toObject();
 
   delete copiedResume._id;
@@ -108,6 +134,7 @@ export const duplicateResumeService = async (
   delete copiedResume.updatedAt;
 
   copiedResume.title = `${resume.title} (Copy)`;
+  copiedResume.isWatermarked = !user.premium;
 
   return await duplicateResume(copiedResume);
 };

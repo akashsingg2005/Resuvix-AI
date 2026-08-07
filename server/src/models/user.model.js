@@ -41,6 +41,32 @@ const userSchema = new mongoose.Schema(
       default: false,
     },
 
+    planType: {
+      type: String,
+      enum: ["free", "single", "pro"],
+      default: "free",
+    },
+
+    subscriptionExpiresAt: {
+      type: Date,
+      default: null,
+    },
+
+    paidResumesCount: {
+      type: Number,
+      default: 0,
+    },
+
+    paidInterviewsCount: {
+      type: Number,
+      default: 0,
+    },
+
+    hasUsedFreeQuota: {
+      type: Boolean,
+      default: false,
+    },
+
     refreshToken: {
       type: String,
       default: null,
@@ -58,15 +84,14 @@ const userSchema = new mongoose.Schema(
     },
 
     resetOTP: {
-    type: String,
-    default: null
-},
+      type: String,
+      default: null,
+    },
 
-resetOTPExpiry: {
-    type: Date,
-    default: null
-},
-
+    resetOTPExpiry: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,

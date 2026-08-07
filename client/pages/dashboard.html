@@ -2,345 +2,607 @@
 <html lang="en">
 
 <head>
-
-    <!-- =========================================================
-         META
-    ========================================================== -->
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Resuvix AI - AI Powered Career Platform</title>
+    <meta name="description" content="Manage your AI resumes, ATS analysis, and interview preparation.">
 
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0">
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <title>Dashboard • Resuvix AI</title>
+    <!-- Remix Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
 
-    <meta
-        name="description"
-        content="Resuvix AI — AI Powered Career Platform Dashboard">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../assets/logo/favicon.png">
 
-    <!-- =========================================================
-         FAVICON
-    ========================================================== -->
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/home.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/responsive.css">
 
-    <link
-        rel="icon"
-        href="../assets/logo/favicon.png">
-
-    <!-- =========================================================
-         GOOGLE FONT
-    ========================================================== -->
-
-    <link rel="preconnect"
-        href="https://fonts.googleapis.com">
-
-    <link rel="preconnect"
-        href="https://fonts.gstatic.com"
-        crossorigin>
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
-
-    <!-- =========================================================
-         REMIX ICONS
-    ========================================================== -->
-
-    <link
-        href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css"
-        rel="stylesheet">
-
-    <!-- =========================================================
-         CSS
-    ========================================================== -->
-
-    <link rel="stylesheet"
-        href="../css/global.css">
-
-    <link rel="stylesheet"
-        href="../css/components.css">
-
-    <link rel="stylesheet"
-        href="../css/dashboard.css">
-
+    <style>
+        .modal-body-content {
+            margin-top: 20px;
+        }
+        .form-label {
+            display: block;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s ease;
+            background: #ffffff;
+        }
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.15);
+        }
+        .form-group-margin {
+            margin-bottom: 20px;
+        }
+        .user-dropdown-menu {
+            position: absolute;
+            top: 70px;
+            right: 0;
+            width: 220px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            padding: 12px;
+            box-shadow: var(--shadow-lg);
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            z-index: 1500;
+        }
+        .user-dropdown-menu.show {
+            display: flex;
+        }
+        .dropdown-item-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-light);
+            transition: all 0.2s ease;
+            width: 100%;
+            text-align: left;
+        }
+        .dropdown-item-btn:hover {
+            background: rgba(108, 99, 255, 0.08);
+            color: var(--primary);
+        }
+    </style>
 </head>
 
-<body>
+<body class="dashboard-body">
 
-    <!-- =========================================================
-         FLOATING BACKGROUND
-    ========================================================== -->
-
+    <!-- Landing Page Animated Background Continuity -->
     <div class="gradient-bg"></div>
     <div class="gradient-bg bg2"></div>
     <div class="gradient-bg bg3"></div>
 
-    <!-- =========================================================
-         DASHBOARD LAYOUT
-    ========================================================== -->
-
-    <div class="dashboard-layout">
-
-        <!-- =====================================================
-             SIDEBAR
-        ====================================================== -->
-
-        <aside
-            class="sidebar"
-            id="sidebar">
-
-            <div class="sidebar-scroll">
-
-                <nav class="sidebar-nav">
-
-                    <a
-                        href="#"
-                        class="active">
-
-                        <i class="ri-dashboard-fill"></i>
-                        <span>Dashboard</span>
-
-                    </a>
-
-                    <a href="#resume-builder">
-
-                        <i class="ri-file-list-3-line"></i>
-                        <span>Resume Builder</span>
-
-                    </a>
-
-                    <a href="#templates">
-
-                        <i class="ri-layout-grid-line"></i>
-                        <span>Templates</span>
-
-                    </a>
-
-                    <a href="#ats">
-
-                        <i class="ri-bar-chart-box-line"></i>
-                        <span>ATS Checker</span>
-
-                    </a>
-
-                    <a href="#interview">
-
-                        <i class="ri-robot-2-line"></i>
-                        <span>AI Interview</span>
-
-                    </a>
-
-                    <a href="#cover-letter">
-
-                        <i class="ri-file-paper-line"></i>
-                        <span>Cover Letter</span>
-
-                    </a>
-
-                    <a href="#history">
-
-                        <i class="ri-history-line"></i>
-                        <span>Resume History</span>
-
-                    </a>
-
-                    <a href="#tracker">
-
-                        <i class="ri-briefcase-4-line"></i>
-                        <span>Job Tracker</span>
-
-                    </a>
-
-                    <a href="#analytics">
-
-                        <i class="ri-line-chart-line"></i>
-                        <span>Analytics</span>
-
-                    </a>
-
-                    <a href="#premium">
-
-                        <i class="ri-vip-crown-line"></i>
-                        <span>Premium</span>
-
-                    </a>
-
-                    <a href="#settings">
-
-                        <i class="ri-settings-3-line"></i>
-                        <span>Settings</span>
-
-                    </a>
-
-                </nav>
-
-            </div>
-
-            <!-- Fixed Bottom Profile -->
-
-            <div class="sidebar-footer">
-
-                <div class="user-card">
-
-                    <div class="user-avatar">
-
-                        <img
-                            id="userAvatar"
-                            src="../assets/images/default-avatar.png"
-                            alt="User">
-
-                    </div>
-
-                    <div class="user-info">
-
-                        <h4 id="userName">
-                            Loading...
-                        </h4>
-
-                        <p id="userEmail">
-                            loading@email.com
-                        </p>
-
-                    </div>
-
-                </div>
-
-                <button
-                    id="logoutBtn"
-                    class="sidebar-logout">
-
-                    <i class="ri-logout-box-r-line"></i>
-
-                    <span>Logout</span>
-
+    <!-- ==========================================
+            FLOATING GLASS HEADER
+    =========================================== -->
+    <header class="dash-header">
+        <div class="dash-nav">
+            <div class="dash-nav-left">
+                <button class="drawer-trigger" id="drawerTrigger" title="Open Navigation Menu">
+                    <i class="ri-menu-2-line"></i>
                 </button>
-
+                <a href="../index.html" class="dash-logo">
+                    <img src="../assets/logo/logo.png" alt="Resuvix AI">
+                </a>
             </div>
 
-        </aside>
-
-        <!-- =====================================================
-             MAIN CONTENT
-        ====================================================== -->
-
-        <main class="main-content">
-
-            <!-- =================================================
-                 TOP NAVBAR
-            ================================================== -->
-
-            <header class="dashboard-navbar">
-
-                <div class="navbar-left">
-
-                    <button
-                        id="menuToggle"
-                        class="icon-btn">
-
-                        <i class="ri-menu-2-line"></i>
-
-                    </button>
-
-                    <a
-                        href="../index.html"
-                        class="logo">
-
-                        <img
-                            src="../assets/logo/logo.png"
-                            alt="Resuvix AI">
-
-                    </a>
-
+            <div class="dash-nav-right">
+                <div id="planBadgeContainer">
+                    <span class="dash-badge-free" id="userPlanBadge"><i class="ri-sparkling-fill"></i> Free Tier</span>
                 </div>
 
-                <div class="navbar-center">
+                <div class="icon-btn-wrap">
+                    <button class="dash-icon-btn" id="notifBellBtn" title="Notifications">
+                        <i class="ri-notification-3-line"></i>
+                        <span class="unread-dot"></span>
+                    </button>
+                </div>
 
-                    <div class="search-box">
+                <div style="position: relative;">
+                    <div class="user-profile-menu" id="userProfilePill">
+                        <div class="user-avatar-small" id="userAvatarText">A</div>
+                        <span class="user-name-abbr" id="userNameText">Account</span>
+                        <i class="ri-arrow-down-s-line"></i>
+                    </div>
 
-                        <i class="ri-search-line"></i>
+                    <!-- Profile Dropdown -->
+                    <div class="user-dropdown-menu" id="userDropdownMenu">
+                        <button class="dropdown-item-btn" id="dropBtnBilling">
+                            <i class="ri-bank-card-line"></i> Payment Details
+                        </button>
+                        <button class="dropdown-item-btn" id="dropBtnAdmin" style="display: none;">
+                            <i class="ri-shield-user-line"></i> Admin Panel
+                        </button>
+                        <button class="dropdown-item-btn" id="dropBtnLogout" style="color: #EF4444;">
+                            <i class="ri-logout-box-r-line" style="color: #EF4444;"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
 
-                        <input
-                            type="text"
-                            placeholder="Search resumes, templates, AI tools...">
+    <!-- ==========================================
+            CHATGPT STYLE SLIDE DRAWER
+    =========================================== -->
+    <div class="drawer-overlay" id="drawerOverlay"></div>
 
+    <aside class="chatgpt-drawer" id="chatgptDrawer">
+        <div class="drawer-top">
+            <div class="drawer-brand">
+                <a href="../index.html" class="logo">
+                    <img src="../assets/logo/logo.png" alt="Resuvix AI">
+                </a>
+                <button class="drawer-close" id="drawerClose">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+
+            <nav class="drawer-menu-list">
+                <a href="dashboard.html" class="drawer-item active" id="navItemDash">
+                    <i class="ri-dashboard-3-line"></i> Dashboard
+                </a>
+                <a href="builder.html" class="drawer-item" id="navItemResumes">
+                    <i class="ri-file-list-3-line"></i> AI Resume Builder
+                </a>
+                <a href="ats-checker.html" class="drawer-item" id="navItemATS">
+                    <i class="ri-bar-chart-box-line"></i> ATS Checker
+                </a>
+                <a href="#" class="drawer-item" id="navItemInterview">
+                    <i class="ri-user-voice-line"></i> Interview Prep
+                </a>
+                <a href="#" class="drawer-item" id="navItemCoverLetter">
+                    <i class="ri-draft-line"></i> Cover Letters
+                </a>
+                <a href="#" class="drawer-item" id="navItemBilling">
+                    <i class="ri-bank-card-line"></i> Payment Details
+                </a>
+                <a href="admin.html" class="drawer-item" id="navItemAdmin" style="display: none;">
+                    <i class="ri-shield-user-line"></i> Admin Panel
+                </a>
+            </nav>
+        </div>
+
+        <div class="drawer-bottom">
+            <div class="drawer-pro-card" id="drawerUpgradeCard">
+                <h4>🚀 Upgrade to Pro</h4>
+                <p>Unlock unlimited AI resume generation and advanced ATS reports.</p>
+                <button class="btn-drawer-upgrade" id="btnDrawerUpgrade">Upgrade Now</button>
+            </div>
+
+            <button class="drawer-item" id="drawerLogoutBtn" style="width: 100%; margin-top: 16px; color: #EF4444;">
+                <i class="ri-logout-box-r-line" style="color: #EF4444;"></i> Logout
+            </button>
+        </div>
+    </aside>
+
+    <!-- ==========================================
+            DASHBOARD MAIN CONTAINER
+    =========================================== -->
+    <main class="dash-main">
+        <div class="dash-container">
+
+            <!-- Dynamic Greeting Header -->
+            <div class="dash-welcome">
+                <div class="dash-welcome-text">
+                    <h1>Good Morning, <span class="text-gradient" id="greetingUserName">User</span> 👋</h1>
+                    <p>Continue building your career with AI-powered resume insights and optimization.</p>
+                </div>
+                <div class="dash-actions-row">
+                    <button class="btn-gradient" id="btnCreateAIResume">
+                        <i class="ri-sparkling-fill"></i> Create AI Resume
+                    </button>
+                </div>
+            </div>
+
+            <!-- Statistics Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon purple">
+                        <i class="ri-file-code-line"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span>AI Resumes</span>
+                        <h2 id="statResumeCount">0 / 1 Free</h2>
+                        <p class="text-muted" id="statResumeSub">First AI resume free forever</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon cyan">
+                        <i class="ri-bar-chart-2-line"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span>ATS Score</span>
+                        <h2 id="statATSScore">94%</h2>
+                        <p class="text-primary">High Recruiter Match</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon green">
+                        <i class="ri-user-voice-line"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span>Interview Prep</span>
+                        <h2>88%</h2>
+                        <p style="color: var(--success);">Top 10% Candidate</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon amber">
+                        <i class="ri-briefcase-4-line"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span>Job Market</span>
+                        <h2>High Demand</h2>
+                        <p style="color: var(--warning);">240+ Active Openings</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions Section -->
+            <div class="quick-actions-section">
+                <div class="section-head">
+                    <h3>⚡ Quick Actions</h3>
+                </div>
+                <div class="actions-grid">
+
+                    <!-- Card 1: AI Resume Generator -->
+                    <div class="action-card" id="quickCardCreateAI">
+                        <div class="action-card-header">
+                            <div class="icon-box" style="width: 48px; height: 48px; font-size: 22px;">
+                                <i class="ri-ai-generate"></i>
+                            </div>
+                            <span class="action-badge ai" id="aiActionBadge">1 Free Left</span>
+                        </div>
+                        <h4>AI Resume Generator</h4>
+                        <p>Generate a recruiter-friendly ATS resume customized for your dream role.</p>
+                        <button class="btn-gradient btn-action-card" id="btnQuickAIResume" style="margin-top: 14px; width: 100%; font-size: 13px; padding: 10px 16px; border-radius: 12px;">
+                            <i class="ri-sparkling-fill"></i> Launch Builder <i class="ri-arrow-right-line"></i>
+                        </button>
+                    </div>
+
+                    <!-- Card 2: ATS Score Checker -->
+                    <div class="action-card" id="quickCardATS">
+                        <div class="action-card-header">
+                            <div class="icon-box" style="width: 48px; height: 48px; font-size: 22px; color: var(--accent);">
+                                <i class="ri-shield-check-line"></i>
+                            </div>
+                            <span class="action-badge free">Free</span>
+                        </div>
+                        <h4>ATS Score Checker</h4>
+                        <p>Scan existing resumes against ATS algorithms and fix formatting flaws.</p>
+                        <button class="btn-outline btn-action-card" id="btnQuickATS" style="margin-top: 14px; width: 100%; font-size: 13px; padding: 10px 16px; border-radius: 12px; border-color: var(--accent); color: var(--accent);">
+                            <i class="ri-bar-chart-2-line"></i> Check ATS Score <i class="ri-arrow-right-line"></i>
+                        </button>
+                    </div>
+
+                    <!-- Card 3: AI Mock Interview -->
+                    <div class="action-card" id="quickCardInterview">
+                        <div class="action-card-header">
+                            <div class="icon-box" style="width: 48px; height: 48px; font-size: 22px; color: var(--success);">
+                                <i class="ri-mic-line"></i>
+                            </div>
+                            <span class="action-badge free">Free</span>
+                        </div>
+                        <h4>AI Mock Interview</h4>
+                        <p>Practice HR and technical interview questions with real-time AI feedback.</p>
+                        <button class="btn-outline btn-action-card" id="btnQuickInterview" style="margin-top: 14px; width: 100%; font-size: 13px; padding: 10px 16px; border-radius: 12px; border-color: var(--success); color: var(--success);">
+                            <i class="ri-user-voice-line"></i> Start Practice <i class="ri-arrow-right-line"></i>
+                        </button>
+                    </div>
+
+                    <!-- Card 4: Cover Letter Writer -->
+                    <div class="action-card" id="quickCardCoverLetter">
+                        <div class="action-card-header">
+                            <div class="icon-box" style="width: 48px; height: 48px; font-size: 22px; color: var(--warning);">
+                                <i class="ri-file-paper-2-line"></i>
+                            </div>
+                            <span class="action-badge free">Free</span>
+                        </div>
+                        <h4>Cover Letter Writer</h4>
+                        <p>Instantly generate personalized cover letters for targeted roles.</p>
+                        <button class="btn-outline btn-action-card" id="btnQuickCoverLetter" style="margin-top: 14px; width: 100%; font-size: 13px; padding: 10px 16px; border-radius: 12px; border-color: var(--warning); color: var(--warning);">
+                            <i class="ri-draft-line"></i> Write Cover Letter <i class="ri-arrow-right-line"></i>
+                        </button>
                     </div>
 
                 </div>
+            </div>
 
-                <div class="navbar-right">
-
-                    <button class="icon-btn">
-
-                        <i class="ri-notification-3-line"></i>
-
-                    </button>
-
-                    <button class="profile-dropdown">
-
-                        <img
-                            id="navAvatar"
-                            src="../assets/images/default-avatar.png"
-                            alt="Profile">
-
-                        <i class="ri-arrow-down-s-line"></i>
-
-                    </button>
-
+            <!-- Resumes List Section -->
+            <div class="recent-resumes-section">
+                <div class="section-head">
+                    <h3>📄 My Resumes</h3>
+                    <span class="text-muted" style="font-size: 14px; font-weight: 600;">Unlimited Editing, Previewing & Downloading</span>
                 </div>
 
-            </header>
-
-            <!-- =================================================
-                 HERO SECTION
-            ================================================== -->
-
-            <section class="dashboard-hero">
-
-                <div class="hero-left">
-
-                    <span class="hero-badge">
-
-                        <i class="ri-sparkling-2-fill"></i>
-
-                        AI Career Workspace
-
-                    </span>
-
-                    <h1>
-
-                        <span id="greetingText">
-                            Good Morning
-                        </span>
-
-                        <br>
-
-                        <span id="heroUserName">
-                            Loading...
-                        </span>
-
-                    </h1>
-
-                    <p>
-
-                        Build resumes, improve ATS score, prepare for interviews,
-                        and manage your complete career journey from one AI-powered
-                        dashboard.
-
-                    </p>
-
+                <div class="recent-resumes-grid" id="recentResumesGrid">
+                    <!-- Loaded dynamically via JS -->
+                    <div class="empty-resumes-card" id="emptyResumesCard">
+                        <div class="empty-icon">
+                            <i class="ri-file-add-line"></i>
+                        </div>
+                        <h3>No AI Resumes Generated Yet</h3>
+                        <p style="max-width: 420px; margin: 10px auto 20px;">You haven't generated your first AI resume yet. Your first AI-generated resume is 100% FREE forever!</p>
+                        <button class="btn-gradient" id="btnCreateFirstResume">
+                            <i class="ri-sparkling-fill"></i> Create My First AI Resume (FREE)
+                        </button>
+                    </div>
                 </div>
+            </div>
 
-                <div class="hero-right">
+        </div>
+    </main>
 
-                    <button class="btn-gradient">
+    <!-- ==========================================
+            1. CREATE AI RESUME WIZARD MODAL
+    =========================================== -->
+    <div class="modal-overlay" id="createResumeModalOverlay">
+        <div class="premium-modal">
+            <button class="modal-close-btn" class="closeModalBtn" onclick="document.getElementById('createResumeModalOverlay').classList.remove('active')">
+                <i class="ri-close-line"></i>
+            </button>
+            <div class="premium-modal-header">
+                <div class="premium-icon-badge" style="background: linear-gradient(135deg, var(--primary), var(--accent));">
+                    <i class="ri-magic-line"></i>
+                </div>
+                <h2>Create AI-Tailored Resume</h2>
+                <p>Enter your targeted job role & key skills. Our AI will draft a complete ATS resume.</p>
+            </div>
 
-                        <i class="ri-add-circle-line"></i>
-
-                        New Resume
-
+            <form id="aiResumeWizardForm" class="modal-body-content">
+                <div class="form-group-margin">
+                    <label class="form-label">Target Job Title</label>
+                    <input type="text" id="wizJobTitle" class="form-input" placeholder="e.g. Senior Software Engineer / Data Analyst" required>
+                </div>
+                <div class="form-group-margin">
+                    <label class="form-label">Experience Level</label>
+                    <select id="wizExpLevel" class="form-select">
+                        <option value="Entry-Level">Entry-Level / Fresher</option>
+                        <option value="Mid-Level" selected>Mid-Level (2-5 Years)</option>
+                        <option value="Senior-Level">Senior / Lead (5+ Years)</option>
+                    </select>
+                </div>
+                <div class="form-group-margin">
+                    <label class="form-label">Core Skills (Comma separated)</label>
+                    <input type="text" id="wizSkills" class="form-input" placeholder="e.g. Node.js, React, MongoDB, System Design">
+                </div>
+                <div style="display: flex; gap: 14px; margin-top: 24px;">
+                    <button type="submit" class="btn-gradient" id="btnGenerateResumeSubmit" style="flex: 1; padding: 14px;">
+                        <i class="ri-sparkling-fill"></i> Generate Resume
                     </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
+    <!-- ==========================================
+            2. ATS CHECKER SCANNER MODAL
+    =========================================== -->
+    <div class="modal-overlay" id="atsModalOverlay">
+        <div class="premium-modal" style="max-width: 680px;">
+            <button class="modal-close-btn" onclick="document.getElementById('atsModalOverlay').classList.remove('active')">
+                <i class="ri-close-line"></i>
+            </button>
+            <div class="premium-modal-header">
+                <div class="premium-icon-badge" style="background: linear-gradient(135deg, #06B6D4, #3B82F6);">
+                    <i class="ri-shield-check-line"></i>
+                </div>
+                <h2>ATS Resume Score Scanner</h2>
+                <p>Paste your resume text below to analyze ATS compatibility and keywords.</p>
+            </div>
+
+            <form id="atsScanForm" class="modal-body-content">
+                <div class="form-group-margin">
+                    <label class="form-label">Paste Resume Content / Summary</label>
+                    <textarea id="atsResumeText" class="form-textarea" rows="4" placeholder="Paste your resume text here..." required></textarea>
+                </div>
+                <button type="submit" class="btn-gradient" style="width: 100%; padding: 14px;">
+                    <i class="ri-bar-chart-2-line"></i> Analyze ATS Score
+                </button>
+            </form>
+
+            <div id="atsResultsContainer" style="display: none; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+                    <h4 style="font-size: 1.2rem; font-weight: 800;">ATS Compatibility Result</h4>
+                    <span id="atsScoreValue" class="ats-score-badge" style="font-size: 16px; padding: 8px 16px;">Score: 94%</span>
+                </div>
+                <div style="margin-bottom: 16px;">
+                    <strong style="font-size: 13px; text-transform: uppercase; color: var(--text-light);">Formatting & Content Tips:</strong>
+                    <ul id="atsTipsList" style="margin-top: 8px; font-size: 14px; color: var(--text-light); display: flex; flex-direction: column; gap: 6px;">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+            3. AI MOCK INTERVIEW MODAL
+    =========================================== -->
+    <div class="modal-overlay" id="interviewModalOverlay">
+        <div class="premium-modal" style="max-width: 720px;">
+            <button class="modal-close-btn" onclick="document.getElementById('interviewModalOverlay').classList.remove('active')">
+                <i class="ri-close-line"></i>
+            </button>
+            <div class="premium-modal-header">
+                <div class="premium-icon-badge" style="background: linear-gradient(135deg, #22C55E, #10B981);">
+                    <i class="ri-mic-line"></i>
+                </div>
+                <h2>AI Mock Interview Preparation</h2>
+                <p>Practice technical & HR viva questions generated specifically for your tech stack.</p>
+            </div>
+
+            <div id="interviewQuestionsList" class="modal-body-content" style="max-height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px;">
+                <!-- Loaded dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+            4. AI COVER LETTER MODAL
+    =========================================== -->
+    <div class="modal-overlay" id="coverLetterModalOverlay">
+        <div class="premium-modal" style="max-width: 680px;">
+            <button class="modal-close-btn" onclick="document.getElementById('coverLetterModalOverlay').classList.remove('active')">
+                <i class="ri-close-line"></i>
+            </button>
+            <div class="premium-modal-header">
+                <div class="premium-icon-badge" style="background: linear-gradient(135deg, #F59E0B, #D97706);">
+                    <i class="ri-file-paper-2-line"></i>
+                </div>
+                <h2>AI Cover Letter Writer</h2>
+                <p>Generate a customized, professional cover letter for your job applications.</p>
+            </div>
+
+            <form id="coverLetterForm" class="modal-body-content">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                    <div class="form-group-margin">
+                        <label class="form-label">Target Role</label>
+                        <input type="text" id="clTargetRole" class="form-input" placeholder="e.g. Frontend Developer" required>
+                    </div>
+                    <div class="form-group-margin">
+                        <label class="form-label">Company Name</label>
+                        <input type="text" id="clCompanyName" class="form-input" placeholder="e.g. Google / Amazon" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-gradient" style="width: 100%; padding: 14px; margin-bottom: 20px;">
+                    <i class="ri-draft-line"></i> Generate Cover Letter
+                </button>
+            </form>
+
+            <div id="clResultContainer" style="display: none;">
+                <textarea id="clOutputText" class="form-textarea" rows="8" readonly></textarea>
+                <button class="btn-outline" id="btnCopyCoverLetter" style="margin-top: 12px; width: 100%;">
+                    <i class="ri-file-copy-line"></i> Copy to Clipboard
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+            5. PREMIUM GLASS MODAL
+    =========================================== -->
+    <div class="modal-overlay" id="premiumModalOverlay">
+        <div class="premium-modal">
+            <button class="modal-close-btn" id="premiumModalClose">
+                <i class="ri-close-line"></i>
+            </button>
+
+            <div class="premium-modal-header">
+                <div class="premium-icon-badge">
+                    <i class="ri-vip-crown-fill"></i>
+                </div>
+                <h2>Unlock Unlimited AI Resume Creation</h2>
+                <p>You have already used your <strong>1 FREE AI Resume</strong>. Your first resume remains editable and downloadable forever. Upgrade to Pro to generate unlimited AI resumes.</p>
+            </div>
+
+            <!-- Plans Grid -->
+            <div class="plans-grid" id="modalPlansGrid">
+                <!-- Loaded dynamically -->
+            </div>
+
+            <!-- Coupon Box -->
+            <div class="coupon-box-row">
+                <input type="text" class="coupon-input" id="couponCodeInput" placeholder="Enter Coupon Code (e.g. RESUVIX50)">
+                <button class="btn-outline" id="btnApplyCoupon" style="padding: 12px 22px;">Apply</button>
+            </div>
+            <div id="couponMessage" style="font-size: 13px; font-weight: 600; margin-bottom: 16px; display: none;"></div>
+
+            <!-- Modal Action Buttons -->
+            <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+                <button class="btn-gradient" id="btnPayUpgrade" style="flex: 1; padding: 16px;">
+                    Upgrade Now & Unlock
+                </button>
+                <button class="btn-outline" id="btnCancelModal" style="padding: 16px 24px;">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+            6. PAYMENT & BILLING DETAILS MODAL
+    =========================================== -->
+    <div class="modal-overlay" id="billingModalOverlay">
+        <div class="premium-modal" style="max-width: 620px;">
+            <button class="modal-close-btn" onclick="document.getElementById('billingModalOverlay').classList.remove('active')">
+                <i class="ri-close-line"></i>
+            </button>
+            <div class="premium-modal-header">
+                <div class="premium-icon-badge" style="background: linear-gradient(135deg, #6C63FF, #06B6D4);">
+                    <i class="ri-bank-card-line"></i>
+                </div>
+                <h2>Payment & Plan Details</h2>
+                <p>View your active subscription plan, validity, and account benefits.</p>
+            </div>
+
+            <div class="modal-body-content">
+                <!-- Active Plan Box -->
+                <div style="background: linear-gradient(135deg, #0F172A, #1E293B); border-radius: 20px; padding: 24px; color: white; margin-bottom: 24px; position: relative;">
+                    <div style="font-size: 11.5px; font-weight: 800; color: #38BDF8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">CURRENT ACTIVE PASS</div>
+                    <h3 style="font-size: 1.5rem; font-weight: 800; color: white; margin: 0 0 8px;" id="billingPlanTitle">Free Starter Pass</h3>
+                    <div style="font-size: 13.5px; color: #CBD5E1; display: flex; align-items: center; gap: 8px;" id="billingPlanValidity">
+                        <i class="ri-time-line" style="color: #38BDF8;"></i> <span>Validity: Unlimited Free Tier</span>
+                    </div>
                 </div>
 
-            </section>
+                <!-- Benefits List -->
+                <h4 style="font-size: 15px; font-weight: 800; margin-bottom: 12px; color: var(--text);">Included Plan Benefits</h4>
+                <ul style="list-style: none; padding: 0; margin-bottom: 24px; font-size: 13.5px; display: flex; flex-direction: column; gap: 10px;" id="billingBenefitsList">
+                    <li style="display: flex; align-items: center; gap: 10px;"><i class="ri-checkbox-circle-fill" style="color: #22C55E;"></i> Unlimited Free ATS Score Checks</li>
+                    <li style="display: flex; align-items: center; gap: 10px;"><i class="ri-checkbox-circle-fill" style="color: #22C55E;"></i> Unlimited Free AI Cover Letters</li>
+                    <li style="display: flex; align-items: center; gap: 10px;"><i class="ri-checkbox-circle-fill" style="color: #22C55E;"></i> 1-Time Free AI Resume Build</li>
+                    <li style="display: flex; align-items: center; gap: 10px;"><i class="ri-checkbox-circle-fill" style="color: #22C55E;"></i> 1-Time Free AI Technical Mock Interview</li>
+                </ul>
 
-            <!-- Continue from the opening dashboard grid in Part 2 -->
+                <button class="btn-gradient" id="btnBillingUpgrade" style="width: 100%; padding: 14px; border-radius: 14px;">
+                    <i class="ri-sparkling-fill"></i> Upgrade / Manage Plan Access
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Razorpay Checkout SDK -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <!-- Scripts -->
+    <script src="../js/config.js"></script>
+    <script src="../js/storage.js"></script>
+    <script src="../js/toast.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/dashboard.js"></script>
+</body>
+
+</html>

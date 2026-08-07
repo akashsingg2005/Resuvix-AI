@@ -28,6 +28,10 @@ const Validator = {
 
     },
 
+    isEmail(email) {
+        return this.email(email);
+    },
+
     /**
      * Password Validation
      * Minimum:

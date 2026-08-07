@@ -26,23 +26,75 @@ import {
   saveResetOTP,
 } from "../repositories/auth.repository.js";
 
+import registerOTPTemplate from "../templates/registerOTP.template.js";
+
+// In-Memory Registration OTP Cache (No Database Storage)
+const registerOTPCache = new Map();
+
 /**
- * Register User
+ * Send Email OTP for Registration (via Nodemailer - No Database Storage)
  */
-export const registerUser = async ({ fullName, email, password }) => {
-  const existingUser = await findUserByEmail(email);
+export const sendRegisterOTP = async (email) => {
+  const normalizedEmail = String(email).toLowerCase().trim();
+  const existingUser = await findUserByEmail(normalizedEmail);
 
   if (existingUser) {
-    throw new ApiError(409, "Email already registered");
+    throw new ApiError(409, "This email is already registered. Please sign in.");
+  }
+
+  const otp = generateOTP();
+  const expiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes
+
+  // Save to temporary memory cache
+  registerOTPCache.set(normalizedEmail, { otp, expiresAt });
+
+  // Send Email via Nodemailer
+  await sendMail({
+    to: normalizedEmail,
+    subject: "Verify Your Resuvix AI Email Address",
+    html: registerOTPTemplate(otp),
+  });
+
+  return { success: true, message: "Verification OTP code sent successfully to your email." };
+};
+
+/**
+ * Register User with In-Memory OTP Verification
+ */
+export const registerUser = async ({ fullName, email, password, otp }) => {
+  const normalizedEmail = String(email).toLowerCase().trim();
+  const existingUser = await findUserByEmail(normalizedEmail);
+
+  if (existingUser) {
+    throw new ApiError(409, "Email is already registered");
+  }
+
+  // Verify OTP from memory cache
+  const cached = registerOTPCache.get(normalizedEmail);
+
+  if (!cached) {
+    throw new ApiError(400, "Please click 'Send Verification OTP Code' to receive an OTP first.");
+  }
+
+  if (String(cached.otp).trim() !== String(otp).trim()) {
+    throw new ApiError(400, "Invalid verification OTP code. Please check your email.");
+  }
+
+  if (cached.expiresAt < Date.now()) {
+    registerOTPCache.delete(normalizedEmail);
+    throw new ApiError(400, "Verification OTP code has expired. Please request a new code.");
   }
 
   const hashedPassword = await hashPassword(password);
 
   const user = await createUser({
-    fullName,
-    email,
+    fullName: fullName.trim(),
+    email: normalizedEmail,
     password: hashedPassword,
   });
+
+  // Clear memory cache upon successful registration
+  registerOTPCache.delete(normalizedEmail);
 
   const payload = {
     id: user._id,
@@ -55,17 +107,17 @@ export const registerUser = async ({ fullName, email, password }) => {
   await updateRefreshToken(user._id, refreshToken);
 
   return {
-  user: {
-    id: user._id,
-    fullName: user.fullName,
-    email: user.email,
-    avatar: user.avatar,
-    role: user.role,
-    premium: user.premium,
-  },
-  accessToken,
-  refreshToken,
-};
+    user: {
+      id: user._id,
+      fullName: user.fullName,
+      email: user.email,
+      avatar: user.avatar,
+      role: user.role,
+      premium: user.premium,
+    },
+    accessToken,
+    refreshToken,
+  };
 };
 
 /**
@@ -104,17 +156,17 @@ export const loginUser = async ({ email, password }) => {
   await updateLastLogin(user._id);
 
   return {
-  user: {
-    id: user._id,
-    fullName: user.fullName,
-    email: user.email,
-    avatar: user.avatar,
-    role: user.role,
-    premium: user.premium,
-  },
-  accessToken,
-  refreshToken,
-};
+    user: {
+      id: user._id,
+      fullName: user.fullName,
+      email: user.email,
+      avatar: user.avatar,
+      role: user.role,
+      premium: user.premium,
+    },
+    accessToken,
+    refreshToken,
+  };
 };
 
 /**
@@ -196,33 +248,25 @@ export const forgotPassword = async (email) => {
         );
     }
 
-    // Generate 6-digit OTP
     const otp = generateOTP();
 
-    // OTP expires in 10 minutes
     const expiry = new Date(
         Date.now() + 10 * 60 * 1000
     );
 
-    // Save OTP in MongoDB
     await saveResetOTP(
         user._id,
         otp,
         expiry
     );
 
-    // Send email
     await sendMail({
-
         to: user.email,
-
         subject: "Reset Your Resuvix AI Password",
-
         html: resetOTPTemplate(
             user.fullName,
             otp
         )
-
     });
 
     return true;
