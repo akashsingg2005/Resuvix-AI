@@ -9,7 +9,7 @@
 
 .navbar{
     position:fixed;
-    top:20px;
+    top:14px;
     left:0;
     width:100%;
     z-index:1000;
@@ -17,27 +17,30 @@
 }
 
 .navbar.scrolled{
-    top:10px;
+    top:8px;
 }
 
 .nav-wrapper{
     display:flex;
     align-items:center;
     justify-content:space-between;
+    width: min(90%, 1100px) !important;
+    margin: 0 auto;
 
-    background:rgba(255,255,255,.75);
+    background:rgba(255,255,255,.88);
 
-    backdrop-filter:blur(18px);
-    -webkit-backdrop-filter:blur(18px);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
 
-    border:1px solid rgba(255,255,255,.7);
+    border:1px solid rgba(255,255,255,.9);
 
     border-radius:999px;
 
-    padding:14px 22px;
+    padding:6px 20px;
+    min-height:52px;
 
     box-shadow:
-        0 10px 35px rgba(15,23,42,.08);
+        0 12px 30px rgba(108,99,255,.08);
 }
 
 /* ===========================
@@ -51,10 +54,12 @@
 }
 
 .logo img{
-    width:210px;
-    height:auto;
+    height:56px;
+    max-height:60px;
+    width:auto;
     display:block;
     object-fit:contain;
+    transition: transform 0.3s ease;
 }
 
 /* ===========================
@@ -2043,14 +2048,14 @@ body{
 .footer{
     background:#fff;
     border-top:1px solid var(--border);
-    margin-top:120px;
+    margin-top:40px;
 }
 
 .footer-grid{
     display:grid;
     grid-template-columns:2fr 1fr 1fr 1fr;
-    gap:50px;
-    padding:80px 0 50px;
+    gap:40px;
+    padding:40px 0 24px;
 }
 
 .footer-logo{

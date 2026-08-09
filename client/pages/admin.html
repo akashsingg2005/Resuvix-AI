@@ -26,11 +26,19 @@
     <link rel="stylesheet" href="../css/responsive.css">
 
     <style>
+        .admin-table-container {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-top: 16px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
         .admin-table {
             width: 100%;
             border-collapse: separate;
             border-spacing: 0;
-            margin-top: 16px;
+            min-width: 600px;
         }
         .admin-table th, .admin-table td {
             padding: 16px 20px;
@@ -43,9 +51,8 @@
             font-weight: 700;
             font-size: 13px;
             text-transform: uppercase;
+            white-space: nowrap;
         }
-        .admin-table th:first-child { border-top-left-radius: 16px; }
-        .admin-table th:last-child { border-top-right-radius: 16px; }
         .admin-card {
             background: rgba(255, 255, 255, 0.9);
             border: 1px solid var(--border);
@@ -74,6 +81,74 @@
         }
         .form-control:focus {
             border-color: var(--primary);
+        }
+
+        /* Mobile & Tablet Responsive Layout */
+        @media (max-width: 768px) {
+            .dash-main {
+                padding-top: 90px !important;
+                padding-bottom: 40px !important;
+            }
+            .dash-container {
+                width: 96% !important;
+                max-width: 100% !important;
+                padding: 0 10px !important;
+            }
+            .dash-welcome {
+                margin-bottom: 20px !important;
+            }
+            .dash-welcome h1 {
+                font-size: 1.6rem !important;
+            }
+            .dash-welcome p {
+                font-size: 13px !important;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 12px !important;
+            }
+            .stat-card {
+                padding: 14px 12px !important;
+                border-radius: 18px !important;
+            }
+            .stat-card h2 {
+                font-size: 1.3rem !important;
+            }
+            .admin-card {
+                padding: 20px 16px !important;
+                border-radius: 20px !important;
+                margin-bottom: 20px !important;
+            }
+            .admin-card .section-head {
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 12px !important;
+            }
+            .admin-card .section-head button {
+                width: 100% !important;
+                text-align: center;
+                justify-content: center;
+            }
+            .admin-table th, .admin-table td {
+                padding: 12px 14px !important;
+                font-size: 12.5px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr !important;
+            }
+            .dash-nav {
+                padding: 10px 16px !important;
+            }
+            .dash-logo img {
+                height: 42px !important;
+            }
+            .dash-badge-pro {
+                font-size: 11px !important;
+                padding: 4px 10px !important;
+            }
         }
     </style>
 </head>
@@ -192,21 +267,24 @@
                     </button>
                 </div>
 
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>Code</th>
-                            <th>Type</th>
-                            <th>Discount</th>
-                            <th>Used / Limit</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="couponsTableBody">
-                        <!-- Loaded dynamically -->
-                    </tbody>
-                </table>
+                <div class="admin-table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Type</th>
+                                <th>Discount</th>
+                                <th>Max Cap</th>
+                                <th>Used / Limit</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="couponsTableBody">
+                            <!-- Loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
         </div>
@@ -236,6 +314,10 @@
                     <input type="number" id="cpValue" class="form-control" placeholder="50" required>
                 </div>
                 <div class="form-group">
+                    <label>Max Discount Cap (₹) <span style="font-weight: 500; color: var(--text-light); font-size: 12px;">(Optional cap for %, e.g. 100)</span></label>
+                    <input type="number" id="cpMaxDiscount" class="form-control" placeholder="100 (0 for no cap)" value="0">
+                </div>
+                <div class="form-group">
                     <label>Usage Limit</label>
                     <input type="number" id="cpLimit" class="form-control" value="100">
                 </div>
@@ -254,6 +336,23 @@
     <script src="../js/api.js"></script>
     <script src="../js/auth.js"></script>
     <script src="../js/admin.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const drawerTrigger = document.getElementById("drawerTrigger");
+            const drawerClose = document.getElementById("drawerClose");
+            const drawerOverlay = document.getElementById("drawerOverlay");
+            const chatgptDrawer = document.getElementById("chatgptDrawer");
+
+            const toggleDrawer = () => {
+                chatgptDrawer?.classList.toggle("open");
+                drawerOverlay?.classList.toggle("active");
+            };
+
+            if (drawerTrigger) drawerTrigger.addEventListener("click", toggleDrawer);
+            if (drawerClose) drawerClose.addEventListener("click", toggleDrawer);
+            if (drawerOverlay) drawerOverlay.addEventListener("click", toggleDrawer);
+        });
+    </script>
 </body>
 
 </html>

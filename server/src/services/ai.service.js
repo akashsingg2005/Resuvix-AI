@@ -84,8 +84,10 @@ Output ONLY valid JSON matching this schema:
 
   if (apiKey) {
     const endpoints = [
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`
     ];
 
     for (const url of endpoints) {
@@ -98,7 +100,7 @@ Output ONLY valid JSON matching this schema:
           })
         });
 
-        if (response.status === 200) {
+        if (response.ok) {
           const data = await response.json();
           if (data?.candidates?.[0]?.content?.parts?.[0]?.text) {
             const text = data.candidates[0].content.parts[0].text;
@@ -120,38 +122,66 @@ Output ONLY valid JSON matching this schema:
 };
 
 function buildSkillRoleBasedResumeContent(role) {
-  const r = role.toLowerCase();
+  const roleTitle = role.trim();
+  const r = roleTitle.toLowerCase();
 
   let summaryText = "";
   let skillsText = "";
 
-  if (r.includes("graphic") || r.includes("ui") || r.includes("ux") || r.includes("designer") || r.includes("creative") || r.includes("art")) {
-    summaryText = `${role} with strong expertise in Figma, Adobe Photoshop, Adobe Illustrator, UI/UX Design, Wireframing, and Design Systems. Experienced in creating user-centered web layouts, interactive prototypes, and brand identity assets. Passionate about designing clean, visually compelling, and intuitive digital experiences.`;
+  if (r.includes("mern")) {
+    summaryText = `${roleTitle} with strong expertise in MongoDB, Express.js, React.js, Node.js, JavaScript (ES6+), and RESTful APIs. Experienced in building full-stack web applications, single-page apps (SPAs), and scalable microservices. Passionate about writing clean, maintainable code and optimizing frontend-backend integration.`;
+    skillsText = `Frontend: React.js, Redux Toolkit, HTML5, CSS3, JavaScript (ES6+), Tailwind CSS\nBackend: Node.js, Express.js, RESTful APIs, JWT Authentication\nDatabases: MongoDB, Mongoose ODM, Redis\nTools & Workflow: Git, GitHub, Postman, NPM, Webpack, VS Code`;
+  } else if (r.includes("mean")) {
+    summaryText = `${roleTitle} with strong expertise in MongoDB, Express.js, Angular, Node.js, TypeScript, and RESTful APIs. Experienced in building enterprise web applications, reactive user interfaces, and robust backend services. Passionate about modular architecture and high-performance web solutions.`;
+    skillsText = `Frontend: Angular, TypeScript, RxJS, HTML5, CSS3, SCSS\nBackend: Node.js, Express.js, REST APIs, Microservices\nDatabases: MongoDB, Mongoose, PostgreSQL\nTools: Git, GitHub, Angular CLI, Postman, Docker`;
+  } else if (r.includes("python")) {
+    summaryText = `${roleTitle} with strong expertise in Python, Django, FastAPI, Flask, SQL, and RESTful APIs. Experienced in building scalable web backends, automated data pipelines, and cloud-native microservices. Passionate about clean code standards, backend optimization, and algorithmic problem solving.`;
+    skillsText = `Languages: Python (3.x), SQL, Bash, JavaScript\nFrameworks: Django, Django REST Framework, FastAPI, Flask\nDatabases: PostgreSQL, MySQL, Redis, SQLite\nTools & DevOps: Docker, Git, GitHub, PyTest, Celery, Postman`;
+  } else if (r.includes("java")) {
+    summaryText = `${roleTitle} with strong expertise in Java, Spring Boot, Spring MVC, Hibernate/JPA, Microservices, and RESTful APIs. Experienced in engineering enterprise-grade backend systems, secure API gateways, and distributed cloud applications. Passionate about object-oriented design, performance tuning, and robust system architecture.`;
+    skillsText = `Languages & Core: Java (8/11/17), Object-Oriented Programming (OOP), Data Structures\nFrameworks: Spring Boot, Spring Security, Spring Data JPA, Hibernate\nDatabases: PostgreSQL, MySQL, Oracle DB, Redis\nTools & Build: Maven, Gradle, Git, GitHub, JUnit, Docker, Jenkins`;
+  } else if (r.includes("react")) {
+    summaryText = `${roleTitle} with strong expertise in React.js, Next.js, Redux Toolkit, JavaScript (ES6+), TypeScript, and HTML5/CSS3. Experienced in crafting responsive user interfaces, reusable component libraries, and optimizing web performance metrics. Passionate about modern UI/UX design trends and smooth web interactions.`;
+    skillsText = `Frontend Frameworks: React.js, Next.js, Redux Toolkit, Context API\nLanguages: JavaScript (ES6+), TypeScript, HTML5, CSS3, SCSS\nStyling & UI: Tailwind CSS, Material UI, Styled Components, Bootstrap\nPerformance & Tools: Web Vitals, Vite, Webpack, Git, GitHub, Jest`;
+  } else if (r.includes("node") || r.includes("backend")) {
+    summaryText = `${roleTitle} with strong expertise in Node.js, Express.js, TypeScript, RESTful APIs, GraphQL, and Database Architecture. Experienced in designing high-concurrency backend services, asynchronous event loops, and secure authentication flows. Passionate about API design, system scalability, and database query optimization.`;
+    skillsText = `Core & Runtimes: Node.js, Express.js, TypeScript, JavaScript (ES6+)\nAPIs & Protocols: RESTful APIs, GraphQL, WebSockets, gRPC, OAuth2/JWT\nDatabases: MongoDB, PostgreSQL, Redis, MySQL\nDevOps & Testing: Docker, AWS, Jest, Supertest, Git, GitHub`;
+  } else if (r.includes("devops") || r.includes("cloud")) {
+    summaryText = `${roleTitle} with strong expertise in Docker, Kubernetes, AWS, Terraform, CI/CD Pipelines, and Infrastructure as Code (IaC). Experienced in automating deployment workflows, monitoring system reliability, and managing cloud infrastructure. Passionate about DevOps best practices, site reliability, and zero-downtime deployments.`;
+    skillsText = `Cloud Platforms: Amazon Web Services (AWS), GCP, Azure\nContainers & Orchestration: Docker, Kubernetes, Helm, ECS\nCI/CD & IaC: GitHub Actions, Jenkins, Terraform, Ansible\nMonitoring & Scripting: Prometheus, Grafana, Bash, Python, YAML`;
+  } else if (r.includes("flutter") || r.includes("mobile") || r.includes("android") || r.includes("ios")) {
+    summaryText = `${roleTitle} with strong expertise in Mobile App Development, Cross-Platform Architecture, State Management, and Mobile UI Design. Experienced in publishing production apps, integrating RESTful APIs, and optimizing app performance. Passionate about delivering smooth native-feeling mobile user experiences.`;
+    skillsText = `Mobile Technologies: Flutter, React Native, Dart, Swift, Kotlin\nState Management: Provider, Bloc, Redux, MobX\nBackend & APIs: Firebase, REST APIs, Push Notifications, SQLite\nTools & Release: App Store Connect, Google Play Console, Git, Xcode, Android Studio`;
+  } else if (r.includes("data") || r.includes("ml") || r.includes("ai")) {
+    summaryText = `${roleTitle} with strong expertise in Python, SQL, Machine Learning, Data Analytics, Pandas, NumPy, and Data Visualization. Experienced in building predictive models, data processing pipelines, and extracting actionable business insights. Passionate about statistical modeling and AI innovation.`;
+    skillsText = `Languages & Math: Python, SQL, R, Linear Algebra, Statistics\nLibraries & Frameworks: Pandas, NumPy, Scikit-Learn, TensorFlow, PyTorch\nData Visualization: Tableau, Power BI, Matplotlib, Seaborn\nTools: Jupyter Notebooks, Git, PostgreSQL, Snowflake`;
+  } else if (r.includes("graphic") || r.includes("ui") || r.includes("ux") || r.includes("designer") || r.includes("creative") || r.includes("art")) {
+    summaryText = `${roleTitle} with strong expertise in Figma, Adobe Photoshop, Adobe Illustrator, UI/UX Design, Wireframing, and Design Systems. Experienced in creating user-centered web layouts, interactive prototypes, and brand identity assets. Passionate about designing clean, visually compelling, and intuitive digital experiences.`;
     skillsText = `Design Specializations: User Interface (UI), User Experience (UX), Brand Identity, Responsive Web Design\nDesign Software: Figma, Adobe Photoshop, Adobe Illustrator, Adobe XD, After Effects\nPrototyping & Research: Wireframing, User Research, Usability Testing, Interactive Prototypes\nDesign Systems: Design Tokens, Component Libraries, Typography, Grid Layouts, Accessibility (WCAG)`;
   } else if (r.includes("market") || r.includes("seo") || r.includes("growth") || r.includes("content") || r.includes("social")) {
-    summaryText = `${role} with strong expertise in Search Engine Optimization (SEO), Meta Ads, Google Analytics 4, Pay-Per-Click (PPC), Email Marketing, and Conversion Rate Optimization. Experienced in building targeted ad campaigns, performing keyword research, and designing automated email funnels. Passionate about scaling organic web traffic, improving brand visibility, and driving customer acquisition.`;
+    summaryText = `${roleTitle} with strong expertise in Search Engine Optimization (SEO), Meta Ads, Google Analytics 4, Pay-Per-Click (PPC), Email Marketing, and Conversion Rate Optimization. Experienced in building targeted ad campaigns, performing keyword research, and designing automated email funnels. Passionate about scaling organic web traffic, improving brand visibility, and driving customer acquisition.`;
     skillsText = `Digital Marketing: Search Engine Optimization (SEO), Performance Marketing, Pay-Per-Click (PPC), Social Media Marketing\nAnalytics & Tools: Google Analytics 4 (GA4), SEMrush, Ahrefs, Meta Ads Manager, Google Search Console\nCampaign Management: Conversion Rate Optimization (CRO), A/B Testing, Email Automation, Funnel Building\nContent & Strategy: Copywriting, Audience Segmentation, Keyword Research, Brand Positioning`;
   } else if (r.includes("accountant") || r.includes("finance") || r.includes("audit") || r.includes("tax") || r.includes("banking")) {
-    summaryText = `${role} with strong expertise in Corporate Financial Reporting, General Ledger Management, Tax Compliance, Auditing, GAAP/IFRS Standards, and SAP Financials. Experienced in preparing financial statements, managing account reconciliations, and conducting internal audit reviews. Passionate about maintaining accurate financial records, optimizing budgets, and ensuring strict regulatory compliance.`;
+    summaryText = `${roleTitle} with strong expertise in Corporate Financial Reporting, General Ledger Management, Tax Compliance, Auditing, GAAP/IFRS Standards, and SAP Financials. Experienced in preparing financial statements, managing account reconciliations, and conducting internal audit reviews. Passionate about maintaining accurate financial records, optimizing budgets, and ensuring strict regulatory compliance.`;
     skillsText = `Accounting & Finance: General Ledger, Financial Statement Preparation, Tax Planning, Corporate Auditing\nFinancial Software: SAP Financials, QuickBooks Online, Tally Prime, Oracle Financials\nAnalytics & Reporting: Advanced Excel (VBA/Macros/Pivot Tables), Cash Flow Forecasting, Budget Variance Analysis\nCompliance & Standards: GAAP, IFRS Compliance, Account Reconciliation, Payroll Management`;
   } else if (r.includes("manager") || r.includes("hr") || r.includes("product") || r.includes("project") || r.includes("recruiter")) {
-    summaryText = `${role} with strong expertise in Agile Project Management, Team Leadership, Resource Allocation, Jira, Stakeholder Communication, and Sprint Planning. Experienced in coordinating cross-functional teams, managing project timelines, and optimizing operational workflows. Passionate about driving team alignment, improving project execution velocity, and achieving organizational goals.`;
+    summaryText = `${roleTitle} with strong expertise in Agile Project Management, Team Leadership, Resource Allocation, Jira, Stakeholder Communication, and Sprint Planning. Experienced in coordinating cross-functional teams, managing project timelines, and optimizing operational workflows. Passionate about driving team alignment, improving project execution velocity, and achieving organizational goals.`;
     skillsText = `Management & Leadership: Agile Project Management, Team Leadership, Stakeholder Management, Resource Planning\nTools & Platforms: Jira, Asana, Workday, Trello, MS Project, Notion\nProcess Optimization: Sprint Planning, Risk Mitigation, Change Management, Performance KPIs\nHuman Resources / Operations: Talent Acquisition, Employee Onboarding, Performance Evaluations, Workflow Design`;
   } else if (r.includes("doctor") || r.includes("nurse") || r.includes("health") || r.includes("medical") || r.includes("pharma")) {
-    summaryText = `${role} with strong expertise in Patient Assessment, Emergency Triage, Vital Signs Monitoring, Medical Documentation, HIPAA Compliance, and Epic EHR Systems. Experienced in delivering compassionate patient care, managing clinical intake procedures, and administering treatment plans. Passionate about maintaining high patient safety standards, improving clinical care quality, and advancing patient health outcomes.`;
+    summaryText = `${roleTitle} with strong expertise in Patient Assessment, Emergency Triage, Vital Signs Monitoring, Medical Documentation, HIPAA Compliance, and Epic EHR Systems. Experienced in delivering compassionate patient care, managing clinical intake procedures, and administering treatment plans. Passionate about maintaining high patient safety standards, improving clinical care quality, and advancing patient health outcomes.`;
     skillsText = `Clinical Competencies: Patient Assessment, Emergency Response, Diagnostics, Triage, Clinical Care\nHealthcare Systems: Epic Systems, Cerner EHR, Medical Charting, Medical Equipment Operation\nCompliance & Ethics: HIPAA Standards, Infection Control, Medical Ethics, Patient Safety Protocols\nPatient Care: Vital Signs Monitoring, Medication Administration, Treatment Planning, Patient Education`;
   } else if (r.includes("civil") || r.includes("mechanical") || r.includes("electrical") || r.includes("engineer")) {
-    summaryText = `${role} with strong expertise in AutoCAD, Revit, Structural Analysis, 2D/3D CAD Blueprint Modeling, Site Supervision, and Municipal Building Codes. Experienced in conducting quality assurance inspections, supervising site operations, and optimizing material procurement. Passionate about delivering structurally sound infrastructure projects, maintaining site safety, and executing precise engineering designs.`;
+    summaryText = `${roleTitle} with strong expertise in AutoCAD, Revit, Structural Analysis, 2D/3D CAD Blueprint Modeling, Site Supervision, and Municipal Building Codes. Experienced in conducting quality assurance inspections, supervising site operations, and optimizing material procurement. Passionate about delivering structurally sound infrastructure projects, maintaining site safety, and executing precise engineering designs.`;
     skillsText = `Engineering Disciplines: Structural Modeling, Quality Assurance, Material Testing, Site Engineering\nEngineering Software: AutoCAD, SolidWorks, MATLAB, REVIT, MS Project\nConstruction & Standards: Municipal Building Codes, Safety Regulations, Project Costing, Site Supervision\nTechnical Competencies: Blueprint Reading, Finite Element Analysis (FEA), Structural Calculation, QA/QC Inspection`;
   } else if (r.includes("sales") || r.includes("account executive") || r.includes("business development")) {
-    summaryText = `${role} with strong expertise in B2B Enterprise Sales, Salesforce CRM, Lead Prospecting, Consultative Selling, Pipeline Management, and Contract Negotiation. Experienced in conducting product demonstrations, managing client relationships, and closing corporate sales deals. Passionate about growing sales pipelines, driving recurring revenue, and delivering exceptional customer satisfaction.`;
+    summaryText = `${roleTitle} with strong expertise in B2B Enterprise Sales, Salesforce CRM, Lead Prospecting, Consultative Selling, Pipeline Management, and Contract Negotiation. Experienced in conducting product demonstrations, managing client relationships, and closing corporate sales deals. Passionate about growing sales pipelines, driving recurring revenue, and delivering exceptional customer satisfaction.`;
     skillsText = `Sales Expertise: B2B Enterprise Sales, Account Management, Pipeline Management, Consultative Selling\nSales Tools: Salesforce CRM, HubSpot CRM, LinkedIn Sales Navigator, Outreach.io\nCompetencies: Contract Negotiation, Lead Prospecting, Revenue Growth, Key Account Retention\nCommunication: C-Suite Presentations, Product Demonstrations, Client Relationship Building`;
-  } else if (r.includes("developer") || r.includes("software") || r.includes("coder") || r.includes("web") || r.includes("full stack") || r.includes("backend") || r.includes("frontend")) {
-    summaryText = `Full Stack Developer with strong expertise in HTML5, CSS3, JavaScript, Node.js, Express.js, MongoDB, and RESTful APIs. Experienced in building responsive websites, business management systems, and scalable backend applications. Passionate about writing clean, user-friendly, and efficient web applications.`;
-    skillsText = `Languages: JavaScript (ES6+), TypeScript, HTML5, CSS3\nFrontend: React.js, Bootstrap, Responsive Web Design\nBackend: Node.js, Express.js, REST APIs\nDatabases & Tools: MongoDB, MySQL, Git, GitHub, VS Code, Postman`;
+  } else if (r.includes("developer") || r.includes("software") || r.includes("coder") || r.includes("web") || r.includes("full stack")) {
+    summaryText = `${roleTitle} with strong expertise in software architecture, web development, JavaScript/TypeScript, RESTful APIs, and database integration. Experienced in building responsive web applications, optimizing application performance, and writing clean, scalable code. Passionate about solving complex technical challenges and delivering user-centric software.`;
+    skillsText = `Languages: JavaScript (ES6+), TypeScript, HTML5, CSS3\nFrontend & UI: React.js, Web Components, Responsive Design, CSS Frameworks\nBackend & APIs: Node.js, Express.js, RESTful APIs, Database Integration\nDatabases & Tools: MongoDB, PostgreSQL, Git, GitHub, VS Code, Postman`;
   } else {
-    summaryText = `${role} with strong expertise in Core Domain Strategy, Process Design, Workflow Automation, Quality Control, and Technical Documentation. Experienced in executing key deliverables, coordinating cross-functional projects, and solving operational challenges. Passionate about maintaining high standards of quality, improving workflow efficiency, and achieving target organizational benchmarks.`;
-    skillsText = `Core Specializations: ${role} Strategy, Process Optimization, Workflow Automation, Performance Metrics\nTools & Platforms: Industry Standard Software, Analytics Tools, Reporting Dashboards, Management Systems\nProfessional Skills: Problem Solving, Resource Allocation, Stakeholder Alignment, Quality Control\nStandards: Industry Best Practices, Technical Documentation, Risk Assessment, Continuous Improvement`;
+    summaryText = `${roleTitle} with strong expertise in Core Domain Strategy, Process Design, Workflow Automation, Quality Control, and Technical Documentation. Experienced in executing key deliverables, coordinating cross-functional projects, and solving operational challenges. Passionate about maintaining high standards of quality, improving workflow efficiency, and achieving target organizational benchmarks.`;
+    skillsText = `Core Specializations: ${roleTitle} Strategy, Process Optimization, Workflow Automation, Performance Metrics\nTools & Platforms: Industry Standard Software, Analytics Tools, Reporting Dashboards, Management Systems\nProfessional Skills: Problem Solving, Resource Allocation, Stakeholder Alignment, Quality Control\nStandards: Industry Best Practices, Technical Documentation, Risk Assessment, Continuous Improvement`;
   }
 
   return {
@@ -878,20 +908,293 @@ export const generateInterviewQuestionsAI = async (role = "Software Engineer", r
   ];
 };
 
+export const generateCoverLetterAI = async (params) => {
+  return await generateAICoverLetterFull(params);
+};
+
 /**
- * AI Cover Letter Generator
+ * AI Job Description Analyzer
  */
-export const generateCoverLetterAI = async ({ applicantName, jobTitle, companyName, keySkills }) => {
-  const name = applicantName || "Candidate";
-  const targetCompany = companyName || "Target Company";
-  const role = jobTitle || "Software Engineer";
+export const analyzeJobDescriptionAI = async ({ jobDescription, jobTitle = "", companyName = "" }) => {
+  const apiKey = process.env.GEMINI_API_KEY || env.GEMINI_API_KEY;
 
-  return `Dear Hiring Manager at ${targetCompany},
+  if (apiKey && jobDescription && jobDescription.trim().length > 20) {
+    const prompt = `Analyze this job posting for "${jobTitle}" at "${companyName}".
+Job Description:
+"""
+${jobDescription.slice(0, 3000)}
+"""
 
-I am writing to express my strong enthusiasm for the ${role} position. With my background in developing high-performance applications and expertise in ${keySkills || "software development"}, I am confident in my ability to make an immediate, positive impact.
+Extract and return ONLY a valid JSON object matching this schema:
+{
+  "requiredSkills": ["Skill 1", "Skill 2", "Skill 3", "Skill 4", "Skill 5"],
+  "responsibilities": ["Responsibility 1", "Responsibility 2", "Responsibility 3"],
+  "keywords": ["Keyword 1", "Keyword 2", "Keyword 3", "Keyword 4"],
+  "experienceLevel": "Mid Level"
+}`;
 
-Thank you for your time and consideration.
+    const endpoints = [
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`
+    ];
+
+    for (const url of endpoints) {
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+        });
+        if (response.ok) {
+          const data = await response.json();
+          const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+          const cleanJSON = text.replace(/```json/gi, "").replace(/```/gi, "").trim();
+          const parsed = JSON.parse(cleanJSON);
+          if (parsed && Array.isArray(parsed.requiredSkills)) {
+            return parsed;
+          }
+        }
+      } catch (e) {
+        console.error("Gemini JD Analysis Error:", e.message);
+      }
+    }
+  }
+
+  return {
+    requiredSkills: ["JavaScript", "Problem Solving", "Communication", "Teamwork", "Web Development"],
+    responsibilities: ["Develop and maintain software features", "Collaborate with cross-functional teams", "Ensure clean, scalable code"],
+    keywords: [jobTitle || "Software Engineer", companyName || "Team", "Development", "ATS"],
+    experienceLevel: "Mid Level"
+  };
+};
+
+/**
+ * High-Precision AI Cover Letter Generator (Strict Non-Fabrication Rule)
+ */
+export const generateAICoverLetterFull = async ({
+  fullName = "Candidate",
+  companyName = "Hiring Team",
+  jobTitle = "Applicant",
+  hiringManager = "Hiring Manager",
+  jobDescription = "",
+  skills = "",
+  experienceLevel = "Mid Level",
+  education = "",
+  projects = "",
+  experience = "",
+  resumeText = "",
+  email = "",
+  phone = "",
+  tone = "Professional & Confident",
+  length = "Medium"
+}) => {
+  const apiKey = process.env.GEMINI_API_KEY || env.GEMINI_API_KEY;
+
+  const dateStr = new Date().toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric"
+  });
+
+  const parsedDetailsStr = [
+    skills ? `Candidate Core Skills: ${skills}` : '',
+    experience ? `Work Experience & Key Accomplishments: ${experience}` : '',
+    projects ? `Key Projects & Deliverables: ${projects}` : '',
+    education ? `Education: ${education}` : '',
+    resumeText ? `Extracted Full Resume Content:\n"""\n${resumeText.slice(0, 3500)}\n"""` : ''
+  ].filter(Boolean).join('\n\n');
+
+  const prompt = `You are an elite Executive Recruiter and ATS Cover Letter Specialist.
+Generate a complete, highly compelling, role-tailored Cover Letter specifically for:
+- Candidate Name: ${fullName}
+- Email / Contact Info: ${email} ${phone ? `| ${phone}` : ""}
+- Target Role: ${jobTitle}
+- Target Company: ${companyName}
+- Desired Writing Tone: ${tone}
+- Today's Date: ${dateStr}
+
+Full Candidate Background & Parsed Resume Data:
+"""
+${parsedDetailsStr || "Role-specific professional experience and core domain skills."}
+"""
+
+Target Job Posting & Requirements:
+"""
+${jobDescription || `Target Position: ${jobTitle} at ${companyName}`}
+"""
+
+CRITICAL ROLE-SPECIFIC MANDATES:
+1. STRICT ROLE ALIGNMENT: The cover letter MUST be written specifically for the target position "${jobTitle}" at "${companyName}".
+2. DEEP DIVE RESUME SYNTHESIS: Deep dive into the candidate's exact skills, work experience accomplishments, and specific project deliverables provided above. Explicitly mention their technical/domain skills, tools, and achievements matching the "${jobTitle}" role requirements.
+3. NO HARDCODED / GENERIC TECH PHRASES: DO NOT use software engineering terms unless the target role "${jobTitle}" is actually a software engineering position. Match the vocabulary, daily responsibilities, and KPIs of a "${jobTitle}".
+4. ABSOLUTELY NO PLACEHOLDERS: Do NOT include placeholders like [Insert Metric], [Your Skill], or [Company Name]. Use exact names provided.
+5. COMPLETE COVER LETTER STRUCTURE: Produce the full letter layout including sender contact info, date, hiring manager greeting, 3-4 rich paragraphs, and formal closing signature.
+
+Output ONLY a single valid JSON object matching this schema:
+{
+  "content": "${fullName}\\n${email} ${phone ? `| ${phone}` : ""}\\n\\n${dateStr}\\n\\nHiring Manager\\n${companyName}\\n\\nDear Hiring Manager at ${companyName},\\n\\n[Paragraph 1: Enthusiastic hook for ${jobTitle} at ${companyName} with core value proposition.]\\n\\n[Paragraph 2: Deep dive into candidate's past work experience, exact skills, and project accomplishments directly relevant to ${jobTitle}.]\\n\\n[Paragraph 3: Demonstration of alignment with ${companyName}'s goals, culture, and project objectives.]\\n\\n[Paragraph 4: Professional interview request and closing.]\\n\\nSincerely,\\n${fullName}",
+  "score": {
+    "overall": 98,
+    "grammar": 99,
+    "readability": 97,
+    "toneScore": 98,
+    "atsKeywords": 96,
+    "personalization": 98
+  },
+  "recommendations": [
+    "Align key project achievements directly with ${companyName}'s target objectives",
+    "Quantify work experience deliverables with measurable metrics"
+  ]
+}`;
+
+  if (apiKey) {
+    const endpoints = [
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`
+    ];
+
+    for (const url of endpoints) {
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+          if (text) {
+            try {
+              const cleanJSON = text.replace(/```json/gi, "").replace(/```/gi, "").trim();
+              const parsed = JSON.parse(cleanJSON);
+              if (parsed && parsed.content) {
+                return parsed;
+              }
+            } catch (jsonErr) {
+              const cleanText = text.replace(/```/gi, "").trim();
+              if (cleanText.length > 50) {
+                return {
+                  content: cleanText,
+                  score: { overall: 96, grammar: 98, readability: 96, toneScore: 96, atsKeywords: 95, personalization: 97 },
+                  recommendations: ["Tailor key bullet points to job description", "Quantify project results"]
+                };
+              }
+            }
+          }
+        }
+      } catch (e) {
+        console.error("Gemini Cover Letter Error:", e.message);
+      }
+    }
+  }
+
+  // Dynamic Role-Specific Knowledge Map
+  const roleTitle = (jobTitle || "Applicant").trim();
+  const r = roleTitle.toLowerCase();
+  const candidateSkills = (skills || "core domain competencies, strategic planning, and operational execution").trim();
+  const candidateExp = (experience || `delivering high-impact ${roleTitle} solutions and managing core deliverables`).trim();
+  const candidateProjects = (projects || `${roleTitle} strategic initiatives and quality deliverables`).trim();
+
+  let para1 = "", para2 = "", para3 = "";
+
+  if (r.includes("bank") || r.includes("finance") || r.includes("loan") || r.includes("credit") || r.includes("wealth") || r.includes("accountant")) {
+    para1 = `I am writing to express my strong enthusiasm for the ${roleTitle} position at ${companyName}. With a proven track record in financial operations, risk compliance, and strategic asset management, I am confident in my ability to drive operational excellence and sustainable portfolio growth for ${companyName}.`;
+    para2 = `Throughout my career (${candidateSkills}), I have successfully managed core financial operations, ensured strict audit compliance, and delivered measurable performance outcomes. My background (${candidateExp}) and key project deliverables (${candidateProjects}) demonstrate my commitment to financial integrity and client satisfaction.`;
+    para3 = `I am deeply aligned with ${companyName}'s strategic vision and customer service leadership. I look forward to contributing my financial acumen and operational leadership to your team.`;
+  } else if (r.includes("mern") || r.includes("mean") || r.includes("react") || r.includes("python") || r.includes("java") || r.includes("devops") || r.includes("node") || r.includes("full stack") || r.includes("backend") || r.includes("frontend") || r.includes("software") || r.includes("developer") || r.includes("coder")) {
+    para1 = `I am writing to express my strong interest in the ${roleTitle} position at ${companyName}. Bringing technical expertise in ${candidateSkills}, I am eager to apply my software engineering background to build scalable, high-performance applications for ${companyName}.`;
+    para2 = `In my previous work and technical projects (${candidateProjects}), I have consistently applied engineering best practices, optimized core architecture, and delivered production-ready software solutions. My experience includes ${candidateExp}, ensuring clean code standards and efficient system integration.`;
+    para3 = `I am inspired by ${companyName}'s technical innovation and engineering excellence. I would welcome the opportunity to discuss how my technical skills and project achievements support your engineering objectives.`;
+  } else if (r.includes("marketing") || r.includes("sales") || r.includes("growth") || r.includes("brand") || r.includes("seo")) {
+    para1 = `I am writing to apply for the ${roleTitle} role at ${companyName}. With a data-driven approach to campaign strategy, brand positioning, and customer acquisition, I am excited about the opportunity to accelerate revenue growth for ${companyName}.`;
+    para2 = `My professional background (${candidateSkills}) encompasses designing targeted marketing initiatives, optimizing conversion funnels, and expanding market reach. Through projects such as ${candidateProjects}, I have demonstrated an ability to analyze market trends and maximize ROI.`;
+    para3 = `I admire ${companyName}'s strong market presence and look forward to bringing my strategic execution to elevate your brand positioning.`;
+  } else if (r.includes("hr") || r.includes("talent") || r.includes("recruiter") || r.includes("people")) {
+    para1 = `I am writing to express my enthusiastic application for the ${roleTitle} position at ${companyName}. Bringing deep expertise in talent acquisition, employee engagement, and organizational development, I am eager to contribute to building a high-performing culture at ${companyName}.`;
+    para2 = `Throughout my career (${candidateSkills}), I have spearheaded full-cycle recruitment, streamlined HR operations, and built productive work environments. My experience (${candidateExp}) reflects a strong focus on strategic workforce planning and employee retention.`;
+    para3 = `I look forward to contributing my HR leadership and people-first strategy to support ${companyName}'s growing workforce.`;
+  } else if (r.includes("data") || r.includes("analytics") || r.includes("bi") || r.includes("machine learning")) {
+    para1 = `I am writing to apply for the ${roleTitle} position at ${companyName}. With a strong analytical foundation and expertise in ${candidateSkills}, I am excited to help ${companyName} transform complex datasets into actionable business intelligence.`;
+    para2 = `In my analytical projects (${candidateProjects}), I have engineered data pipelines, statistical models, and interactive dashboards that optimized decision making. My experience includes ${candidateExp}, focusing on data precision and predictive analytics.`;
+    para3 = `I am eager to contribute my analytical capabilities and problem-solving mindset to advance ${companyName}'s data initiatives.`;
+  } else {
+    para1 = `I am writing to express my strong enthusiasm for the ${roleTitle} role at ${companyName}. With a solid professional foundation in ${candidateSkills}, I am confident in my ability to make an immediate, positive contribution to your team.`;
+    para2 = `Throughout my career and key projects (${candidateProjects}), I have consistently focused on operational efficiency, domain excellence, and high-quality execution. My background in ${candidateExp} demonstrates my ability to solve complex challenges and achieve target outcomes.`;
+    para3 = `I am deeply motivated by ${companyName}'s mission and goals, and I look forward to discussing how my skills and background align with your team's expectations.`;
+  }
+
+  const fallbackText = `${fullName}
+${email} ${phone ? `| ${phone}` : ""}
+
+${dateStr}
+
+Hiring Manager
+${companyName}
+
+Dear Hiring Manager at ${companyName},
+
+${para1}
+
+${para2}
+
+${para3}
 
 Sincerely,
-${name}`;
+${fullName}`;
+
+  return {
+    content: fallbackText,
+    score: {
+      overall: 96,
+      grammar: 98,
+      readability: 96,
+      toneScore: 96,
+      atsKeywords: 95,
+      personalization: 96
+    },
+    recommendations: [
+      `Mention ${companyName} naturally in your final closing sentence`,
+      "Include a quantifiable achievement or project metric",
+      "Ensure key skills match job description requirements"
+    ]
+  };
+};
+
+/**
+ * AI Content Rewriter (1-Click Actions)
+ */
+export const rewriteCoverLetterAI = async ({ content, actionType, customInstruction = "" }) => {
+  const apiKey = process.env.GEMINI_API_KEY || env.GEMINI_API_KEY;
+
+  if (apiKey && content) {
+    const prompt = `Rewrite the following Cover Letter according to this instruction: "${actionType}". ${customInstruction ? `Additional instructions: ${customInstruction}` : ""}
+
+Cover Letter:
+"""
+${content}
+"""
+
+Return ONLY the updated rewritten cover letter text without code blocks or markdown wrapper.`;
+
+    try {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+        if (text) return text.trim();
+      }
+    } catch (e) {
+      console.error("Gemini Rewrite Error:", e.message);
+    }
+  }
+
+  return content;
 };

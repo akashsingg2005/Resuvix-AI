@@ -119,11 +119,45 @@
                     <span class="dash-badge-free" id="userPlanBadge"><i class="ri-sparkling-fill"></i> Free Tier</span>
                 </div>
 
-                <div class="icon-btn-wrap">
+                <div class="icon-btn-wrap" style="position: relative;">
                     <button class="dash-icon-btn" id="notifBellBtn" title="Notifications">
                         <i class="ri-notification-3-line"></i>
-                        <span class="unread-dot"></span>
+                        <span class="unread-dot" id="notifUnreadBadge"></span>
                     </button>
+
+                    <!-- Interactive Notifications Dropdown -->
+                    <div class="notif-dropdown-menu" id="notifDropdownMenu">
+                        <div class="notif-header">
+                            <h4><i class="ri-notification-3-line" style="color: var(--primary);"></i> Notifications</h4>
+                            <button class="btn-mark-read" id="btnMarkAllRead">Mark all read</button>
+                        </div>
+                        <div class="notif-list" id="notifListContainer">
+                            <div class="notif-item">
+                                <div class="notif-icon purple"><i class="ri-user-smile-line"></i></div>
+                                <div class="notif-content">
+                                    <div class="notif-title">Welcome to Resuvix AI</div>
+                                    <div class="notif-text">Your account is ready! 1 Free High-Quality ATS Resume Download has been credited.</div>
+                                    <div class="notif-time">Just now</div>
+                                </div>
+                            </div>
+                            <div class="notif-item">
+                                <div class="notif-icon cyan"><i class="ri-bar-chart-box-line"></i></div>
+                                <div class="notif-content">
+                                    <div class="notif-title">AI ATS Scanner Active</div>
+                                    <div class="notif-text">Scan any PDF resume against job roles for instantaneous ATS compatibility feedback.</div>
+                                    <div class="notif-time">Today</div>
+                                </div>
+                            </div>
+                            <div class="notif-item">
+                                <div class="notif-icon green"><i class="ri-file-text-line"></i></div>
+                                <div class="notif-content">
+                                    <div class="notif-title">Smart Resume Builder</div>
+                                    <div class="notif-text">Live ATS vector canvas rendering enabled. Live updates render instantaneously without page reloads.</div>
+                                    <div class="notif-time">Active</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div style="position: relative;">
@@ -179,13 +213,13 @@
                 <a href="#" class="drawer-item" id="navItemInterview">
                     <i class="ri-user-voice-line"></i> Interview Prep
                 </a>
-                <a href="#" class="drawer-item" id="navItemCoverLetter">
+                <a href="cover-letter.html" class="drawer-item" id="navItemCoverLetter">
                     <i class="ri-draft-line"></i> Cover Letters
                 </a>
                 <a href="#" class="drawer-item" id="navItemBilling">
                     <i class="ri-bank-card-line"></i> Payment Details
                 </a>
-                <a href="admin.html" class="drawer-item" id="navItemAdmin" style="display: none;">
+                <a href="admin.html" class="drawer-item" id="navItemAdmin" style="display: none !important;">
                     <i class="ri-shield-user-line"></i> Admin Panel
                 </a>
             </nav>
@@ -213,7 +247,7 @@
             <!-- Dynamic Greeting Header -->
             <div class="dash-welcome">
                 <div class="dash-welcome-text">
-                    <h1>Good Morning, <span class="text-gradient" id="greetingUserName">User</span> 👋</h1>
+                    <h1 id="greetingTitle">Good Morning, <span class="text-gradient" id="greetingUserName">User</span> 👋</h1>
                     <p>Continue building your career with AI-powered resume insights and optimization.</p>
                 </div>
                 <div class="dash-actions-row">
@@ -467,47 +501,7 @@
                 <!-- Loaded dynamically -->
             </div>
         </div>
-    </div>
-
-    <!-- ==========================================
-            4. AI COVER LETTER MODAL
-    =========================================== -->
-    <div class="modal-overlay" id="coverLetterModalOverlay">
-        <div class="premium-modal" style="max-width: 680px;">
-            <button class="modal-close-btn" onclick="document.getElementById('coverLetterModalOverlay').classList.remove('active')">
-                <i class="ri-close-line"></i>
-            </button>
-            <div class="premium-modal-header">
-                <div class="premium-icon-badge" style="background: linear-gradient(135deg, #F59E0B, #D97706);">
-                    <i class="ri-file-paper-2-line"></i>
-                </div>
-                <h2>AI Cover Letter Writer</h2>
-                <p>Generate a customized, professional cover letter for your job applications.</p>
-            </div>
-
-            <form id="coverLetterForm" class="modal-body-content">
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
-                    <div class="form-group-margin">
-                        <label class="form-label">Target Role</label>
-                        <input type="text" id="clTargetRole" class="form-input" placeholder="e.g. Frontend Developer" required>
-                    </div>
-                    <div class="form-group-margin">
-                        <label class="form-label">Company Name</label>
-                        <input type="text" id="clCompanyName" class="form-input" placeholder="e.g. Google / Amazon" required>
-                    </div>
-                </div>
-                <button type="submit" class="btn-gradient" style="width: 100%; padding: 14px; margin-bottom: 20px;">
-                    <i class="ri-draft-line"></i> Generate Cover Letter
-                </button>
-            </form>
-
-            <div id="clResultContainer" style="display: none;">
-                <textarea id="clOutputText" class="form-textarea" rows="8" readonly></textarea>
-                <button class="btn-outline" id="btnCopyCoverLetter" style="margin-top: 12px; width: 100%;">
-                    <i class="ri-file-copy-line"></i> Copy to Clipboard
-                </button>
-            </div>
-        </div>
+ 
     </div>
 
     <!-- ==========================================
@@ -585,6 +579,14 @@
                     <li style="display: flex; align-items: center; gap: 10px;"><i class="ri-checkbox-circle-fill" style="color: #22C55E;"></i> 1-Time Free AI Resume Build</li>
                     <li style="display: flex; align-items: center; gap: 10px;"><i class="ri-checkbox-circle-fill" style="color: #22C55E;"></i> 1-Time Free AI Technical Mock Interview</li>
                 </ul>
+
+                <!-- Recent Payments History -->
+                <div id="billingTransactionsContainer" style="margin-bottom: 24px;">
+                    <h4 style="font-size: 15px; font-weight: 800; margin-bottom: 12px; color: var(--text);">Recent Payment Transactions</h4>
+                    <div id="billingTransactionsList" style="display: flex; flex-direction: column; gap: 10px; max-height: 180px; overflow-y: auto;">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
 
                 <button class="btn-gradient" id="btnBillingUpgrade" style="width: 100%; padding: 14px; border-radius: 14px;">
                     <i class="ri-sparkling-fill"></i> Upgrade / Manage Plan Access

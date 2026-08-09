@@ -17,12 +17,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     const auth = new AuthController();
-    await auth.restoreSession();
+    try {
+        await auth.restoreSession();
+    } catch (e) {
+        console.warn("Restore session info warning:", e.message);
+    }
 
-    const currentUser = Storage.getUser();
+    let currentUser = Storage.getUser();
     if (!currentUser) {
-        window.location.href = "../login.html";
-        return;
+        if (Storage.getAccessToken()) {
+            currentUser = { fullName: "User", email: "" };
+        } else {
+            window.location.href = "../login.html";
+            return;
+        }
     }
 
     // 2. Initialize Dashboard Component
@@ -83,6 +91,7 @@ class DashboardApp {
     updateUserUI() {
         const userNameText = document.getElementById("userNameText");
         const greetingUserName = document.getElementById("greetingUserName");
+        const greetingTitle = document.getElementById("greetingTitle");
         const userAvatarText = document.getElementById("userAvatarText");
         const planBadgeContainer = document.getElementById("planBadgeContainer");
         const navItemAdmin = document.getElementById("navItemAdmin");
@@ -96,10 +105,26 @@ class DashboardApp {
         if (greetingUserName) greetingUserName.textContent = firstName;
         if (userAvatarText) userAvatarText.textContent = initial;
 
-        // Admin badge & links
-        if (this.user.role === "admin") {
+        // Dynamic Time-Based Greeting
+        const currentHour = new Date().getHours();
+        let greetingTime = "Good Morning";
+        if (currentHour >= 12 && currentHour < 17) {
+            greetingTime = "Good Afternoon";
+        } else if (currentHour >= 17) {
+            greetingTime = "Good Evening";
+        }
+
+        if (greetingTitle) {
+            greetingTitle.innerHTML = `${greetingTime}, <span class="text-gradient" id="greetingUserName">${this.escapeHTML(firstName)}</span> 👋`;
+        }
+
+        // Admin panel links are ONLY visible if user.role === 'admin'
+        if (this.user && this.user.role === "admin") {
             if (navItemAdmin) navItemAdmin.style.display = "flex";
             if (dropBtnAdmin) dropBtnAdmin.style.display = "flex";
+        } else {
+            if (navItemAdmin) navItemAdmin.style.display = "none";
+            if (dropBtnAdmin) dropBtnAdmin.style.display = "none";
         }
 
         // Premium plan status
@@ -112,7 +137,7 @@ class DashboardApp {
             }
         } else {
             if (planBadgeContainer) {
-                planBadgeContainer.innerHTML = `<span class="dash-badge-free" id="userPlanBadge"><i class="ri-sparkling-fill"></i> Free Tier (1 Free)</span>`;
+                planBadgeContainer.innerHTML = `<span class="dash-badge-free" id="userPlanBadge"><i class="ri-sparkling-fill"></i> Free Tier</span>`;
             }
         }
     }
@@ -174,16 +199,43 @@ class DashboardApp {
         // User Avatar Profile Dropdown Toggle
         const userProfilePill = document.getElementById("userProfilePill");
         const userDropdownMenu = document.getElementById("userDropdownMenu");
+        const notifBellBtn = document.getElementById("notifBellBtn");
+        const notifDropdownMenu = document.getElementById("notifDropdownMenu");
+        const notifUnreadBadge = document.getElementById("notifUnreadBadge");
+        const btnMarkAllRead = document.getElementById("btnMarkAllRead");
+
         if (userProfilePill && userDropdownMenu) {
             userProfilePill.addEventListener("click", (e) => {
                 e.stopPropagation();
+                if (notifDropdownMenu) notifDropdownMenu.classList.remove("show");
                 userDropdownMenu.classList.toggle("show");
             });
+        }
 
-            document.addEventListener("click", () => {
-                userDropdownMenu.classList.remove("show");
+        if (notifBellBtn && notifDropdownMenu) {
+            notifBellBtn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                if (userDropdownMenu) userDropdownMenu.classList.remove("show");
+                notifDropdownMenu.classList.toggle("show");
             });
         }
+
+        if (btnMarkAllRead) {
+            btnMarkAllRead.addEventListener("click", (e) => {
+                e.stopPropagation();
+                if (notifUnreadBadge) notifUnreadBadge.style.display = "none";
+                toast.success("All notifications marked as read.");
+            });
+        }
+
+        document.addEventListener("click", (e) => {
+            if (userDropdownMenu && !userDropdownMenu.contains(e.target) && e.target !== userProfilePill) {
+                userDropdownMenu.classList.remove("show");
+            }
+            if (notifDropdownMenu && !notifDropdownMenu.contains(e.target) && e.target !== notifBellBtn) {
+                notifDropdownMenu.classList.remove("show");
+            }
+        });
 
         const dropBtnAdmin = document.getElementById("dropBtnAdmin");
         if (dropBtnAdmin) {
@@ -204,6 +256,21 @@ class DashboardApp {
         if (btnCreateAIResume) btnCreateAIResume.addEventListener("click", handleCreateIntent);
         if (btnCreateFirstResume) btnCreateFirstResume.addEventListener("click", handleCreateIntent);
         if (quickCardCreateAI) quickCardCreateAI.addEventListener("click", handleCreateIntent);
+
+        // Quick Action Triggers
+        const btnQuickATS = document.getElementById("btnQuickATS");
+        const quickCardATS = document.getElementById("quickCardATS");
+        if (btnQuickATS) btnQuickATS.addEventListener("click", () => window.location.href = "ats-checker.html");
+        if (quickCardATS) quickCardATS.addEventListener("click", (e) => {
+            if (e.target !== btnQuickATS) window.location.href = "ats-checker.html";
+        });
+
+        const btnQuickCoverLetter = document.getElementById("btnQuickCoverLetter");
+        const quickCardCoverLetter = document.getElementById("quickCardCoverLetter");
+        if (btnQuickCoverLetter) btnQuickCoverLetter.addEventListener("click", () => window.location.href = "cover-letter.html");
+        if (quickCardCoverLetter) quickCardCoverLetter.addEventListener("click", (e) => {
+            if (e.target !== btnQuickCoverLetter) window.location.href = "cover-letter.html";
+        });
 
         // Drawer Nav Links
         const navItemResumes = document.getElementById("navItemResumes");
@@ -239,6 +306,15 @@ class DashboardApp {
         const cancelModal = document.getElementById("btnCancelModal");
         if (modalClose) modalClose.addEventListener("click", () => this.closePremiumModal());
         if (cancelModal) cancelModal.addEventListener("click", () => this.closePremiumModal());
+
+        // Close modal when clicking outside (backdrop overlay click)
+        document.querySelectorAll(".modal-overlay").forEach(overlay => {
+            overlay.addEventListener("click", (e) => {
+                if (e.target === overlay) {
+                    overlay.classList.remove("active");
+                }
+            });
+        });
     }
 
     /**
@@ -387,47 +463,19 @@ class DashboardApp {
         if (navItemInterview) navItemInterview.addEventListener("click", openInterview);
 
         // Quick Card 4: Cover Letter
+        // Cover Letter Page Direct Navigation
         const quickCardCoverLetter = document.getElementById("quickCardCoverLetter");
         const btnQuickCoverLetter = document.getElementById("btnQuickCoverLetter");
         const navItemCoverLetter = document.getElementById("navItemCoverLetter");
-        const coverModal = document.getElementById("coverLetterModalOverlay");
-        const coverForm = document.getElementById("coverLetterForm");
 
-        const openCover = (e) => {
+        const redirectToCoverLetter = (e) => {
             if (e) e.preventDefault();
-            if (coverModal) coverModal.classList.add("active");
+            window.location.href = "cover-letter.html";
         };
 
-        if (quickCardCoverLetter) quickCardCoverLetter.addEventListener("click", openCover);
-        if (btnQuickCoverLetter) btnQuickCoverLetter.addEventListener("click", (e) => { e.stopPropagation(); openCover(e); });
-        if (navItemCoverLetter) navItemCoverLetter.addEventListener("click", openCover);
-
-        if (coverForm) {
-            coverForm.addEventListener("submit", (e) => {
-                e.preventDefault();
-                const role = document.getElementById("clTargetRole")?.value || "Developer";
-                const company = document.getElementById("clCompanyName")?.value || "Tech Corp";
-
-                const resContainer = document.getElementById("clResultContainer");
-                const outText = document.getElementById("clOutputText");
-                if (resContainer && outText) {
-                    resContainer.style.display = "block";
-                    outText.value = `Dear Hiring Manager at ${company},\n\nI am writing to express my strong interest in the ${role} position. With extensive experience in full-stack development, modern web architecture, and clean code practices, I am confident in my ability to make an immediate impact at ${company}.\n\nThroughout my career, I have successfully designed, deployed, and optimized scalable web applications. I would welcome the opportunity to discuss how my technical expertise aligns with your team's goals.\n\nSincerely,\n${this.user.fullName}`;
-                    toast.success("AI Cover Letter generated!");
-                }
-            });
-        }
-
-        const btnCopyCL = document.getElementById("btnCopyCoverLetter");
-        if (btnCopyCL) {
-            btnCopyCL.addEventListener("click", () => {
-                const outText = document.getElementById("clOutputText");
-                if (outText && outText.value) {
-                    navigator.clipboard.writeText(outText.value);
-                    toast.success("Cover letter copied to clipboard!");
-                }
-            });
-        }
+        if (quickCardCoverLetter) quickCardCoverLetter.addEventListener("click", redirectToCoverLetter);
+        if (btnQuickCoverLetter) btnQuickCoverLetter.addEventListener("click", redirectToCoverLetter);
+        if (navItemCoverLetter) navItemCoverLetter.addEventListener("click", redirectToCoverLetter);
 
         // Payment & Billing Details Modal Handler
         const navItemBilling = document.getElementById("navItemBilling");
@@ -435,48 +483,92 @@ class DashboardApp {
         const billingModal = document.getElementById("billingModalOverlay");
         const btnBillingUpgrade = document.getElementById("btnBillingUpgrade");
 
-        const openBilling = (e) => {
+        const openBilling = async (e) => {
             if (e) e.preventDefault();
             if (billingModal) {
+                billingModal.classList.add("active");
                 const titleEl = document.getElementById("billingPlanTitle");
                 const validityEl = document.getElementById("billingPlanValidity");
                 const benefitsEl = document.getElementById("billingBenefitsList");
+                const txListEl = document.getElementById("billingTransactionsList");
 
-                const isPro = this.user.planType === "pro" || (this.user.premium && !this.user.planType);
-                const isSingle = this.user.planType === "single";
+                if (txListEl) txListEl.innerHTML = `<div style="font-size: 13px; color: var(--text-light);"><i class="ri-loader-4-line ri-spin"></i> Fetching live payment details...</div>`;
 
-                if (titleEl) titleEl.textContent = isPro ? "Pro Unlimited Yearly Pass" : isSingle ? "One-Time Service Pass" : "Free Starter Pass";
-
-                if (validityEl) {
-                    let validityText = "Unlimited Free Tier Access";
-                    if (isPro) {
-                        const expDate = this.user.subscriptionExpiresAt ? new Date(this.user.subscriptionExpiresAt).toLocaleDateString("en-IN") : "1 Year From Purchase";
-                        validityText = `Active Pro Pass • Valid Until: ${expDate}`;
-                    } else if (isSingle) {
-                        validityText = `Single Job Pass Active (${this.user.paidResumesCount || 1} Build / Interview Left)`;
+                try {
+                    const payData = await api.get("/api/v1/payments/my-payments");
+                    if (payData && payData.user) {
+                        this.user = { ...this.user, ...payData.user };
+                        Storage.saveUser(this.user);
+                        this.updateUserUI();
                     }
-                    validityEl.innerHTML = `<i class="ri-time-line" style="color: #38BDF8;"></i> <span>Validity: ${validityText}</span>`;
-                }
 
-                if (benefitsEl) {
-                    if (isPro) {
-                        benefitsEl.innerHTML = `
-                            <li style="display: flex; align-items: center; gap: 10px;"><i class="ri-checkbox-circle-fill" style="color: #22C55E;"></i> Unlimited AI Resume Generations</li>
-                            <li style="display: flex; align-items: center; gap: 10px;"><i class="ri-checkbox-circle-fill" style="color: #22C55E;"></i> Unlimited AI Technical Mock Interviews</li>
-                            <li style="display: flex; align-items: center; gap: 10px;"><i class="ri-checkbox-circle-fill" style="color: #22C55E;"></i> Full 15-Section Unlocked ATS Score Reports</li>
-                            <li style="display: flex; align-items: center; gap: 10px;"><i class="ri-checkbox-circle-fill" style="color: #22C55E;"></i> Unlimited Tailored Cover Letters & High-Res PDF Exports</li>
-                        `;
-                    } else {
-                        benefitsEl.innerHTML = `
-                            <li style="display: flex; align-items: center; gap: 10px;"><i class="ri-checkbox-circle-fill" style="color: #22C55E;"></i> Unlimited Free ATS Score Scans</li>
-                            <li style="display: flex; align-items: center; gap: 10px;"><i class="ri-checkbox-circle-fill" style="color: #22C55E;"></i> Unlimited Free AI Cover Letters</li>
-                            <li style="display: flex; align-items: center; gap: 10px;"><i class="ri-checkbox-circle-fill" style="color: #22C55E;"></i> 1 Free AI Resume Build & 1 Free Mock Interview</li>
-                            <li style="display: flex; align-items: center; gap: 10px;"><i class="ri-close-circle-fill" style="color: #94A3B8;"></i> Upgrade required for unlimited resume generation</li>
-                        `;
+                    const payments = payData?.payments || [];
+                    const isPro = this.user.planType === "pro" || (this.user.premium && !this.user.planType);
+                    const isSingle = this.user.planType === "single";
+
+                    if (titleEl) titleEl.textContent = isPro ? "Pro Unlimited Yearly Pass" : isSingle ? "One-Time Service Pass" : "Free Starter Pass";
+
+                    if (validityEl) {
+                        let validityText = "Unlimited Free Tier Access";
+                        if (isPro) {
+                            const expDate = this.user.subscriptionExpiresAt ? new Date(this.user.subscriptionExpiresAt).toLocaleDateString("en-IN") : "1 Year From Purchase";
+                            validityText = `Active Pro Pass • Valid Until: ${expDate}`;
+                        } else if (isSingle) {
+                            validityText = `Single Job Pass Active (${this.user.paidResumesCount || 1} Build / Interview Left)`;
+                        }
+                        validityEl.innerHTML = `<i class="ri-time-line" style="color: #38BDF8;"></i> <span>Validity: ${validityText}</span>`;
                     }
-                }
 
-                billingModal.classList.add("active");
+                    if (benefitsEl) {
+                        if (isPro) {
+                            benefitsEl.innerHTML = `
+                                <li style="display: flex; align-items: center; gap: 10px;"><i class="ri-checkbox-circle-fill" style="color: #22C55E;"></i> Unlimited AI Resume Generations</li>
+                                <li style="display: flex; align-items: center; gap: 10px;"><i class="ri-checkbox-circle-fill" style="color: #22C55E;"></i> Unlimited AI Technical Mock Interviews</li>
+                                <li style="display: flex; align-items: center; gap: 10px;"><i class="ri-checkbox-circle-fill" style="color: #22C55E;"></i> Full 15-Section Unlocked ATS Score Reports</li>
+                                <li style="display: flex; align-items: center; gap: 10px;"><i class="ri-checkbox-circle-fill" style="color: #22C55E;"></i> Unlimited Tailored Cover Letters & High-Res PDF Exports</li>
+                            `;
+                        } else {
+                            benefitsEl.innerHTML = `
+                                <li style="display: flex; align-items: center; gap: 10px;"><i class="ri-checkbox-circle-fill" style="color: #22C55E;"></i> Unlimited Free ATS Score Scans</li>
+                                <li style="display: flex; align-items: center; gap: 10px;"><i class="ri-checkbox-circle-fill" style="color: #22C55E;"></i> Unlimited Free AI Cover Letters</li>
+                                <li style="display: flex; align-items: center; gap: 10px;"><i class="ri-checkbox-circle-fill" style="color: #22C55E;"></i> 1 Free AI Resume Build & 1 Free Mock Interview</li>
+                                <li style="display: flex; align-items: center; gap: 10px;"><i class="ri-close-circle-fill" style="color: #94A3B8;"></i> Upgrade required for unlimited resume generation</li>
+                            `;
+                        }
+                    }
+
+                    if (txListEl) {
+                        if (payments.length === 0) {
+                            txListEl.innerHTML = `<div style="font-size: 13px; color: var(--text-light); padding: 12px; background: #F8FAFC; border-radius: 12px; border: 1px solid var(--border);">No paid payment transactions found. You are currently using the Free Starter tier.</div>`;
+                        } else {
+                            let txHtml = "";
+                            payments.forEach(tx => {
+                                const dt = new Date(tx.createdAt || Date.now()).toLocaleDateString("en-IN", {
+                                    day: "numeric",
+                                    month: "short",
+                                    year: "numeric"
+                                });
+                                txHtml += `
+                                    <div style="background: #F8FAFC; border: 1px solid var(--border); border-radius: 14px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; font-size: 13px;">
+                                        <div>
+                                            <strong style="color: var(--text); font-weight: 800;">₹${tx.finalAmount || tx.originalAmount}</strong>
+                                            <span style="color: var(--text-light); margin-left: 8px;">• ${dt}</span>
+                                            <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">ID: ${tx.razorpayPaymentId || tx.razorpayOrderId || 'N/A'}</div>
+                                        </div>
+                                        <span class="badge" style="background: rgba(34, 197, 94, 0.1); color: #22C55E; font-weight: 800; font-size: 11px; padding: 4px 10px;">
+                                            <i class="ri-checkbox-circle-fill"></i> ${tx.paymentStatus.toUpperCase()}
+                                        </span>
+                                    </div>
+                                `;
+                            });
+                            txListEl.innerHTML = txHtml;
+                        }
+                    }
+
+                } catch (err) {
+                    console.error("Error fetching payment history:", err);
+                    if (txListEl) txListEl.innerHTML = `<div style="font-size: 13px; color: #EF4444;">Could not load payment records.</div>`;
+                }
             }
         };
 
@@ -561,7 +653,7 @@ class DashboardApp {
         }
 
         let html = "";
-        this.resumes.forEach((resume, idx) => {
+        this.resumes.forEach((resume) => {
             const updatedDate = new Date(resume.updatedAt || Date.now()).toLocaleDateString("en-US", {
                 month: "short",
                 day: "numeric",
@@ -569,7 +661,7 @@ class DashboardApp {
             });
 
             const score = resume.atsScore || 98;
-            const isFreeDownloadAvailable = (idx === 0 && !resume.isWatermarked) || this.user.premium;
+            const isUnlocked = resume.isWatermarked === false || this.user.premium || (this.user.paidResumesCount || 0) > 0;
 
             html += `
                 <div class="resume-card" data-id="${resume._id}">
@@ -588,17 +680,14 @@ class DashboardApp {
                     </div>
 
                     <div class="resume-card-actions">
-                        <div style="display: flex; gap: 6px;">
-                            <button class="btn-action-small btn-edit-resume" data-id="${resume._id}">
+                        <div style="display: flex; gap: 6px; width: 100%;">
+                            <button class="btn-action-small btn-edit-resume" data-id="${resume._id}" style="flex: 1;">
                                 <i class="ri-edit-line"></i> Edit
                             </button>
-                            <button class="btn-action-small btn-download-resume ${!isFreeDownloadAvailable ? 'locked-pay' : ''}" data-id="${resume._id}">
-                                <i class="${isFreeDownloadAvailable ? 'ri-download-2-line' : 'ri-lock-line'}"></i> ${isFreeDownloadAvailable ? 'Export PDF' : 'Pay & Download'}
+                            <button class="btn-action-small btn-download-resume ${!isUnlocked ? 'locked-pay' : ''}" data-id="${resume._id}" style="flex: 1;">
+                                <i class="${isUnlocked ? 'ri-download-2-line' : 'ri-lock-line'}"></i> ${isUnlocked ? 'Export PDF' : 'Pay & Download'}
                             </button>
                         </div>
-                        <button class="resume-menu-btn btn-delete-resume" data-id="${resume._id}" title="Delete Resume">
-                            <i class="ri-delete-bin-line"></i>
-                        </button>
                     </div>
                 </div>
             `;
@@ -618,28 +707,13 @@ class DashboardApp {
             btn.addEventListener("click", (e) => {
                 const id = e.currentTarget.dataset.id;
                 const targetResume = this.resumes[index];
-                const isFreeDownloadAvailable = (index === 0 && !targetResume?.isWatermarked) || this.user.premium;
+                const isUnlocked = targetResume?.isWatermarked === false || this.user.premium || (this.user.paidResumesCount || 0) > 0;
 
-                if (isFreeDownloadAvailable) {
+                if (isUnlocked) {
                     window.location.href = `builder.html?id=${id}`;
                 } else {
-                    toast.info("1 Free Download used. Please purchase a download pass or Pro membership to export additional resumes.");
+                    toast.info("This fresh resume is watermarked. Please purchase a single pass or Pro membership to export.");
                     this.openPremiumModal();
-                }
-            });
-        });
-
-        grid.querySelectorAll(".btn-delete-resume").forEach(btn => {
-            btn.addEventListener("click", async (e) => {
-                const id = e.currentTarget.dataset.id;
-                if (confirm("Are you sure you want to delete this resume?")) {
-                    try {
-                        await api.delete(`/api/v1/resumes/${id}`);
-                        toast.success("Resume deleted successfully.");
-                        await this.loadResumes();
-                    } catch (err) {
-                        toast.error(err.message || "Failed to delete resume.");
-                    }
                 }
             });
         });

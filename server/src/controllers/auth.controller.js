@@ -99,14 +99,15 @@ export const logout = asyncHandler(async (req, res) => {
  * Refresh Token
  */
 export const refresh = asyncHandler(async (req, res) => {
-  const token = req.cookies.refreshToken;
+  const token = req.cookies?.refreshToken || req.body?.refreshToken || req.headers["x-refresh-token"];
 
-  const accessToken = await refreshAccessToken(token);
+  const result = await refreshAccessToken(token);
+  const accessToken = typeof result === "string" ? result : result.accessToken;
 
   res
     .cookie("accessToken", accessToken, {
       ...cookieOptions,
-      maxAge: 15 * 60 * 1000,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     })
     .status(200)
     .json(

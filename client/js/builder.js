@@ -15,12 +15,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     const auth = new AuthController();
-    await auth.restoreSession();
+    try {
+        await auth.restoreSession();
+    } catch (e) {
+        console.warn("Restore session info warning:", e);
+    }
 
-    const user = Storage.getUser();
+    let user = Storage.getUser();
     if (!user) {
-        window.location.href = "../login.html";
-        return;
+        if (Storage.getAccessToken()) {
+            user = { fullName: "User", email: "" };
+        } else {
+            window.location.href = "../login.html";
+            return;
+        }
     }
 
     const builder = new BuilderApp(user);
@@ -56,7 +64,7 @@ class BuilderApp {
         this.initLiveSync();
         this.initAIHandlers();
         this.initActionButtons();
-        this.initRefetchHandler();
+        this.initPaymentModalControls();
 
         // Load existing resume if editing, otherwise check watermarking status for new resume
         if (this.resumeId) {
@@ -90,14 +98,18 @@ class BuilderApp {
             const resumes = res.data || res;
             const existingCount = Array.isArray(resumes) ? resumes.length : 0;
 
-            if (!this.user.premium) {
-                if (this.user.hasUsedFreeQuota || existingCount >= 1) {
-                    this.isWatermarked = true;
-                } else {
-                    this.isWatermarked = false;
-                }
-            } else {
+            const isPro = this.user.planType === 'pro' && this.user.subscriptionExpiresAt && new Date(this.user.subscriptionExpiresAt) > new Date();
+            const hasPaidCredit = (this.user.paidResumesCount || 0) > 0;
+
+            if (existingCount === 0) {
+                // Rule 1: First resume ever created is 100% FREE with unlimited edits & exports
                 this.isWatermarked = false;
+            } else if (isPro || hasPaidCredit) {
+                // Rule 2 & 3: Pro or Single Pass available
+                this.isWatermarked = false;
+            } else {
+                // Rule 4: Fresh new resume requires pass
+                this.isWatermarked = true;
             }
             this.syncLivePreview();
         } catch (err) {
@@ -140,7 +152,14 @@ class BuilderApp {
             const res = await api.get(`/api/v1/resumes/${id}`);
             const data = res.data || res;
             if (data) {
-                this.isWatermarked = data.isWatermarked || (!this.user.premium && this.user.hasUsedFreeQuota);
+                const isPro = this.user.planType === 'pro' && this.user.subscriptionExpiresAt && new Date(this.user.subscriptionExpiresAt) > new Date();
+                const hasPaidCredit = (this.user.paidResumesCount || 0) > 0;
+
+                if (data.isWatermarked === false || isPro || hasPaidCredit) {
+                    this.isWatermarked = false;
+                } else {
+                    this.isWatermarked = true;
+                }
 
                 if (data.template) {
                     this.selectedTemplate = data.template;
@@ -824,35 +843,6 @@ class BuilderApp {
         }
     }
 
-    initRefetchHandler() {
-        const btnRefetch = document.getElementById("btnRefetchData");
-        if (btnRefetch) {
-            btnRefetch.addEventListener("click", async () => {
-                try {
-                    toast.info("Refetching saved user data from server...");
-                    const res = await api.get("/api/v1/resumes");
-                    if (res && res.length) {
-                        const saved = res[0];
-                        if (saved.personalInfo) {
-                            if (saved.personalInfo.fullName) document.getElementById("inpFullName").value = saved.personalInfo.fullName;
-                            if (saved.personalInfo.email) document.getElementById("inpEmail").value = saved.personalInfo.email;
-                            if (saved.personalInfo.phone) document.getElementById("inpPhone").value = saved.personalInfo.phone;
-                            if (saved.personalInfo.location) document.getElementById("inpLocation").value = saved.personalInfo.location;
-                        }
-                        if (saved.summary) document.getElementById("inpSummary").value = saved.summary;
-                        if (saved.skills && saved.skills.length) document.getElementById("inpSkills").value = saved.skills.join("\n");
-                        this.syncLivePreview();
-                        toast.success("Saved user data refetched successfully!");
-                    } else {
-                        toast.info("Loaded fresh workspace.");
-                    }
-                } catch (err) {
-                    toast.error("Failed to refetch saved data.");
-                }
-            });
-        }
-    }
-
     /**
      * Dedicated AI Handlers
      */
@@ -890,6 +880,72 @@ class BuilderApp {
     }
 
     /**
+     * Seamless Save & Export Paywall Enfo    /**
+     * Auto-Save Resume Edits to Database
+     */
+    async saveResumeToDatabase() {
+        if (!Storage.isLoggedIn()) return null;
+
+        this.readFormValues();
+        const fullName = document.getElementById("inpFullName").value.trim();
+        const jobTitle = document.getElementById("inpJobTitle").value.trim();
+        const title = `${fullName || "Professional"} Resume${jobTitle ? ` — ${jobTitle}` : ''}`;
+
+        const payload = {
+            title,
+            template: this.selectedTemplate,
+            personalInfo: {
+                fullName: fullName,
+                email: document.getElementById("inpEmail").value.trim(),
+                phone: document.getElementById("inpPhone").value.trim(),
+                location: document.getElementById("inpLocation").value.trim(),
+                linkedin: document.getElementById("inpLinkedin").value.trim(),
+                github: document.getElementById("inpGithub").value.trim(),
+                portfolio: document.getElementById("inpWebsite").value.trim()
+            },
+            summary: document.getElementById("inpSummary").value.trim(),
+            skills: document.getElementById("inpSkills").value.split("\n").map(s => s.trim()).filter(Boolean),
+            experience: this.experiences.filter(e => e.position || e.company || e.description),
+            education: this.educations.filter(e => e.degree || e.college),
+            projects: this.projects.filter(p => p.title || p.description),
+            customSections: this.customSections.filter(c => c.heading || c.details),
+            atsScore: 98
+        };
+
+        try {
+            let response;
+            if (this.resumeId) {
+                response = await api.put(`/api/v1/resumes/${this.resumeId}`, payload);
+            } else {
+                response = await api.post("/api/v1/resumes", payload);
+            }
+
+            const responseData = response.data || response;
+            const savedResume = responseData.resume || (responseData._id ? responseData : null);
+            const updatedUser = responseData.user;
+
+            if (updatedUser) {
+                Storage.saveUser(updatedUser);
+                this.user = updatedUser;
+            }
+
+            if (savedResume && savedResume._id) {
+                this.resumeId = savedResume._id;
+                if (savedResume.isWatermarked !== undefined) {
+                    this.isWatermarked = savedResume.isWatermarked;
+                }
+                const newUrl = `${window.location.pathname}?id=${savedResume._id}`;
+                window.history.replaceState({ path: newUrl }, '', newUrl);
+            }
+
+            return savedResume;
+        } catch (err) {
+            console.error("Auto save resume error:", err);
+            return null;
+        }
+    }
+
+    /**
      * Seamless Save & Export Paywall Enforcement
      */
     initActionButtons() {
@@ -904,59 +960,17 @@ class BuilderApp {
                     return;
                 }
 
-                this.readFormValues();
-                const fullName = document.getElementById("inpFullName").value.trim();
-                const jobTitle = document.getElementById("inpJobTitle").value.trim();
-                const title = `${fullName || "Professional"} Resume${jobTitle ? ` — ${jobTitle}` : ''}`;
-
-                const payload = {
-                    title,
-                    template: this.selectedTemplate,
-                    personalInfo: {
-                        fullName: fullName,
-                        email: document.getElementById("inpEmail").value.trim(),
-                        phone: document.getElementById("inpPhone").value.trim(),
-                        location: document.getElementById("inpLocation").value.trim(),
-                        linkedin: document.getElementById("inpLinkedin").value.trim(),
-                        github: document.getElementById("inpGithub").value.trim(),
-                        portfolio: document.getElementById("inpWebsite").value.trim()
-                    },
-                    summary: document.getElementById("inpSummary").value.trim(),
-                    skills: document.getElementById("inpSkills").value.split("\n").map(s => s.trim()).filter(Boolean),
-                    experience: this.experiences.filter(e => e.position || e.company || e.description),
-                    education: this.educations.filter(e => e.degree || e.college),
-                    projects: this.projects.filter(p => p.title || p.description),
-                    customSections: this.customSections.filter(c => c.heading || c.details),
-                    atsScore: 98
-                };
-
                 const originalHTML = btnSave.innerHTML;
                 btnSave.disabled = true;
                 btnSave.innerHTML = `<i class="ri-loader-4-line ri-spin"></i> Saving...`;
 
                 try {
                     toast.info("Saving resume to MongoDB database...");
-                    
-                    let response;
-                    if (this.resumeId) {
-                        response = await api.put(`/api/v1/resumes/${this.resumeId}`, payload);
-                    } else {
-                        response = await api.post("/api/v1/resumes", payload);
-                    }
-
-                    const savedObj = response.data || response;
-                    if (savedObj && savedObj._id) {
-                        this.resumeId = savedObj._id;
-                        this.isWatermarked = savedObj.isWatermarked || (!this.user.premium && this.user.hasUsedFreeQuota);
-                    }
-
-                    toast.success("Resume saved successfully to database!");
-                    setTimeout(() => {
-                        window.location.href = "dashboard.html";
-                    }, 1200);
+                    await this.saveResumeToDatabase();
+                    toast.success("Resume saved successfully!");
                 } catch (err) {
-                    console.error("Save resume database error:", err);
                     toast.error(err.message || "Failed to save resume to database.");
+                } finally {
                     btnSave.disabled = false;
                     btnSave.innerHTML = originalHTML;
                 }
@@ -965,21 +979,315 @@ class BuilderApp {
 
         const btnExportPDF = document.getElementById("btnExportPDF");
         if (btnExportPDF) {
-            btnExportPDF.addEventListener("click", (e) => {
+            btnExportPDF.addEventListener("click", async (e) => {
                 if (e) e.preventDefault();
 
-                if (this.isWatermarked && !this.user.premium) {
-                    toast.error("PDF Export Locked! Watermarked preview can only be downloaded after Pro upgrade or purchasing a single pass.");
-                    setTimeout(() => {
-                        window.location.href = "dashboard.html";
-                    }, 1500);
+                if (!Storage.isLoggedIn()) {
+                    toast.error("Please login to save & export your resume.");
+                    window.location.href = "../login.html";
                     return;
                 }
 
-                toast.info("Opening Multi-Page PDF Print Window...");
-                window.print();
+                // 1. AUTOMATICALLY SAVE ALL FORM EDITS TO DATABASE FIRST
+                toast.info("Saving your resume edits automatically...");
+                await this.saveResumeToDatabase();
+
+                // 2. If this resume is ALREADY unwatermarked (unlocked), trigger direct PDF download immediately!
+                if (!this.isWatermarked) {
+                    await this.downloadPDF();
+                    return;
+                }
+
+                // 3. If resume is currently watermarked, attempt to unlock with available Single Pass / Pro
+                if (this.resumeId) {
+                    try {
+                        toast.info("Verifying export pass & watermark status...");
+                        const response = await api.post(`/api/v1/resumes/${this.resumeId}/export`);
+                        const data = response.data || response;
+
+                        if (data.user) {
+                            Storage.saveUser(data.user);
+                            this.user = data.user;
+                        }
+
+                        if (data.resume) {
+                            this.isWatermarked = data.resume.isWatermarked;
+                        }
+
+                        if (!this.isWatermarked) {
+                            toast.success("Resume unlocked! Generating PDF download...");
+                            this.syncLivePreview();
+                            await this.downloadPDF();
+                            return;
+                        }
+                    } catch (err) {
+                        // Payment required error -> Open Payment Modal directly in Builder (NO REDIRECT!)
+                        this.isWatermarked = true;
+                        this.syncLivePreview();
+                        toast.info("Watermarked preview! Choose a pass to unlock instant unwatermarked PDF downloads.");
+                        this.openPremiumModal();
+                        return;
+                    }
+                }
+
+                // 4. Fallback watermark check -> Open Payment Modal directly in Builder (NO REDIRECT!)
+                this.isWatermarked = true;
+                this.syncLivePreview();
+                toast.info("Watermarked preview! Choose a pass to unlock instant unwatermarked PDF downloads.");
+                this.openPremiumModal();
             });
         }
+    }
+
+    /**
+     * Fetch Admin Managed Settings (Pricing & Keys)
+     */
+    async fetchSettings() {
+        try {
+            const res = await api.get("/api/v1/settings");
+            const data = res.data || res;
+            if (data) {
+                if (data.premiumDownloadPrice !== undefined) {
+                    this.perResumePrice = Number(data.premiumDownloadPrice);
+                }
+                if (data.bulkDownloadPrice !== undefined) {
+                    this.proUnlimitedPrice = Number(data.bulkDownloadPrice);
+                }
+            }
+        } catch (err) {
+            console.log("Using default admin pricing:", this.perResumePrice, this.proUnlimitedPrice);
+        }
+        this.currentBasePrice = this.selectedPlan === "unlimited" ? this.proUnlimitedPrice : this.perResumePrice;
+    }
+
+    /**
+     * In-Builder Payment & Upgrade Modal Controls
+     */
+    async initPaymentModalControls() {
+        this.selectedPlan = 'single';
+        this.perResumePrice = 199;
+        this.proUnlimitedPrice = 499;
+        this.currentBasePrice = 199;
+        this.appliedDiscount = 0;
+        this.appliedCouponCode = "";
+
+        await this.fetchSettings();
+
+        const modalClose = document.getElementById("premiumModalClose");
+        const cancelModal = document.getElementById("btnCancelModal");
+        if (modalClose) modalClose.addEventListener("click", () => this.closePremiumModal());
+        if (cancelModal) cancelModal.addEventListener("click", () => this.closePremiumModal());
+
+        const btnApplyCoupon = document.getElementById("btnApplyCoupon");
+        if (btnApplyCoupon) {
+            btnApplyCoupon.addEventListener("click", () => this.handleApplyCoupon());
+        }
+
+        const btnPayUpgrade = document.getElementById("btnPayUpgrade");
+        if (btnPayUpgrade) {
+            btnPayUpgrade.addEventListener("click", () => this.handleRazorpayPayment());
+        }
+
+        document.querySelectorAll(".modal-overlay").forEach(overlay => {
+            overlay.addEventListener("click", (e) => {
+                if (e.target === overlay) {
+                    overlay.classList.remove("active");
+                }
+            });
+        });
+    }
+
+    openPremiumModal() {
+        this.renderPlansGrid();
+        this.updateFinalPriceDisplay();
+        const modal = document.getElementById("premiumModalOverlay");
+        if (modal) modal.classList.add("active");
+    }
+
+    closePremiumModal() {
+        const modal = document.getElementById("premiumModalOverlay");
+        if (modal) modal.classList.remove("active");
+    }
+
+    renderPlansGrid() {
+        const grid = document.getElementById("modalPlansGrid");
+        if (!grid) return;
+
+        grid.innerHTML = `
+            <div class="plan-card-option ${this.selectedPlan === 'single' ? 'active' : ''}" data-plan="single" data-price="${this.perResumePrice}">
+                <div class="plan-name">1 Single Resume Download Pass</div>
+                <div class="plan-price">₹${this.perResumePrice} <span style="font-size: 12px; font-weight: 500;">/ resume</span></div>
+                <div style="font-size: 11px; color: var(--text-light); margin-top: 4px;">Unlock this resume instantly without watermarks</div>
+            </div>
+
+            <div class="plan-card-option ${this.selectedPlan === 'unlimited' ? 'active' : ''}" data-plan="unlimited" data-price="${this.proUnlimitedPrice}">
+                <div class="plan-name">Pro Unlimited Yearly Pass (Best Value)</div>
+                <div class="plan-price">₹${this.proUnlimitedPrice} <span style="font-size: 12px; font-weight: 500;">/ yearly</span></div>
+                <div style="font-size: 11px; color: var(--success); font-weight: 700; margin-top: 4px;">Unlimited AI resumes & PDF exports for 1 full year</div>
+            </div>
+        `;
+
+        grid.querySelectorAll(".plan-card-option").forEach(card => {
+            card.addEventListener("click", () => {
+                grid.querySelectorAll(".plan-card-option").forEach(c => c.classList.remove("active"));
+                card.classList.add("active");
+                this.selectedPlan = card.dataset.plan;
+                this.currentBasePrice = Number(card.dataset.price);
+                this.updateFinalPriceDisplay();
+            });
+        });
+    }
+
+    updateFinalPriceDisplay() {
+        const msg = document.getElementById("couponMessage");
+        if (this.appliedDiscount > 0) {
+            const finalAmount = Math.max(this.currentBasePrice - this.appliedDiscount, 0);
+            if (msg) {
+                msg.style.display = "block";
+                msg.style.color = "var(--success)";
+                msg.textContent = `🎉 Coupon '${this.appliedCouponCode}' Applied! Discount: ₹${this.appliedDiscount}. Final Total: ₹${finalAmount}`;
+            }
+        } else {
+            if (msg) {
+                msg.style.display = "block";
+                msg.style.color = "var(--text-light)";
+                msg.textContent = `Selected Plan: ₹${this.currentBasePrice}`;
+            }
+        }
+    }
+
+    async handleApplyCoupon() {
+        const input = document.getElementById("couponCodeInput");
+        if (!input || !input.value.trim()) {
+            toast.error("Please enter a coupon code.");
+            return;
+        }
+
+        const code = input.value.trim().toUpperCase();
+
+        try {
+            toast.info(`Validating coupon code ${code}...`);
+            const result = await api.post("/api/v1/coupons/validate", {
+                code: code,
+                amount: this.currentBasePrice
+            });
+
+            if (result && result.discount !== undefined) {
+                this.appliedDiscount = result.discount;
+                this.appliedCouponCode = code;
+                this.updateFinalPriceDisplay();
+                toast.success(`🎉 Coupon ${code} applied successfully!`);
+            } else {
+                toast.error("Invalid or expired coupon code.");
+            }
+        } catch (err) {
+            toast.error(err.message || "Failed to validate coupon code.");
+        }
+    }
+
+    async handleRazorpayPayment() {
+        try {
+            toast.info("Initiating secure Razorpay checkout...");
+
+            const keyRes = await api.get("/api/v1/payments/key");
+            const razorpayKey = keyRes.key;
+
+            const orderRes = await api.post("/api/v1/payments/create-order", {
+                resumeId: this.resumeId || undefined,
+                couponCode: this.appliedCouponCode || undefined,
+                plan: this.selectedPlan
+            });
+
+            const { order } = orderRes;
+
+            const options = {
+                key: razorpayKey,
+                amount: order.amount,
+                currency: order.currency || "INR",
+                name: "Resuvix AI",
+                description: this.selectedPlan === 'unlimited' ? "Pro Yearly Unlimited Access Pass" : "Single Resume Download Pass",
+                order_id: order.id,
+                handler: async (response) => {
+                    try {
+                        toast.info("Verifying payment security signature...");
+                        const verifyRes = await api.post("/api/v1/payments/verify-payment", {
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_signature: response.razorpay_signature,
+                            couponCode: this.appliedCouponCode || undefined
+                        });
+
+                        if (verifyRes) {
+                            toast.success("🎉 Payment Successful! Resume Unlocked!");
+                            this.isWatermarked = false;
+                            this.user.premium = true;
+                            Storage.saveUser(this.user);
+                            this.syncLivePreview();
+                            this.closePremiumModal();
+
+                            // Save unwatermarked state to database
+                            await this.saveResumeToDatabase();
+
+                            // Automatically trigger vector PDF download in builder!
+                            setTimeout(async () => {
+                                await this.downloadPDF();
+                            }, 300);
+                        }
+                    } catch (err) {
+                        toast.error(err.message || "Payment verification failed.");
+                    }
+                },
+                prefill: {
+                    name: this.user.fullName || "User",
+                    email: this.user.email || "",
+                    contact: this.user.phone || "9999999999"
+                }
+            };
+
+            const rzp = new window.Razorpay(options);
+            rzp.on("payment.failed", function (response) {
+                toast.error(response.error.description || "Payment failed. Please try again.");
+            });
+            rzp.open();
+
+        } catch (err) {
+            console.error("Razorpay order creation error:", err);
+            toast.error(err.message || "Failed to initiate payment. Please try again.");
+        }
+    }
+
+    async downloadPDF() {
+        const pagesContainer = document.getElementById("pagesContainer");
+        if (!pagesContainer) return;
+
+        const btnExportPDF = document.getElementById("btnExportPDF");
+        const originalText = btnExportPDF ? btnExportPDF.innerHTML : "";
+
+        if (btnExportPDF) {
+            btnExportPDF.disabled = true;
+            btnExportPDF.innerHTML = `<i class="ri-loader-4-line ri-spin"></i> Preparing Vector PDF...`;
+        }
+
+        // Hide any active toast alerts before triggering print stream
+        const toastContainer = document.getElementById("toast-container") || document.querySelector(".toast-container");
+        if (toastContainer) {
+            toastContainer.style.display = "none";
+        }
+
+        const resetBtn = () => {
+            if (btnExportPDF) {
+                btnExportPDF.disabled = false;
+                btnExportPDF.innerHTML = originalText;
+            }
+            if (toastContainer) {
+                toastContainer.style.display = "";
+            }
+        };
+
+        setTimeout(() => {
+            window.print();
+            resetBtn();
+        }, 150);
     }
 
     escapeHTML(str) {

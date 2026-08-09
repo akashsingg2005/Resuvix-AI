@@ -221,3 +221,24 @@ export const verifyPayment = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getUserPayments = async (req, res, next) => {
+  try {
+    const orders = await Order.find({ user: req.user._id })
+      .sort({ createdAt: -1 })
+      .populate("resume", "title");
+
+    const User = (await import("../models/user.model.js")).default;
+    const currentUser = await User.findById(req.user._id).select(
+      "planType subscriptionExpiresAt paidResumesCount paidInterviewsCount premium email fullName"
+    );
+
+    res.status(200).json({
+      success: true,
+      user: currentUser,
+      payments: orders,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

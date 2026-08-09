@@ -101,6 +101,8 @@ class ATSCheckerApp {
         const closeBtn = document.getElementById("drawerClose");
         const overlay = document.getElementById("drawerOverlay");
         const drawer = document.getElementById("chatgptDrawer");
+        const navItemAdmin = document.getElementById("navItemAdmin");
+        const drawerUpgradeCard = document.getElementById("drawerUpgradeCard");
 
         const openDrawer = () => {
             if (drawer) drawer.classList.add("active");
@@ -118,6 +120,21 @@ class ATSCheckerApp {
         if (closeBtn) closeBtn.addEventListener("click", closeDrawer);
         if (overlay) overlay.addEventListener("click", closeDrawer);
 
+        // Admin badge & Pro upgrade card visibility
+        if (this.user?.role === "admin" && navItemAdmin) {
+            navItemAdmin.style.display = "flex";
+        }
+        if (this.user?.premium && drawerUpgradeCard) {
+            drawerUpgradeCard.style.display = "none";
+        }
+
+        // Auto close drawer when clicking menu items
+        document.querySelectorAll(".drawer-menu-list .drawer-item").forEach(item => {
+            item.addEventListener("click", () => {
+                closeDrawer();
+            });
+        });
+
         document.addEventListener("keydown", (e) => {
             if (e.key === "Escape") closeDrawer();
         });
@@ -125,8 +142,25 @@ class ATSCheckerApp {
 
     initEventListeners() {
         const dropBtnLogout = document.getElementById("dropBtnLogout");
-        if (dropBtnLogout && this.auth) {
-            dropBtnLogout.addEventListener("click", () => this.auth.logout());
+        const drawerLogoutBtn = document.getElementById("drawerLogoutBtn");
+
+        const handleLogout = () => {
+            if (this.auth) {
+                this.auth.logout();
+            } else if (typeof Storage !== "undefined") {
+                Storage.logout();
+                window.location.href = "../login.html";
+            }
+        };
+
+        if (dropBtnLogout) dropBtnLogout.addEventListener("click", handleLogout);
+        if (drawerLogoutBtn) drawerLogoutBtn.addEventListener("click", handleLogout);
+
+        const btnDrawerUpgrade = document.getElementById("btnDrawerUpgrade");
+        if (btnDrawerUpgrade) {
+            btnDrawerUpgrade.addEventListener("click", () => {
+                window.location.href = "dashboard.html";
+            });
         }
 
         const userProfilePill = document.getElementById("userProfilePill");

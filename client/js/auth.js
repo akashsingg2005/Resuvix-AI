@@ -19,6 +19,14 @@ class AuthController {
 
     }
 
+    getAppPageURL(pageName) {
+        const pathname = window.location.pathname;
+        if (pathname.includes("/pages/")) {
+            return pageName;
+        }
+        return `pages/${pageName}`;
+    }
+
     /**
      * ==========================================
      * INITIALIZE
@@ -555,9 +563,9 @@ class AuthController {
                 const hasPending = typeof sessionStorage !== "undefined" && sessionStorage.getItem("resuvix_pending_ats_report");
 
                 if (redirect === "ats-checker" || hasPending) {
-                    window.location.href = "./pages/ats-checker.html";
+                    window.location.href = this.getAppPageURL("ats-checker.html");
                 } else {
-                    window.location.href = "./pages/dashboard.html";
+                    window.location.href = this.getAppPageURL("dashboard.html");
                 }
             }, 800);
 
@@ -689,9 +697,9 @@ class AuthController {
                 const hasPending = typeof sessionStorage !== "undefined" && sessionStorage.getItem("resuvix_pending_ats_report");
 
                 if (redirect === "ats-checker" || hasPending) {
-                    window.location.href = "./pages/ats-checker.html";
+                    window.location.href = this.getAppPageURL("ats-checker.html");
                 } else {
-                    window.location.href = "./pages/dashboard.html";
+                    window.location.href = this.getAppPageURL("dashboard.html");
                 }
             }, 800);
 
@@ -776,35 +784,19 @@ class AuthController {
      */
 
     async refreshAccessToken() {
-
         try {
-
-            const response =
-
-                await AuthAPI.refreshToken();
-
-            if (response.accessToken) {
-
-                Storage.saveAccessToken(
-
-                    response.accessToken
-
-                );
-
+            const response = await AuthAPI.refreshToken();
+            const token = response.accessToken || response.data?.accessToken;
+            if (token) {
+                Storage.saveAccessToken(token);
+                return true;
             }
-
-            return true;
-
-        }
-
-        catch (error) {
-
-            Storage.logout();
-
             return false;
-
         }
-
+        catch (error) {
+            console.warn("Refresh token attempt failed:", error.message);
+            return false;
+        }
     }
 
     /**
@@ -814,62 +806,34 @@ class AuthController {
      */
 
     async restoreSession() {
-
         if (!Storage.isLoggedIn()) {
-
             return;
-
         }
 
         try {
-
-            const response =
-
-                await AuthAPI.me();
-
-            Storage.saveUser(
-
-                response.user
-
-            );
-
+            const response = await AuthAPI.me();
+            if (response && (response.user || response._id)) {
+                Storage.saveUser(response.user || response);
+            }
         }
-
         catch (error) {
-
-            const refreshed =
-
-                await this.refreshAccessToken();
-
+            const refreshed = await this.refreshAccessToken();
             if (!refreshed) {
-
                 return;
-
             }
 
             try {
-
-                const response =
-
-                    await AuthAPI.me();
-
-                Storage.saveUser(
-
-                    response.user
-
-                );
-
+                const response = await AuthAPI.me();
+                if (response && (response.user || response._id)) {
+                    Storage.saveUser(response.user || response);
+                }
             }
-
-            catch {
-
-                Storage.logout();
-
+            catch (err) {
+                console.warn("Restore user profile warning:", err.message);
             }
-
         }
-
     }
+
         /**
      * ==========================================
      * PROTECTED ROUTES

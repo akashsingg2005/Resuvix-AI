@@ -21,6 +21,7 @@
     <!-- CSS -->
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="../css/builder.css">
 </head>
 
@@ -204,9 +205,6 @@
 
             <div class="preview-toolbar">
                 <span>📄 Live Auto-Paginated A4 Canvas</span>
-                <button class="btn-refetch-server" id="btnRefetchData">
-                    <i class="ri-refresh-line"></i> Refetch Saved Data
-                </button>
             </div>
 
             <div class="pages-container" id="pagesContainer">
@@ -232,7 +230,48 @@
         </div>
     </div>
 
+    <!-- Premium Payment Modal Overlay -->
+    <div class="modal-overlay" id="premiumModalOverlay">
+        <div class="premium-modal">
+            <button class="modal-close-btn" id="premiumModalClose">
+                <i class="ri-close-line"></i>
+            </button>
+
+            <div class="premium-modal-header">
+                <div class="premium-icon-badge">
+                    <i class="ri-vip-crown-fill"></i>
+                </div>
+                <h2>Unlock Clean Unwatermarked Export</h2>
+                <p>Your resume edits have been automatically saved. Select a pass to unlock high-resolution vector PDF export.</p>
+            </div>
+
+            <!-- Plans Grid -->
+            <div class="plans-grid" id="modalPlansGrid">
+                <!-- Loaded dynamically -->
+            </div>
+
+            <!-- Coupon Box -->
+            <div class="coupon-box-row">
+                <input type="text" class="coupon-input" id="couponCodeInput" placeholder="Enter Coupon Code (e.g. RESUVIX50)">
+                <button class="btn-outline" id="btnApplyCoupon" style="padding: 12px 22px;">Apply</button>
+            </div>
+            <div id="couponMessage" style="font-size: 13px; font-weight: 600; margin-bottom: 16px; display: none;"></div>
+
+            <!-- Modal Action Buttons -->
+            <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+                <button class="btn-gradient" id="btnPayUpgrade" style="flex: 1; padding: 16px;">
+                    Upgrade Now & Unlock PDF
+                </button>
+                <button class="btn-outline" id="btnCancelModal" style="padding: 16px 24px;">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="../js/config.js"></script>
     <script src="../js/storage.js"></script>
     <script src="../js/toast.js"></script>

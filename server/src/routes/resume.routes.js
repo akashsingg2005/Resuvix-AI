@@ -7,6 +7,7 @@ import {
   updateResume,
   deleteResume,
   duplicateResume,
+  exportResume,
 } from "../controllers/resume.controller.js";
 
 import { protect } from "../middleware/auth.middleware.js";
@@ -35,7 +36,13 @@ router.get("/", getMyResumes);
 // Get Single Resume
 router.get("/:id", getResume);
 
-// Update Resume
+// Update Resume (Supports both PUT and PATCH)
+router.put(
+  "/:id",
+  validate(updateResumeSchema),
+  updateResume
+);
+
 router.patch(
   "/:id",
   validate(updateResumeSchema),
@@ -47,5 +54,8 @@ router.delete("/:id", deleteResume);
 
 // Duplicate Resume
 router.post("/:id/duplicate", duplicateResume);
+
+// Export Resume (Consumes 1 Single Pass credit or free quota)
+router.post("/:id/export", exportResume);
 
 export default router;

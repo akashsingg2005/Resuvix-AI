@@ -11,13 +11,13 @@ export const createResumeSchema = z.object({
     .optional(),
 
   personalInfo: z.object({
-    fullName: z.string().min(2, "Full name is required"),
-    email: z.string().email("Invalid email"),
+    fullName: z.string().min(1, "Full name is required"),
+    email: z.string().optional(),
     phone: z.string().optional(),
     location: z.string().optional(),
-    linkedin: z.string().url().optional().or(z.literal("")),
-    github: z.string().url().optional().or(z.literal("")),
-    portfolio: z.string().url().optional().or(z.literal("")),
+    linkedin: z.string().optional(),
+    github: z.string().optional(),
+    portfolio: z.string().optional(),
   }),
 
   summary: z.string().optional(),

@@ -22,6 +22,6 @@ router.post("/ats-scan", upload.single("file"), scanATS);
 // Protected AI routes requiring authentication
 router.post("/generate-resume", protect, generateResumeAI);
 router.get("/interview-questions", protect, getInterviewQuestions);
-router.post("/cover-letter", protect, generateCoverLetter);
+router.post("/cover-letter", upload.single("file"), protect, generateCoverLetter);
 
 export default router;

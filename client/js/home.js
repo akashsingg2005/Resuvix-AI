@@ -98,13 +98,17 @@ function initHeroTyping(){
    HERO PARALLAX
 ========================================================== */
 
+/* ==========================================================
+   HERO PARALLAX (Desktop Only)
+========================================================== */
+
 function initHeroParallax(){
 
     const hero = document.querySelector(".hero");
 
     const dashboard = document.querySelector(".dashboard");
 
-    if(!hero || !dashboard) return;
+    if(!hero || !dashboard || window.innerWidth <= 992) return;
 
     hero.addEventListener("mousemove",(e)=>{
 
@@ -114,9 +118,9 @@ function initHeroParallax(){
 
         const y = (e.clientY - rect.top) / rect.height;
 
-        const moveX = (x - .5) * 18;
+        const moveX = (x - .5) * 12;
 
-        const moveY = (y - .5) * 18;
+        const moveY = (y - .5) * 12;
 
         dashboard.style.transform =
 
@@ -143,7 +147,7 @@ function initFloatingDashboard(){
 
     const dashboard = document.querySelector(".dashboard");
 
-    if(!dashboard) return;
+    if(!dashboard || window.innerWidth <= 992) return;
 
     let start = null;
 
@@ -153,7 +157,7 @@ function initFloatingDashboard(){
 
         const progress = (timestamp - start) / 1000;
 
-        const y = Math.sin(progress * 1.2) * 8;
+        const y = Math.sin(progress * 1.2) * 6;
 
         dashboard.style.marginTop = `${y}px`;
 
@@ -167,45 +171,11 @@ function initFloatingDashboard(){
 
 
 /* ==========================================================
-   COMPANY AUTO SLIDER
+   COMPANY AUTO SLIDER (Handled purely via hardware-accelerated CSS marquee)
 ========================================================== */
 
 function initCompanySlider(){
-
-    const slider = document.querySelector(".company-slider");
-
-    if(!slider) return;
-
-    const items = [...slider.children];
-
-    if(items.length < 2) return;
-
-    items.forEach(item=>{
-
-        slider.appendChild(item.cloneNode(true));
-
-    });
-
-    let offset = 0;
-
-    function animate(){
-
-        offset += .45;
-
-        if(offset >= slider.scrollWidth / 2){
-
-            offset = 0;
-
-        }
-
-        slider.scrollLeft = offset;
-
-        requestAnimationFrame(animate);
-
-    }
-
-    animate();
-
+    // Handled via GPU accelerated CSS keyframe marqueeScroll in index.html to prevent layout thrashes
 }
 
 /* ==========================================================
@@ -625,23 +595,6 @@ document.querySelectorAll(".btn-gradient").forEach(button=>{
 
 
 /* ==========================================================
-   HERO PARALLAX ON SCROLL
-========================================================== */
-
-window.addEventListener("scroll",()=>{
-
-    const hero = document.querySelector(".hero");
-
-    if(!hero) return;
-
-    const offset = window.scrollY * 0.25;
-
-    hero.style.backgroundPositionY = `${offset}px`;
-
-},{passive:true});
-
-
-/* ==========================================================
    PERFORMANCE
 ========================================================== */
 
@@ -678,7 +631,7 @@ function initFAQAccordion() {
 
                 if (!isOpen) {
                     item.classList.add("active");
-                    body.style.maxHeight = body.scrollHeight + "px";
+                    body.style.maxHeight = (body.scrollHeight + 30) + "px";
                     if (icon) icon.className = "ri-subtract-line";
                 }
             });

@@ -7,6 +7,7 @@ import couponRoutes from "./coupon.routes.js";
 import paymentRoutes from "./payment.routes.js";
 import aiRoutes from "./ai.routes.js";
 import adminRoutes from "./admin.routes.js";
+import coverLetterRoutes from "./coverLetter.routes.js";
 
 const router = express.Router();
 
@@ -26,6 +27,9 @@ router.use("/payments", paymentRoutes);
 
 // AI Services Routes
 router.use("/ai", aiRoutes);
+
+// Cover Letter Routes
+router.use("/cover-letters", coverLetterRoutes);
 
 // Admin Routes
 router.use("/admin", adminRoutes);

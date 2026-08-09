@@ -143,6 +143,7 @@ class AdminApp {
                 const code = document.getElementById("cpCode").value.trim().toUpperCase();
                 const discountType = document.getElementById("cpType").value;
                 const discountValue = Number(document.getElementById("cpValue").value);
+                const maxDiscount = Number(document.getElementById("cpMaxDiscount")?.value) || 0;
                 const usageLimit = Number(document.getElementById("cpLimit").value) || 100;
 
                 try {
@@ -150,6 +151,7 @@ class AdminApp {
                         code,
                         discountType,
                         discountValue,
+                        maxDiscount,
                         usageLimit,
                         active: true
                     });
@@ -180,13 +182,14 @@ class AdminApp {
         if (!tbody) return;
 
         if (!this.coupons.length) {
-            tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">No coupons created yet.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted);">No coupons created yet.</td></tr>`;
             return;
         }
 
         let html = "";
         this.coupons.forEach(cp => {
             const valStr = cp.discountType === "percentage" ? `${cp.discountValue}%` : `₹${cp.discountValue}`;
+            const maxCapStr = cp.maxDiscount > 0 ? `₹${cp.maxDiscount}` : `No Cap`;
             const statusBadge = cp.active ? `<span style="color: var(--success); font-weight: 700;">Active</span>` : `<span style="color: #EF4444;">Disabled</span>`;
 
             html += `
@@ -194,6 +197,7 @@ class AdminApp {
                     <td><strong>${cp.code}</strong></td>
                     <td style="text-transform: capitalize;">${cp.discountType}</td>
                     <td>${valStr}</td>
+                    <td><span style="font-weight: 600; color: #0284C7;">${maxCapStr}</span></td>
                     <td>${cp.usedCount || 0} / ${cp.usageLimit || '∞'}</td>
                     <td>${statusBadge}</td>
                     <td>

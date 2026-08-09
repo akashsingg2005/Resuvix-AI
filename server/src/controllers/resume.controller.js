@@ -14,10 +14,10 @@ import {
  * Create Resume
  */
 export const createResume = asyncHandler(async (req, res) => {
-  const resume = await createResumeService(req.user._id, req.body);
+  const result = await createResumeService(req.user._id, req.body);
 
   res.status(201).json(
-    new ApiResponse(201, "Resume created successfully", resume)
+    new ApiResponse(201, "Resume created successfully", result)
   );
 });
 
@@ -83,5 +83,20 @@ export const duplicateResume = asyncHandler(async (req, res) => {
 
   res.status(201).json(
     new ApiResponse(201, "Resume duplicated successfully", resume)
+  );
+});
+
+/**
+ * Export Resume & Consume Quota / Single Pass Credit
+ */
+export const exportResume = asyncHandler(async (req, res) => {
+  const { exportResumeService } = await import("../services/resume.service.js");
+  const result = await exportResumeService(
+    req.params.id,
+    req.user._id
+  );
+
+  res.status(200).json(
+    new ApiResponse(200, result.message, result)
   );
 });

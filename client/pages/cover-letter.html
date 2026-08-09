@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Cover Letter Writer & Generator | Resuvix AI</title>
+    <meta name="description" content="Instantly generate personalized, role-targeted cover letters powered by Google Gemini AI with real-time editable A4 paper preview and high-res PDF download.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Times+New+Roman&display=swap" rel="stylesheet">
+
+    <!-- Remix Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../assets/logo/favicon.png">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/home.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/builder.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+
+    <style>
+        .cover-workspace {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+            min-height: calc(100vh - 90px);
+            margin-top: 80px;
+            padding: 24px;
+        }
+
+        .cover-form-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            border-radius: 24px;
+            padding: 28px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+            height: fit-content;
+        }
+
+        .cover-preview-card {
+            background: #1E293B;
+            border-radius: 24px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 20px 45px rgba(15, 23, 42, 0.2);
+        }
+
+        .cover-preview-toolbar {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 14px 20px;
+            border-radius: 16px;
+            color: #ffffff;
+            flex-wrap: wrap;
+            gap: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .cover-toolbar-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.12);
+            color: #ffffff !important;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-decoration: none;
+        }
+
+        .cover-toolbar-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        .cover-toolbar-btn.btn-primary-gradient {
+            background: linear-gradient(135deg, #6C63FF, #06B6D4);
+            border: none;
+            box-shadow: 0 4px 15px rgba(108, 99, 255, 0.35);
+        }
+
+        .cover-toolbar-btn.btn-primary-gradient:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
+        }
+
+        .paper-cover-letter {
+            width: 100%;
+            min-height: 950px;
+            background: #ffffff;
+            color: #0F172A;
+            box-shadow: 0 25px 60px rgba(15, 23, 42, 0.4);
+            padding: 56px 60px;
+            box-sizing: border-box;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 15px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            border-radius: 4px;
+            position: relative;
+            outline: none;
+            transition: box-shadow 0.2s ease;
+        }
+
+        .paper-cover-letter:focus {
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.4);
+        }
+
+        .input-group-field {
+            margin-bottom: 18px;
+        }
+
+        .input-group-field label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 800;
+            font-size: 13.5px;
+            color: #0F172A;
+            margin-bottom: 8px;
+        }
+
+        .cover-input, .cover-select, .cover-textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 14px;
+            border: 1.5px solid #E2E8F0;
+            background: #F8FAFC;
+            font-family: inherit;
+            font-size: 14px;
+            color: #0F172A;
+            outline: none;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+        }
+
+        .cover-input:focus, .cover-select:focus, .cover-textarea:focus {
+            border-color: #6C63FF;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.12);
+        }
+
+        .tone-badge-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 6px;
+        }
+
+        .tone-pill-btn {
+            padding: 10px 14px;
+            border-radius: 12px;
+            border: 1px solid #E2E8F0;
+            background: #F8FAFC;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: #475569;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .tone-pill-btn.active, .tone-pill-btn:hover {
+            background: rgba(108, 99, 255, 0.1);
+            color: #6C63FF;
+            border-color: #6C63FF;
+        }
+
+        .ai-actions-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-ai-refine {
+            padding: 8px 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-ai-refine:hover {
+            background: rgba(108, 99, 255, 0.4);
+            border-color: #6C63FF;
+        }
+
+        .dropzone-area-small {
+            border: 2px dashed rgba(108, 99, 255, 0.35);
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.03), rgba(6, 182, 212, 0.04));
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dropzone-area-small:hover, .dropzone-area-small.dragover {
+            border-color: #6C63FF;
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.08), rgba(6, 182, 212, 0.12));
+        }
+
+        .file-selected-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(34, 197, 94, 0.12);
+            color: #166534;
+            border: 1.5px solid #22C55E;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 13px;
+            margin-top: 10px;
+        }
+
+        .saved-letters-box {
+            margin-top: 24px;
+            border-top: 1px solid #E2E8F0;
+            padding-top: 20px;
+        }
+
+        .saved-letter-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            border-radius: 12px;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .saved-letter-item:hover {
+            background: rgba(108, 99, 255, 0.06);
+            border-color: #6C63FF;
+        }
+
+        @media (max-width: 992px) {
+            .cover-workspace {
+                grid-template-columns: 1fr;
+                padding: 16px;
+                margin-top: 75px;
+            }
+            .paper-cover-letter {
+                padding: 32px 24px;
+                font-size: 14px;
+            }
+        }
+
+        @media print {
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            body { background: #ffffff !important; margin: 0 !important; }
+            .dash-header, .cover-form-card, .cover-preview-toolbar, #toast-container, .modal-overlay, .mobile-desktop-notice-overlay { display: none !important; }
+            .cover-workspace { display: block !important; margin-top: 0 !important; padding: 0 !important; }
+            .cover-preview-card { background: none !important; padding: 0 !important; box-shadow: none !important; }
+            .paper-cover-letter { box-shadow: none !important; padding: 40px 48px !important; }
+        }
+    </style>
+</head>
+
+<body class="dashboard-body">
+
+    <div class="gradient-bg"></div>
+    <div class="gradient-bg bg2"></div>
+    <div class="gradient-bg bg3"></div>
+
+    <!-- Header Navigation -->
+    <header class="dash-header">
+        <div class="dash-nav">
+            <div class="dash-nav-left">
+                <button class="drawer-trigger" id="drawerTrigger" title="Open Navigation Menu">
+                    <i class="ri-menu-2-line"></i>
+                </button>
+                <a href="../index.html" class="dash-logo">
+                    <img src="../assets/logo/logo.png" alt="Resuvix AI">
+                </a>
+            </div>
+
+            <div class="dash-nav-right" id="headerAuthNav">
+                <div id="planBadgeContainer">
+                    <span class="dash-badge-free" id="userPlanBadge"><i class="ri-sparkling-fill"></i> Free Tier</span>
+                </div>
+                <div style="position: relative;">
+                    <div class="user-profile-menu" id="userProfilePill">
+                        <div class="user-avatar-small" id="userAvatarText">U</div>
+                        <span class="user-name-abbr" id="userNameText">User</span>
+                        <i class="ri-arrow-down-s-line"></i>
+                    </div>
+                    <div class="user-dropdown-menu" id="userDropdownMenu">
+                        <button class="dropdown-item-btn" id="dropBtnAdmin" style="display: none;"><i class="ri-shield-user-line"></i> Admin Panel</button>
+                        <button class="dropdown-item-btn" id="dropBtnLogout" style="color: #EF4444;"><i class="ri-logout-box-r-line" style="color: #EF4444;"></i> Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Side Drawer (Fixed Logout at Bottom) -->
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+
+    <aside class="chatgpt-drawer" id="chatgptDrawer">
+        <div class="drawer-top">
+            <div class="drawer-brand">
+                <a href="../index.html" class="logo">
+                    <img src="../assets/logo/logo.png" alt="Resuvix AI">
+                </a>
+                <button class="drawer-close" id="drawerClose">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+
+            <nav class="drawer-menu-list">
+                <a href="dashboard.html" class="drawer-item" id="navItemDash">
+                    <i class="ri-dashboard-3-line"></i> Dashboard
+                </a>
+                <a href="builder.html" class="drawer-item" id="navItemResumes">
+                    <i class="ri-file-list-3-line"></i> AI Resume Builder
+                </a>
+                <a href="ats-checker.html" class="drawer-item" id="navItemATS">
+                    <i class="ri-bar-chart-box-line"></i> ATS Checker
+                </a>
+                <a href="dashboard.html" class="drawer-item" id="navItemInterview">
+                    <i class="ri-user-voice-line"></i> Interview Prep
+                </a>
+                <a href="cover-letter.html" class="drawer-item active" id="navItemCoverLetter">
+                    <i class="ri-draft-line"></i> Cover Letters
+                </a>
+                <a href="dashboard.html" class="drawer-item" id="navItemBilling">
+                    <i class="ri-bank-card-line"></i> Payment Details
+                </a>
+                <a href="admin.html" class="drawer-item" id="navItemAdmin" style="display: none !important;">
+                    <i class="ri-shield-user-line"></i> Admin Panel
+                </a>
+            </nav>
+        </div>
+
+        <div class="drawer-bottom">
+            <div class="drawer-pro-card" id="drawerUpgradeCard">
+                <h4>🚀 Upgrade to Pro</h4>
+                <p>Unlock unlimited AI resume generation and advanced ATS reports.</p>
+                <button class="btn-drawer-upgrade" id="btnDrawerUpgrade">Upgrade Now</button>
+            </div>
+
+            <button class="drawer-item" id="drawerLogoutBtn" style="width: 100%; margin-top: 10px; color: #EF4444;">
+                <i class="ri-logout-box-r-line" style="color: #EF4444;"></i> Logout
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="cover-workspace">
+        
+        <!-- Left Form Pane -->
+        <div class="cover-form-card">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                <div style="width: 44px; height: 44px; border-radius: 14px; background: rgba(108, 99, 255, 0.1); color: #6C63FF; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                    <i class="ri-draft-line"></i>
+                </div>
+                <div>
+                    <h2 style="font-size: 1.3rem; font-weight: 800; color: #0F172A; margin: 0;">AI Cover Letter Writer</h2>
+                    <p style="font-size: 13px; color: #64748B; margin: 2px 0 0 0;">Instantly generate personalized, role-targeted cover letters using Google Gemini AI.</p>
+                </div>
+            </div>
+
+            <form id="coverLetterForm">
+                <div class="input-group-field">
+                    <label><i class="ri-briefcase-line" style="color: #6C63FF;"></i> Target Job Role / Title *</label>
+                    <input type="text" id="inpTargetRole" class="cover-input" placeholder="e.g. Full Stack Developer" required>
+                </div>
+
+                <div class="input-group-field">
+                    <label><i class="ri-building-line" style="color: #06B6D4;"></i> Company Name *</label>
+                    <input type="text" id="inpCompanyName" class="cover-input" placeholder="e.g. Google / Tech Corp" required>
+                </div>
+
+                <!-- PDF Resume Document Upload (Instant Auto-Fill) -->
+                <div class="input-group-field">
+                    <label><i class="ri-upload-cloud-2-line" style="color: #6C63FF;"></i> Upload Resume PDF / DOCX (Instant Auto-Fill)</label>
+                    <div class="dropzone-area-small" id="coverDropzoneArea">
+                        <i class="ri-file-pdf-2-line" style="font-size: 2rem; color: #6C63FF; display: block; margin-bottom: 6px;"></i>
+                        <span style="font-weight: 700; font-size: 13.5px; color: #0F172A;">Click or drag PDF resume file here</span>
+                        <p style="font-size: 12px; color: #64748B; margin: 4px 0 0 0;">Extracts candidate skills & experience automatically</p>
+                        <input type="file" id="coverPdfFileInput" accept=".pdf,.docx" style="display: none;">
+                    </div>
+                    <div id="coverFileSelectedBadge"></div>
+                </div>
+
+                <div class="input-group-field">
+                    <label><i class="ri-file-text-line" style="color: #22C55E;"></i> Link Existing Saved Resume (Optional)</label>
+                    <select id="selectSavedResume" class="cover-select">
+                        <option value="">-- Select Saved Resume for Skill Alignment --</option>
+                    </select>
+                </div>
+
+                <div class="input-group-field">
+                    <label><i class="ri-palette-line" style="color: #F59E0B;"></i> Writing Tone & Style</label>
+                    <div class="tone-badge-grid">
+                        <button type="button" class="tone-pill-btn active" data-tone="Professional & Confident">Professional & Confident</button>
+                        <button type="button" class="tone-pill-btn" data-tone="Enthusiastic & Creative">Enthusiastic & Creative</button>
+                        <button type="button" class="tone-pill-btn" data-tone="Executive & Direct">Executive & Direct</button>
+                        <button type="button" class="tone-pill-btn" data-tone="Modern Startup">Modern Startup</button>
+                    </div>
+                </div>
+
+                <div class="input-group-field">
+                    <label><i class="ri-file-list-line" style="color: #8B5CF6;"></i> Job Description / Key Requirements (Optional)</label>
+                    <textarea id="inpJobDescription" class="cover-textarea" rows="3" placeholder="Paste job description text to align keywords..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-gradient" id="btnGenerateCoverLetter" style="width: 100%; padding: 14px; font-weight: 800; font-size: 14.5px; border-radius: 14px;">
+                    <i class="ri-sparkling-fill"></i> Generate AI Cover Letter
+                </button>
+            </form>
+
+            <!-- Saved Cover Letters History -->
+            <div class="saved-letters-box">
+                <h4 style="font-size: 14px; font-weight: 800; color: #0F172A; margin: 0 0 12px 0; display: flex; align-items: center; gap: 8px;">
+                    <i class="ri-history-line" style="color: #6C63FF;"></i> My Saved Cover Letters
+                </h4>
+                <div id="savedLettersList">
+                    <p style="font-size: 12.5px; color: #94A3B8; margin: 0;">No saved cover letters yet.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Live Preview Pane -->
+        <div class="cover-preview-card">
+            <div class="cover-preview-toolbar">
+                <span style="font-weight: 800; font-size: 13.5px; display: flex; align-items: center; gap: 8px;">
+                    <i class="ri-edit-line" style="color: #38BDF8;"></i> Live Editable A4 Paper Canvas
+                </span>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button class="cover-toolbar-btn" id="btnSaveLetter">
+                        <i class="ri-save-line"></i> Save
+                    </button>
+                    <button class="cover-toolbar-btn" id="btnCopyLetter">
+                        <i class="ri-file-copy-line"></i> Copy
+                    </button>
+                    <button class="cover-toolbar-btn" id="btnEmailLetter" style="background: rgba(6, 182, 212, 0.12); color: #0284C7; border-color: rgba(6, 182, 212, 0.3);">
+                        <i class="ri-mail-send-line"></i> Email
+                    </button>
+                    <button class="cover-toolbar-btn btn-primary-gradient" id="btnExportCoverPDF">
+                        <i class="ri-download-2-line"></i> Export PDF
+                    </button>
+                </div>
+
+                <!-- 1-Click AI Refine Actions -->
+                <div class="ai-actions-row">
+                    <button class="btn-ai-refine" data-action="concise"><i class="ri-flashlight-line" style="color: #FACC15;"></i> Make Concise</button>
+                    <button class="btn-ai-refine" data-action="professional"><i class="ri-briefcase-line" style="color: #38BDF8;"></i> Professional Tone</button>
+                    <button class="btn-ai-refine" data-action="leadership"><i class="ri-fire-line" style="color: #F97316;"></i> Highlight Leadership</button>
+                    <button class="btn-ai-refine" data-action="grammar"><i class="ri-check-double-line" style="color: #22C55E;"></i> Polish Grammar</button>
+                </div>
+            </div>
+
+            <!-- Editable Canvas Live Help Notice Banner -->
+            <div style="background: rgba(6, 182, 212, 0.08); border: 1px dashed rgba(6, 182, 212, 0.4); border-radius: 12px; padding: 10px 16px; margin: 12px 18px 0; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                <span style="font-size: 12.5px; font-weight: 700; color: #0284C7; display: flex; align-items: center; gap: 8px;">
+                    <i class="ri-edit-box-line" style="font-size: 17px; color: #0284C7;"></i>
+                    <span><strong>Interactive Canvas:</strong> Click anywhere inside the paper document below to manually type, edit, or customize text directly!</span>
+                </span>
+                <span style="font-size: 11px; background: #0284C7; color: white; padding: 4px 10px; border-radius: 6px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; flex-shrink: 0;">
+                    <i class="ri-cursor-line"></i> Live Editable
+                </span>
+            </div>
+
+            <!-- Editable A4 Paper -->
+            <div class="paper-cover-letter" id="paperCoverLetter" contenteditable="true" spellcheck="true">Select target role and company name to generate your personalized cover letter...</div>
+        </div>
+
+    </main>
+
+    <!-- Send Email Modal -->
+    <div class="modal-overlay" id="emailModalOverlay">
+        <div class="premium-modal" style="max-width: 500px;">
+            <button class="modal-close-btn" id="emailModalClose">
+                <i class="ri-close-line"></i>
+            </button>
+            <div class="premium-modal-header">
+                <div class="premium-icon-badge" style="background: linear-gradient(135deg, #06B6D4, #3B82F6);">
+                    <i class="ri-mail-send-line"></i>
+                </div>
+                <h2>Send Cover Letter to Email</h2>
+                <p>Deliver a formatted copy directly to your inbox via Nodemailer SMTP.</p>
+            </div>
+            <form id="emailCoverForm" class="modal-body-content">
+                <div class="form-group-margin">
+                    <label class="form-label">Recipient Email Address</label>
+                    <input type="email" id="inpRecipientEmail" class="cover-input" placeholder="e.g. user@example.com" required>
+                </div>
+                <div style="display: flex; gap: 12px; margin-top: 20px;">
+                    <button type="submit" class="btn-gradient" id="btnSendEmailNow" style="flex: 1; padding: 14px;">
+                        <i class="ri-send-plane-fill"></i> Send Email Now
+                    </button>
+                    <button type="button" class="cover-toolbar-btn" id="btnCancelEmailModal" style="padding: 14px 20px;">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/config.js"></script>
+    <script src="../js/storage.js"></script>
+    <script src="../js/toast.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/cover-letter.js"></script>
+</body>
+
+</html>

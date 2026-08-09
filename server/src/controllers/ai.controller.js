@@ -76,7 +76,25 @@ export const getInterviewQuestions = asyncHandler(async (req, res) => {
  * Generate Cover Letter
  */
 export const generateCoverLetter = asyncHandler(async (req, res) => {
-  const coverLetter = await generateCoverLetterAI(req.body);
+  let resumeText = req.body.resumeText || "";
+
+  if (req.file) {
+    try {
+      const parsedText = await parsePDFToText(req.file.buffer);
+      if (parsedText && parsedText.trim()) {
+        resumeText = parsedText;
+      }
+    } catch (e) {
+      console.error("Cover Letter PDF parsing exception:", e.message);
+    }
+  }
+
+  const payload = {
+    ...req.body,
+    resumeText: resumeText || req.body.resumeText || req.body.experience || "",
+  };
+
+  const coverLetter = await generateCoverLetterAI(payload);
   res.status(200).json(
     new ApiResponse(200, "Cover letter generated successfully", { coverLetter })
   );

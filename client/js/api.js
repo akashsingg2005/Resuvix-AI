@@ -55,16 +55,17 @@ class APIClient {
                     try {
                         const refreshRes = await fetch(this.baseURL + "/api/v1/auth/refresh-token", {
                             method: "POST",
+                            headers: { "Content-Type": "application/json" },
                             credentials: "include"
                         });
                         if (refreshRes.ok) {
                             const refreshData = await refreshRes.json();
                             const newToken = refreshData.data?.accessToken || refreshData.accessToken;
                             if (newToken && typeof Storage !== "undefined") {
-                                Storage.setAccessToken(newToken);
+                                Storage.saveAccessToken(newToken);
                                 reqHeaders["Authorization"] = `Bearer ${newToken}`;
 
-                                // Retry original request
+                                // Retry original request silently
                                 const retryRes = await fetch(this.baseURL + endpoint, {
                                     credentials: "include",
                                     headers: reqHeaders,
@@ -81,14 +82,8 @@ class APIClient {
                         console.error("Auto refresh failed:", rErr.message);
                     }
 
-                    if (typeof Storage !== "undefined") {
-                        Storage.clearAuth();
-                    }
-                    if (typeof toast !== "undefined") {
-                        toast.error("Session expired. Please log in again.");
-                    }
-
-                    throw new Error("Session expired. Please log in again.");
+                    const msg = result.message || "Session expired. Please log in again.";
+                    throw new Error(msg);
                 }
 
                 const msg = result.message || `Request failed (${response.status})`;
@@ -254,10 +249,6 @@ class AuthAPI {
     }
 
     static async getMe() {
-        return api.get("/api/v1/auth/me");
-    }
-
-    static async me() {
         return api.get("/api/v1/auth/me");
     }
 

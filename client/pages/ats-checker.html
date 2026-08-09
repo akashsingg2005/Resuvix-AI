@@ -469,7 +469,7 @@
         </div>
     </header>
 
-    <!-- Slide Drawer -->
+    <!-- Slide Drawer (Identical to Dashboard) -->
     <div class="drawer-overlay" id="drawerOverlay"></div>
 
     <aside class="chatgpt-drawer" id="chatgptDrawer">
@@ -484,11 +484,11 @@
             </div>
 
             <nav class="drawer-menu-list">
-                <a href="dashboard.html" class="drawer-item">
+                <a href="dashboard.html" class="drawer-item" id="navItemDash">
                     <i class="ri-dashboard-3-line"></i> Dashboard
                 </a>
-                <a href="dashboard.html" class="drawer-item" id="navItemResumes">
-                    <i class="ri-file-list-3-line"></i> AI Resumes
+                <a href="builder.html" class="drawer-item" id="navItemResumes">
+                    <i class="ri-file-list-3-line"></i> AI Resume Builder
                 </a>
                 <a href="ats-checker.html" class="drawer-item active" id="navItemATS">
                     <i class="ri-bar-chart-box-line"></i> ATS Checker
@@ -496,10 +496,13 @@
                 <a href="dashboard.html" class="drawer-item" id="navItemInterview">
                     <i class="ri-user-voice-line"></i> Interview Prep
                 </a>
-                <a href="dashboard.html" class="drawer-item" id="navItemCoverLetter">
+                <a href="cover-letter.html" class="drawer-item" id="navItemCoverLetter">
                     <i class="ri-draft-line"></i> Cover Letters
                 </a>
-                <a href="admin.html" class="drawer-item" id="navItemAdmin" style="display: none;">
+                <a href="dashboard.html" class="drawer-item" id="navItemBilling">
+                    <i class="ri-bank-card-line"></i> Payment Details
+                </a>
+                <a href="admin.html" class="drawer-item" id="navItemAdmin" style="display: none !important;">
                     <i class="ri-shield-user-line"></i> Admin Panel
                 </a>
             </nav>
@@ -511,6 +514,10 @@
                 <p>Unlock unlimited AI resume generation and advanced ATS reports.</p>
                 <button class="btn-drawer-upgrade" id="btnDrawerUpgrade">Upgrade Now</button>
             </div>
+
+            <button class="drawer-item" id="drawerLogoutBtn" style="width: 100%; margin-top: 16px; color: #EF4444;">
+                <i class="ri-logout-box-r-line" style="color: #EF4444;"></i> Logout
+            </button>
         </div>
     </aside>
 

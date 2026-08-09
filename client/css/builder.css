@@ -463,6 +463,52 @@ body.builder-body {
     page-break-after: always;
 }
 
+/* Shared Professional ATS Typography & Layout across ALL Templates */
+.paper-resume p {
+    font-size: 1em;
+    line-height: 1.5;
+    margin: 4px 0;
+}
+
+.paper-resume ul {
+    margin-left: 20px;
+    margin-top: 4px;
+    margin-bottom: 6px;
+    list-style-type: disc;
+}
+
+.paper-resume li {
+    font-size: 1em;
+    line-height: 1.45;
+    margin-bottom: 3px;
+}
+
+.paper-resume .skills-row {
+    font-size: 1em;
+    line-height: 1.5;
+    margin-bottom: 3px;
+}
+
+.paper-resume .skills-row strong {
+    font-weight: 700;
+}
+
+.paper-resume .item-title-row {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 700;
+    font-size: 1.02em;
+}
+
+.paper-resume .item-sub-row {
+    display: flex;
+    justify-content: space-between;
+    font-style: italic;
+    font-size: 0.98em;
+    margin-top: 1px;
+    margin-bottom: 4px;
+}
+
 /* Diagonal Watermark for Preview-Only Mode */
 .paper-resume.watermarked::before {
     content: "PREVIEW ONLY • RESUVIX AI WATERMARK • UNLOCK FULL PDF VIA PRO";
@@ -610,25 +656,32 @@ body.builder-body {
 }
 
 .paper-resume.template-silicon-executive .sv-top-banner {
-    background: #0F172A;
-    color: #ffffff;
+    background: #0F172A !important;
+    background-color: #0F172A !important;
+    color: #ffffff !important;
     padding: 40px 48px;
-    border-bottom: 4px solid #38BDF8;
+    border-bottom: 4px solid #38BDF8 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
 }
 
 .paper-resume.template-silicon-executive .sv-top-banner h1 {
     font-size: 2.3em;
     font-weight: 800;
-    color: #ffffff;
+    color: #ffffff !important;
     margin-bottom: 4px;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
 }
 
 .paper-resume.template-silicon-executive .sv-top-banner .sv-subtitle {
     font-size: 1.1em;
     font-weight: 700;
-    color: #38BDF8;
+    color: #38BDF8 !important;
     text-transform: uppercase;
     margin-bottom: 12px;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
 }
 
 .paper-resume.template-silicon-executive .sv-contact-flex {
@@ -728,17 +781,27 @@ body.builder-body {
     margin-bottom: 10px;
 }
 
-/* Print CSS */
+/* Print CSS - Full Page Edge-to-Edge Vector Export */
 @page {
-    size: A4;
-    margin: 0;
+    size: A4 portrait;
+    margin: 0 !important;
 }
 
 @media print {
-    body {
-        background: #ffffff !important;
+    * {
+        -webkit-print-color-adjust: exact !important;
+        color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
-    .builder-header, .builder-form-pane, .preview-toolbar {
+    html, body {
+        background: #ffffff !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        -webkit-print-color-adjust: exact !important;
+        color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    #toast-container, .toast-container, .toast, .builder-header, .builder-form-pane, .preview-toolbar, .mobile-desktop-notice-overlay, .modal-overlay {
         display: none !important;
     }
     .builder-layout {
@@ -749,17 +812,80 @@ body.builder-body {
     .builder-preview-pane {
         background: none !important;
         padding: 0 !important;
+        overflow: visible !important;
+    }
+    .pages-container {
+        max-width: 100% !important;
+        width: 100% !important;
+        gap: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
     .paper-resume {
         box-shadow: none !important;
-        padding: 40px !important;
+        border-radius: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
         max-width: 100% !important;
         min-height: 1120px !important;
         page-break-after: always;
+        -webkit-print-color-adjust: exact !important;
+        color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* Template 1: Classic Latex ATS */
+    .paper-resume.template-latex-classic {
+        padding: 40px 48px !important;
+    }
+
+    /* Template 2: Silicon Executive (Full-width Dark Top Banner) */
+    .paper-resume.template-silicon-executive {
+        padding: 0 !important;
+    }
+    .paper-resume.template-silicon-executive .sv-top-banner {
+        width: 100% !important;
+        background: #0F172A !important;
+        background-color: #0F172A !important;
+        color: #ffffff !important;
+        padding: 40px 48px !important;
+        border-bottom: 4px solid #38BDF8 !important;
+        -webkit-print-color-adjust: exact !important;
+        color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    .paper-resume.template-silicon-executive .sv-top-banner h1 {
+        color: #ffffff !important;
+        -webkit-print-color-adjust: exact !important;
+    }
+    .paper-resume.template-silicon-executive .sv-top-banner .sv-subtitle {
+        color: #38BDF8 !important;
+        -webkit-print-color-adjust: exact !important;
+    }
+    .paper-resume.template-silicon-executive .sv-top-banner .sv-contact-flex a {
+        color: #38BDF8 !important;
+        -webkit-print-color-adjust: exact !important;
+    }
+
+    /* Template 3: Linear Sleek */
+    .paper-resume.template-linear-sleek {
+        padding: 40px 48px !important;
+        border-left: 6px solid #6C63FF !important;
+    }
+
+    /* Template 4: Stripe Enterprise */
+    .paper-resume.template-stripe-enterprise {
+        padding: 40px 48px !important;
+    }
+
+    .sec-heading-ats {
+        -webkit-print-color-adjust: exact !important;
+        color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
     .paper-resume.watermarked::before {
         display: flex !important;
-        opacity: 0.8 !important;
+        -webkit-print-color-adjust: exact !important;
     }
 }
 

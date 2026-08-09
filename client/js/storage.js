@@ -106,6 +106,14 @@ const Storage = {
 
         this.remove(CONFIG.STORAGE.ACCESS_TOKEN);
 
+    },
+
+    setAccessToken(token) {
+        this.saveAccessToken(token);
+    },
+
+    clearAuth() {
+        this.logout();
     }
 
 };

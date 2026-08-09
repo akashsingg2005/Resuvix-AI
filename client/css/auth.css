@@ -59,23 +59,14 @@ body{
 =========================== */
 
 .auth-wrapper{
-
     width:min(1280px,92%);
-
     min-height:100vh;
-
-    margin:auto;
-
+    margin:0 auto;
     display:grid;
-
     grid-template-columns:1.1fr .9fr;
-
-    align-items:center;
-
-    gap:80px;
-
-    padding:70px 0;
-
+    align-items:flex-start;
+    gap:40px;
+    padding:16px 0 40px;
 }
 
 /* ===========================
@@ -97,33 +88,21 @@ body{
 =========================== */
 
 .auth-logo{
-
     display:flex;
-
     align-items:center;
-
     gap:14px;
-
-    margin-bottom:60px;
-
+    margin-bottom:24px;
 }
 
 .auth-logo img{
-
     width:180px;
-
     height:auto;
-
 }
 
 .auth-logo h2{
-
     font-size:2rem;
-
     font-weight:800;
-
     color:var(--text);
-
 }
 
 /* ===========================
@@ -131,9 +110,7 @@ body{
 =========================== */
 
 .hero-content{
-
-    margin-bottom:55px;
-
+    margin-bottom:24px;
 }
 
 .hero-content .badge{
@@ -320,7 +297,7 @@ body{
 
     border-radius:30px;
 
-    padding:42px;
+    padding:28px 32px;
 
     box-shadow:
         0 25px 70px rgba(15,23,42,.12);

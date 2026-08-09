@@ -91,10 +91,12 @@
 
         /* 1-Line Seamless Company Marquee */
         .company-marquee-wrap {
-            width: 100%;
             overflow: hidden;
+            width: 100%;
+            max-width: 100vw;
             position: relative;
-            padding: 10px 0;
+            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
         }
 
         .company-marquee-track {
@@ -103,11 +105,12 @@
             gap: 36px;
             width: max-content;
             animation: marqueeScroll 25s linear infinite;
+            will-change: transform;
         }
 
         @keyframes marqueeScroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-50%, 0, 0); }
         }
 
         .company-badge-item {
@@ -178,8 +181,6 @@
 
         .price-card-popular {
             border: 2.5px solid #6C63FF !important;
-            background: linear-gradient(180deg, #ffffff, rgba(108, 99, 255, 0.02)) !important;
-            box-shadow: 0 20px 45px rgba(108, 99, 255, 0.15) !important;
         }
 
         .popular-badge-pill {
@@ -252,24 +253,31 @@
             background: rgba(248, 250, 252, 0.7);
         }
 
-        /* FAQ Dropdown Accordion */
+        /* FAQ Dropdown Accordion (QnA) */
         .faq-item-accordion {
             background: #ffffff;
-            border: 1px solid var(--border);
+            border: 1.5px solid var(--border);
             border-radius: 18px;
             margin-bottom: 14px;
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(15, 23, 42, 0.02);
-            transition: all 0.25s ease;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .faq-item-accordion.active {
+            border-color: #6C63FF;
+            box-shadow: 0 12px 30px rgba(108, 99, 255, 0.08);
+            background: #ffffff;
         }
 
         .faq-header {
-            padding: 22px 28px;
+            padding: 20px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
             user-select: none;
+            gap: 16px;
         }
 
         .faq-header h4 {
@@ -277,11 +285,12 @@
             font-weight: 800;
             color: var(--text);
             margin: 0;
+            line-height: 1.4;
         }
 
         .faq-icon {
-            width: 32px;
-            height: 32px;
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
             background: rgba(108, 99, 255, 0.08);
             color: #6C63FF;
@@ -289,18 +298,24 @@
             align-items: center;
             justify-content: center;
             font-size: 18px;
-            transition: transform 0.3s ease;
+            flex-shrink: 0;
+            transition: transform 0.3s ease, background 0.3s ease;
         }
 
         .faq-body {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.35s ease, padding 0.35s ease;
-            padding: 0 28px;
+            opacity: 0;
+            transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, padding 0.35s ease;
+            padding: 0 24px;
+            font-size: 14.5px;
+            color: var(--text-light);
+            line-height: 1.7;
         }
 
         .faq-item-accordion.active .faq-body {
-            padding: 0 28px 22px;
+            padding: 0 24px 20px;
+            opacity: 1;
         }
 
         .faq-item-accordion.active .faq-icon {
@@ -493,6 +508,7 @@
                 <a href="#workflow">How It Works</a>
                 <a href="#templates">Templates</a>
                 <a href="#pricing">Pricing</a>
+                <a href="#testimonials">Reviews</a>
                 <a href="#faq">FAQ</a>
                 <div class="mobile-drawer-cta">
                     <a href="login.html" class="btn-outline" style="width: 100%; text-align: center; border-radius: 999px;">Login</a>
@@ -958,6 +974,107 @@
     </section>
 
     <!-- ===========================
+            TESTIMONIALS SECTION
+    ============================ -->
+    <section id="testimonials" class="testimonials-section" style="padding: 90px 0; background: linear-gradient(180deg, rgba(248, 250, 252, 0.5), #ffffff);">
+        <div class="container">
+            <div style="text-align: center; max-width: 700px; margin: 0 auto 60px;">
+                <span class="hero-badge" style="margin-bottom: 12px;">💬 Success Stories</span>
+                <h2 style="font-size: 2.5rem; font-weight: 800; color: var(--text);">Loved by Job Seekers & Professionals</h2>
+                <p class="section-subtitle">See how candidates transformed their job search and landed top recruiter callbacks with Resuvix AI.</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px;">
+
+                <!-- 1. Raj Kumar Solanki -->
+                <div class="testimonial-card-box" style="background: #ffffff; border: 1px solid var(--border); border-radius: 24px; padding: 32px 28px; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04); display: flex; flex-direction: column; justify-content: space-between; transition: all 0.3s ease;">
+                    <div>
+                        <div style="display: flex; gap: 4px; color: #F59E0B; margin-bottom: 18px; font-size: 16px;">
+                            <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
+                        </div>
+                        <p style="font-size: 14.5px; color: var(--text-light); line-height: 1.7; margin-bottom: 24px;">
+                            "Resuvix AI completely transformed my job hunt! The AI ATS score scanner pinpointed exact missing keywords. Within 2 weeks of updating my resume, I landed 4 interview calls."
+                        </p>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 14px; padding-top: 16px; border-top: 1px solid rgba(226, 232, 240, 0.8);">
+                        <div style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #6C63FF, #06B6D4); color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; flex-shrink: 0;">
+                            RS
+                        </div>
+                        <div>
+                            <h4 style="font-size: 15px; font-weight: 800; color: var(--text); margin: 0;">Raj Kumar Solanki</h4>
+                            <span style="font-size: 12.5px; color: var(--text-light); font-weight: 500;">Senior Software Engineer</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Narayan Kumar -->
+                <div class="testimonial-card-box" style="background: #ffffff; border: 1px solid var(--border); border-radius: 24px; padding: 32px 28px; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04); display: flex; flex-direction: column; justify-content: space-between; transition: all 0.3s ease;">
+                    <div>
+                        <div style="display: flex; gap: 4px; color: #F59E0B; margin-bottom: 18px; font-size: 16px;">
+                            <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
+                        </div>
+                        <p style="font-size: 14.5px; color: var(--text-light); line-height: 1.7; margin-bottom: 24px;">
+                            "The AI Technical Mock Interview prep was a game changer for me. It gave real-time feedback on STAR method answers. Highly recommended for any developer seeking recruiter callbacks!"
+                        </p>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 14px; padding-top: 16px; border-top: 1px solid rgba(226, 232, 240, 0.8);">
+                        <div style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #4F46E5, #9333EA); color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; flex-shrink: 0;">
+                            NK
+                        </div>
+                        <div>
+                            <h4 style="font-size: 15px; font-weight: 800; color: var(--text); margin: 0;">Narayan Kumar</h4>
+                            <span style="font-size: 12.5px; color: var(--text-light); font-weight: 500;">Full Stack Developer</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Adarsh Kumar -->
+                <div class="testimonial-card-box" style="background: #ffffff; border: 1px solid var(--border); border-radius: 24px; padding: 32px 28px; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04); display: flex; flex-direction: column; justify-content: space-between; transition: all 0.3s ease;">
+                    <div>
+                        <div style="display: flex; gap: 4px; color: #F59E0B; margin-bottom: 18px; font-size: 16px;">
+                            <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
+                        </div>
+                        <p style="font-size: 14.5px; color: var(--text-light); line-height: 1.7; margin-bottom: 24px;">
+                            "I built my resume in under 2 minutes with the Executive template. The PDF export is crisp, recruiter-friendly, and the AI cover letter generator saved me hours of effort."
+                        </p>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 14px; padding-top: 16px; border-top: 1px solid rgba(226, 232, 240, 0.8);">
+                        <div style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #059669, #10B981); color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; flex-shrink: 0;">
+                            AK
+                        </div>
+                        <div>
+                            <h4 style="font-size: 15px; font-weight: 800; color: var(--text); margin: 0;">Adarsh Kumar</h4>
+                            <span style="font-size: 12.5px; color: var(--text-light); font-weight: 500;">Product Lead & Developer</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Babusaheb -->
+                <div class="testimonial-card-box" style="background: #ffffff; border: 1px solid var(--border); border-radius: 24px; padding: 32px 28px; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04); display: flex; flex-direction: column; justify-content: space-between; transition: all 0.3s ease;">
+                    <div>
+                        <div style="display: flex; gap: 4px; color: #F59E0B; margin-bottom: 18px; font-size: 16px;">
+                            <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
+                        </div>
+                        <p style="font-size: 14.5px; color: var(--text-light); line-height: 1.7; margin-bottom: 24px;">
+                            "Resuvix AI is by far the most complete career toolkit. Free ATS checks, instant AI resumes, and unlimited exports. Landed my dream role with a 40% salary hike!"
+                        </p>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 14px; padding-top: 16px; border-top: 1px solid rgba(226, 232, 240, 0.8);">
+                        <div style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #EA580C, #F97316); color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; flex-shrink: 0;">
+                            BS
+                        </div>
+                        <div>
+                            <h4 style="font-size: 15px; font-weight: 800; color: var(--text); margin: 0;">Babusaheb</h4>
+                            <span style="font-size: 12.5px; color: var(--text-light); font-weight: 500;">DevOps & Systems Lead</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ===========================
             INTERACTIVE DROPDOWN FAQ ACCORDION
     ============================ -->
     <section id="faq" class="faq-section" style="padding: 90px 0; background: rgba(255, 255, 255, 0.5);">
@@ -1037,22 +1154,22 @@
     <!-- ===========================
             CTA BANNER
     ============================ -->
-    <section style="padding: 100px 0; position: relative;">
+    <section style="padding: 50px 0 20px; position: relative;">
         <div class="container">
-            <div style="background: linear-gradient(135deg, #0F172A, #1E293B); border-radius: 32px; padding: 60px 40px; text-align: center; color: white; box-shadow: 0 25px 60px rgba(15, 23, 42, 0.25); position: relative; overflow: hidden;">
+            <div style="background: linear-gradient(135deg, #0F172A, #1E293B); border-radius: 32px; padding: 48px 32px; text-align: center; color: white; box-shadow: 0 25px 60px rgba(15, 23, 42, 0.25); position: relative; overflow: hidden;">
                 <div style="position: absolute; top: -100px; right: -100px; width: 300px; height: 300px; border-radius: 50%; background: rgba(108, 99, 255, 0.25); filter: blur(80px); pointer-events: none;"></div>
                 <div style="position: absolute; bottom: -100px; left: -100px; width: 300px; height: 300px; border-radius: 50%; background: rgba(6, 182, 212, 0.25); filter: blur(80px); pointer-events: none;"></div>
 
                 <div style="position: relative; z-index: 2; max-width: 700px; margin: 0 auto;">
                     <span style="padding: 6px 18px; border-radius: 999px; background: rgba(108, 99, 255, 0.25); color: #38BDF8; font-weight: 800; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.5px;">🚀 Accelerated Career Success</span>
-                    <h2 style="font-size: 2.8rem; font-weight: 800; margin: 18px 0 12px; color: #ffffff; letter-spacing: -0.5px;">Ready to Land Your Next Interview?</h2>
-                    <p style="font-size: 16px; color: #CBD5E1; max-width: 580px; margin: 0 auto 32px; line-height: 1.6;">Scan your resume for free or create an ATS-optimized resume in under 2 minutes.</p>
+                    <h2 style="font-size: 2.5rem; font-weight: 800; margin: 16px 0 10px; color: #ffffff; letter-spacing: -0.5px;">Ready to Land Your Next Interview?</h2>
+                    <p style="font-size: 15px; color: #CBD5E1; max-width: 580px; margin: 0 auto 28px; line-height: 1.6;">Scan your resume for free or create an ATS-optimized resume in under 2 minutes.</p>
 
                     <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
-                        <a href="pages/ats-checker.html" class="btn-gradient" style="padding: 16px 36px; font-size: 15px; border-radius: 16px; text-decoration: none;">
+                        <a href="pages/ats-checker.html" class="btn-gradient" style="padding: 14px 32px; font-size: 15px; border-radius: 16px; text-decoration: none;">
                             <i class="ri-bar-chart-box-line"></i> Check ATS Score Free
                         </a>
-                        <a href="register.html" class="btn-outline" style="padding: 16px 32px; font-size: 15px; border-radius: 16px; color: white; border-color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.08); text-decoration: none;">
+                        <a href="register.html" class="btn-outline" style="padding: 14px 28px; font-size: 15px; border-radius: 16px; color: white; border-color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.08); text-decoration: none;">
                             <i class="ri-user-add-line"></i> Create Free Account
                         </a>
                     </div>
@@ -1089,21 +1206,20 @@
                 <ul style="list-style: none; padding: 0; font-size: 13.5px; line-height: 2;">
                     <li><a href="login.html">User Login</a></li>
                     <li><a href="register.html">Create Free Account</a></li>
-                    <li><a href="pages/dashboard.html">Dashboard</a></li>
                 </ul>
             </div>
 
             <div>
                 <h4>Connect</h4>
                 <div style="display: flex; gap: 14px; font-size: 20px;">
-                    <a href="#"><i class="ri-github-fill"></i></a>
-                    <a href="#"><i class="ri-linkedin-fill"></i></a>
-                    <a href="#"><i class="ri-twitter-x-fill"></i></a>
+                    <a href="https://github.com/akashsingg2005" target="_blank" rel="noopener noreferrer" title="GitHub"><i class="ri-github-fill"></i></a>
+                    <a href="https://www.linkedin.com/in/akashsingh2005/" target="_blank" rel="noopener noreferrer" title="LinkedIn"><i class="ri-linkedin-fill"></i></a>
+                    <a href="https://www.instagram.com/a.kash._.singh/" target="_blank" rel="noopener noreferrer" title="Instagram"><i class="ri-instagram-line"></i></a>
                 </div>
             </div>
         </div>
 
-        <div class="container footer-bottom" style="margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(226, 232, 240, 0.8); font-size: 13px; text-align: center; color: var(--text-light);">
+        <div class="container footer-bottom" style="margin-top: 20px; padding: 16px 0; border-top: 1px solid rgba(226, 232, 240, 0.8); font-size: 13px; text-align: center; color: var(--text-light);">
             © 2026 Resuvix AI. All rights reserved. Build Smarter. Get Hired Faster.
         </div>
     </footer>
