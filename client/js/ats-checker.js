@@ -74,12 +74,22 @@ class ATSCheckerApp {
         } else {
             const firstName = this.user.fullName ? this.user.fullName.split(" ")[0] : "User";
             const initial = this.user.fullName ? this.user.fullName.charAt(0).toUpperCase() : "U";
-            const isPro = this.user.premium;
+            const isPro = this.user.planType === "pro" || (this.user.premium && this.user.planType !== "single");
+            const paidResumes = this.user.paidResumesCount || 0;
+            const paidInterviews = this.user.paidInterviewsCount || 0;
+            const isSingle = this.user.planType === "single" || paidResumes > 0 || paidInterviews > 0;
             const isAdmin = this.user.role === "admin";
+
+            let badgeHtml = `<span class="dash-badge-free" id="userPlanBadge" style="background: #F1F5F9; color: #64748B; padding: 5px 14px; border-radius: 20px; font-weight: 700; font-size: 12px; display: inline-flex; align-items: center; gap: 6px; border: 1px solid #E2E8F0;"><i class="ri-sparkling-fill" style="color: #6C63FF;"></i> Free Tier</span>`;
+            if (isPro) {
+                badgeHtml = `<span class="dash-badge-pro" id="userPlanBadge" style="background: linear-gradient(135deg, #6C63FF, #38BDF8); color: white; padding: 5px 14px; border-radius: 20px; font-weight: 700; font-size: 12px; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(108, 99, 255, 0.25);"><i class="ri-vip-crown-fill" style="color: #FACC15;"></i> Pro Pass</span>`;
+            } else if (isSingle) {
+                badgeHtml = `<span class="dash-badge-pro" id="userPlanBadge" style="background: linear-gradient(135deg, #06B6D4, #3B82F6); color: white; padding: 5px 14px; border-radius: 20px; font-weight: 700; font-size: 12px; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(6, 182, 212, 0.25);"><i class="ri-flashlight-fill" style="color: #FACC15;"></i> Single Pass</span>`;
+            }
 
             headerNav.innerHTML = `
                 <div id="planBadgeContainer">
-                    ${isPro ? `<span class="dash-badge-pro"><i class="ri-vip-crown-fill"></i> Pro Member</span>` : `<span class="dash-badge-free"><i class="ri-sparkling-fill"></i> Free Tier</span>`}
+                    ${badgeHtml}
                 </div>
                 <div style="position: relative;">
                     <div class="user-profile-menu" id="userProfilePill">
@@ -88,6 +98,7 @@ class ATSCheckerApp {
                         <i class="ri-arrow-down-s-line"></i>
                     </div>
                     <div class="user-dropdown-menu" id="userDropdownMenu">
+                        <button class="dropdown-item-btn" id="dropBtnBilling"><i class="ri-bank-card-line"></i> Payment Details</button>
                         ${isAdmin ? `<button class="dropdown-item-btn" id="dropBtnAdmin"><i class="ri-shield-user-line"></i> Admin Panel</button>` : ''}
                         <button class="dropdown-item-btn" id="dropBtnLogout" style="color: #EF4444;"><i class="ri-logout-box-r-line" style="color: #EF4444;"></i> Logout</button>
                     </div>
@@ -124,8 +135,8 @@ class ATSCheckerApp {
         if (this.user?.role === "admin" && navItemAdmin) {
             navItemAdmin.style.display = "flex";
         }
-        if (this.user?.premium && drawerUpgradeCard) {
-            drawerUpgradeCard.style.display = "none";
+        if (drawerUpgradeCard) {
+            drawerUpgradeCard.style.display = "block";
         }
 
         // Auto close drawer when clicking menu items
@@ -156,10 +167,17 @@ class ATSCheckerApp {
         if (dropBtnLogout) dropBtnLogout.addEventListener("click", handleLogout);
         if (drawerLogoutBtn) drawerLogoutBtn.addEventListener("click", handleLogout);
 
+        const dropBtnBilling = document.getElementById("dropBtnBilling");
+        if (dropBtnBilling) {
+            dropBtnBilling.addEventListener("click", () => {
+                window.location.href = "dashboard.html?openBilling=true";
+            });
+        }
+
         const btnDrawerUpgrade = document.getElementById("btnDrawerUpgrade");
         if (btnDrawerUpgrade) {
             btnDrawerUpgrade.addEventListener("click", () => {
-                window.location.href = "dashboard.html";
+                window.location.href = "dashboard.html?openPremium=true";
             });
         }
 
@@ -625,6 +643,24 @@ class ATSCheckerApp {
         if (currentScoreBadgeText) currentScoreBadgeText.textContent = `${score}/100`;
         if (potentialScoreBadgeText) potentialScoreBadgeText.textContent = `${potential}/100`;
         if (potentialScoreBoostText) potentialScoreBoostText.textContent = `+${potential - score} Points`;
+
+        const btnPrepInterview = document.getElementById("btnPrepareForInterview");
+        if (btnPrepInterview) {
+            btnPrepInterview.onclick = () => {
+                const transferData = {
+                    jobRole: data.targetRole || data.jobRole || "Full Stack Developer",
+                    resumeText: data.resumeText || "",
+                    jdText: data.jdText || "",
+                    matchingSkills: (data.matchingKeywords || []).map(m => typeof m === "string" ? m : m.keyword),
+                    missingSkills: (data.missingKeywords || []).map(m => typeof m === "string" ? m : m.keyword),
+                    atsScore: score,
+                };
+                if (typeof sessionStorage !== "undefined") {
+                    sessionStorage.setItem("resuvix_ats_interview_transfer", JSON.stringify(transferData));
+                }
+                window.location.href = "interview-prep.html";
+            };
+        }
 
         dashboard.scrollIntoView({ behavior: "smooth" });
     }

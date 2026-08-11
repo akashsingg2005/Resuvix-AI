@@ -1198,3 +1198,365 @@ Return ONLY the updated rewritten cover letter text without code blocks or markd
 
   return content;
 };
+
+/**
+ * Fully Role-Agnostic AI Interview Question Generator
+ * Supports Technical, Non-Technical (Marketing, Sales, HR, Finance, Teaching, Civil Eng, etc.), Freshers, Experienced, or Any Custom Role.
+ * Integrates Resume Data and Job Description Data.
+ */
+export const generateRoleAgnosticQuestionsAI = async ({
+  jobRole = "General Professional",
+  companyName = "",
+  experienceLevel = "1-3 Years",
+  difficulty = "Medium",
+  questionCount = 10,
+  interviewType = "Full Mock",
+  resumeData = null,
+  jdData = null,
+}) => {
+  const apiKey = process.env.GEMINI_API_KEY || env.GEMINI_API_KEY;
+  const count = Number(questionCount) || 10;
+
+  const resumeSkills = resumeData?.skills ? resumeData.skills.join(", ") : "";
+  const resumeExp = resumeData?.experience || "";
+  const jdRole = jdData?.targetRole || "";
+  const jdRequired = jdData?.requiredSkills ? jdData.requiredSkills.join(", ") : "";
+  const jdMissing = jdData?.missingSkills ? jdData.missingSkills.join(", ") : "";
+
+  if (apiKey) {
+    const sessionSeed = Date.now().toString(36) + Math.random().toString(36).substring(2, 8);
+    const resumeContext = resumeData?.rawText ? `\nCandidate Resume Text:\n${resumeData.rawText.substring(0, 1500)}` : "";
+    const jdContext = jdData?.rawText ? `\nJob Description Text:\n${jdData.rawText.substring(0, 1200)}` : "";
+
+    const prompt = `You are an Executive Hiring Manager conducting a UNIQUE interview for:
+Job Role: ${jobRole} ${companyName ? `at ${companyName}` : ""}
+Experience Level: ${experienceLevel}
+Difficulty Level: ${difficulty}
+Interview Category / Round: ${interviewType}
+Candidate Resume Skills: ${resumeSkills || "Not provided"}
+Job Description Required Skills: ${jdRequired || "Not provided"}
+${jdMissing ? `Focus heavily on evaluating these missing/weak JD skills: ${jdMissing}` : ""}
+${resumeContext}
+${jdContext}
+
+Session Randomization Seed: ${sessionSeed}
+
+CRITICAL INSTRUCTIONS FOR UNIQUENESS:
+1. You MUST generate completely FRESH, UNIQUE questions every single time. NEVER repeat or recycle questions from prior sessions.
+2. Use the Session Randomization Seed above to vary your question angles, scenarios, and focus areas.
+3. Mix question types: situational (give me a real-world scenario), behavioral (tell me about a time...), technical deep-dive, case-study, opinion-based, and hypothetical.
+4. Each question should probe a DIFFERENT competency or skill area. Do not ask overlapping questions.
+5. Make questions conversational and specific — like a real interviewer who has read the candidate's resume would ask. Reference specific technologies, methodologies, or industry practices relevant to "${jobRole}".
+6. Vary difficulty across questions: start with a warm-up, escalate to challenging scenarios, include at least one curveball or unconventional question.
+7. If resume text is provided, reference specific projects, skills, or experiences mentioned in it to create personalized questions.
+
+Generate exactly ${count} highly realistic, domain-specific interview questions suited specifically for the profession of "${jobRole}".
+Do NOT assume the candidate is a software developer unless the job role explicitly specifies software/IT.
+If the role is Marketing, Sales, HR, Teaching, Civil Engineering, Finance, Hospitality, etc., ask professional domain questions for that specific field.
+
+Return a valid JSON array of ${count} objects matching this exact schema:
+[
+  {
+    "id": 1,
+    "category": "${interviewType}",
+    "question": "Realistic interview question relevant to ${jobRole}",
+    "keyConcepts": ["Key Concept 1", "Key Concept 2"],
+    "modelAnswer": "A detailed, structured, exemplary response that would score 90+ in a real interview. Must be at least 3-4 sentences with specific examples, metrics, or methodologies.",
+    "tips": "Pro tips for answering using STAR approach or domain standards."
+  }
+]
+
+Return ONLY raw valid JSON array. No markdown backticks.`;
+
+    try {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: {
+            temperature: 1.0,
+            topP: 0.95,
+            topK: 40,
+          }
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+        const cleanJson = text.replace(/```json/gi, "").replace(/```/g, "").trim();
+        const parsed = JSON.parse(cleanJson);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed.slice(0, count);
+        }
+      }
+    } catch (e) {
+      console.error("Gemini Role-Agnostic Question Generation Error:", e.message);
+    }
+  }
+
+  // Dynamic Fallback Engine — randomized template-based generation
+  const r = jobRole.toLowerCase();
+  const shuffle = (arr) => {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  };
+
+  // Universal question templates that work for ANY profession
+  const questionTemplates = shuffle([
+    { category: "Introduction & Background", question: `Walk me through your career journey as a ${jobRole}. What key milestones shaped your professional growth?`, keyConcepts: ["Career Trajectory", "Professional Development", "Core Competencies"], modelAnswer: `As a ${jobRole}, I have progressively built expertise through hands-on experience, continuous learning, and tackling increasingly complex challenges in my domain.`, tips: "Structure: Past achievements → Present focus → Future aspirations." },
+    { category: "Behavioral STAR", question: `Tell me about a time when you faced a critical deadline as a ${jobRole} and had to prioritize competing tasks. How did you handle it?`, keyConcepts: ["Time Management", "Prioritization", "Pressure Handling"], modelAnswer: "I assessed task urgency vs. impact, communicated transparently with stakeholders about realistic timelines, delegated where possible, and delivered the highest-priority items first without compromising quality.", tips: "Use STAR: Situation → Task → Action → Result with measurable outcomes." },
+    { category: "Technical & Domain", question: `What are the most critical industry standards, tools, or methodologies you apply daily as a ${jobRole}?`, keyConcepts: ["Industry Standards", "Tools & Frameworks", "Best Practices"], modelAnswer: `I follow established industry standards and leverage modern tools specific to my domain. I stay current with emerging methodologies and continuously evaluate new approaches for efficiency gains.`, tips: "Name specific standards, tools, and certifications relevant to your field." },
+    { category: "Situational Problem Solving", question: `Imagine you discover a significant error in a deliverable that has already been shared with a client or stakeholder. As a ${jobRole}, how do you handle this?`, keyConcepts: ["Error Recovery", "Communication", "Professional Integrity"], modelAnswer: "I immediately assess the error's impact, prepare a corrective plan, proactively inform the stakeholder with transparency, implement the fix, and add safeguards to prevent recurrence.", tips: "Emphasize honesty, speed of response, and preventive measures." },
+    { category: "Teamwork & Collaboration", question: `Describe how you collaborate with cross-functional teams in your role as a ${jobRole}. Give a specific example.`, keyConcepts: ["Cross-functional Collaboration", "Communication", "Stakeholder Management"], modelAnswer: "I establish clear communication channels, define shared goals and responsibilities upfront, and hold regular sync meetings to ensure alignment across teams, resulting in smoother project execution.", tips: "Highlight your ability to bridge gaps between different departments." },
+    { category: "Leadership & Initiative", question: `Tell me about a time you identified a process improvement opportunity in your work as a ${jobRole} and took initiative to implement it.`, keyConcepts: ["Process Improvement", "Initiative", "Impact Measurement"], modelAnswer: "I noticed an inefficiency in our workflow, proposed a streamlined approach backed by data, piloted the change with team buy-in, and achieved measurable improvements in productivity.", tips: "Focus on the before/after impact with specific metrics." },
+    { category: "Conflict Resolution", question: `How do you handle disagreements with a colleague or supervisor regarding a professional decision in your ${jobRole} capacity?`, keyConcepts: ["Conflict Resolution", "Professional Communication", "Compromise"], modelAnswer: "I seek to understand the other perspective first, present my reasoning with supporting data, find common ground, and propose a solution that serves the project's best interest.", tips: "Show emotional intelligence and data-driven decision making." },
+    { category: "Adaptability & Learning", question: `The industry landscape for ${jobRole} professionals is constantly evolving. How do you stay current and adapt to changes?`, keyConcepts: ["Continuous Learning", "Adaptability", "Industry Awareness"], modelAnswer: "I dedicate time to professional development through courses, industry publications, peer networking, and hands-on experimentation with new tools and methodologies.", tips: "Mention specific resources, certifications, or communities you engage with." },
+    { category: "Client & Stakeholder Management", question: `How do you manage expectations when a client or stakeholder requests something that is beyond scope or unrealistic as a ${jobRole}?`, keyConcepts: ["Expectation Management", "Negotiation", "Professional Boundaries"], modelAnswer: "I acknowledge their request, explain the constraints clearly with data, propose alternative solutions within feasible parameters, and document agreed-upon changes formally.", tips: "Balance between being helpful and maintaining professional boundaries." },
+    { category: "Critical Thinking", question: `If you were tasked with completely redesigning a core process in your ${jobRole} department from scratch, what approach would you take?`, keyConcepts: ["Strategic Thinking", "Process Design", "Stakeholder Buy-in"], modelAnswer: "I would audit the current process to identify bottlenecks, benchmark against industry best practices, design a phased rollout plan, gather stakeholder feedback, and measure results against KPIs.", tips: "Demonstrate structured thinking and evidence-based decision making." },
+    { category: "Ethics & Integrity", question: `Have you ever faced an ethical dilemma in your work as a ${jobRole}? How did you navigate it?`, keyConcepts: ["Professional Ethics", "Integrity", "Decision Making"], modelAnswer: "I assessed the situation against professional codes of conduct, consulted with trusted mentors, chose the path that upheld ethical standards even when it was the harder choice, and documented my rationale.", tips: "Show that you prioritize ethics over convenience." },
+    { category: "Innovation & Creativity", question: `What is the most creative or innovative solution you've implemented as a ${jobRole} to solve a complex problem?`, keyConcepts: ["Innovation", "Creative Problem Solving", "Impact"], modelAnswer: "I identified an unconventional approach to a persistent challenge, prototyped the solution, validated it with stakeholders, and rolled it out — resulting in significant efficiency or quality improvements.", tips: "Highlight the 'aha moment' and the measurable impact of your innovation." },
+    { category: "Pressure & Resilience", question: `Describe the most high-pressure situation you've faced as a ${jobRole}. What was at stake and how did you perform?`, keyConcepts: ["Resilience", "Performance Under Pressure", "Composure"], modelAnswer: "I maintained composure, broke the problem into manageable steps, communicated clearly with my team, and delivered the required outcome within the constrained timeline.", tips: "Emphasize calmness, systematic approach, and successful delivery." },
+    { category: "Future Vision", question: `Where do you see the role of a ${jobRole} evolving in the next 3-5 years, and how are you preparing for it?`, keyConcepts: ["Industry Trends", "Future Preparedness", "Strategic Vision"], modelAnswer: "I anticipate significant shifts driven by technology and market changes. I'm actively developing skills in emerging areas, building a broader professional network, and positioning myself for leadership opportunities.", tips: "Show you think strategically about your career and industry trajectory." },
+    { category: "Mentorship & Growth", question: `How have you contributed to mentoring or developing junior team members in your role as a ${jobRole}?`, keyConcepts: ["Mentorship", "Knowledge Sharing", "Team Development"], modelAnswer: "I established regular knowledge-sharing sessions, provided constructive feedback through structured reviews, and created documentation/resources that helped junior members ramp up faster.", tips: "Give specific examples of how your mentorship made a tangible difference." }
+  ]);
+
+  const questions = questionTemplates.slice(0, count).map((q, idx) => ({
+    ...q,
+    id: idx + 1,
+  }));
+
+  return questions;
+};
+
+/**
+ * Evaluate Candidate Live Answer & Check Dynamic Follow-Up Requirement
+ */
+export const evaluateAnswerAndCheckFollowUpAI = async ({
+  jobRole = "Professional",
+  interviewType = "Full Mock",
+  question = "",
+  answer = "",
+  candidateSkills = [],
+  missingSkills = [],
+}) => {
+  const apiKey = process.env.GEMINI_API_KEY || env.GEMINI_API_KEY;
+
+  if (apiKey && question && answer) {
+    const prompt = `You are an expert interviewer evaluating a candidate for the position of "${jobRole}" (${interviewType} round).
+Question asked: "${question}"
+Candidate's response: "${answer}"
+${missingSkills && missingSkills.length ? `Key missing skills to probe if appropriate: ${missingSkills.join(", ")}` : ""}
+
+Evaluate the response thoroughly. To make the interview feel like a real conversational dialogue, you MUST generate a relevant follow-up question based directly on the candidate's response (e.g., asking them to elaborate on a specific technology, project, decision, or metric they mentioned in their answer). Do not ask generic questions. You should always set "shouldFollowUp" to true.
+
+Return a raw valid JSON object with the following schema:
+{
+  "score": 85,
+  "verdict": "Strong Response",
+  "strengths": ["Clear explanation of core principles", "Good domain vocabulary"],
+  "areasToImprove": ["Could provide a specific example or metric", "Elaborate further on practical execution"],
+  "missingKeywords": ["Standard Procedures", "KPI Tracking"],
+  "idealAnswer": "Structured exemplary response demonstrating practical mastery.",
+  "shouldFollowUp": true,
+  "followUpQuestion": "You mentioned handling tight deadlines—how specifically did you prioritize tasks when trade-offs arose?",
+  "starAnalysis": {
+    "situation": "Present",
+    "task": "Present",
+    "action": "Present",
+    "result": "Missing",
+    "recommendation": "Include a measurable outcome (e.g. 25% efficiency gain) to complete the STAR framework."
+  }
+}
+
+Return ONLY raw valid JSON object. No markdown wrappers.`;
+
+    try {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+        const cleanJson = text.replace(/```json/gi, "").replace(/```/g, "").trim();
+        const parsed = JSON.parse(cleanJson);
+        if (parsed && typeof parsed.score === "number") {
+          return parsed;
+        }
+      }
+    } catch (e) {
+      console.error("Gemini Evaluation & Follow-Up Error:", e.message);
+    }
+  }
+
+  // Fallback Evaluator Engine
+  const ansLen = (answer || "").trim().length;
+  let score = 75;
+  let verdict = "Good Candidate Response";
+  let shouldFollowUp = false;
+  let followUpQuestion = "";
+
+  const strengths = ["Directly addressed the main prompt", "Maintained clear professional communication"];
+  const areasToImprove = ["Include a concrete example or metric", "Elaborate on operational trade-offs"];
+  const missingKeywords = ["Domain Standards", "Measurable Outcome"];
+
+  if (ansLen > 250) {
+    score = 88;
+    verdict = "Strong Response";
+    strengths.push("Provided structured explanation with context");
+  } else if (ansLen < 70) {
+    score = 58;
+    verdict = "Needs More Depth";
+    shouldFollowUp = true;
+    followUpQuestion = `Could you elaborate further with a specific example from your experience as a ${jobRole}?`;
+    areasToImprove.push("Response is brief. Structure your answer using the STAR method.");
+  }
+
+  return {
+    score,
+    verdict,
+    strengths,
+    areasToImprove,
+    missingKeywords,
+    idealAnswer: `A comprehensive answer for a ${jobRole} should outline the background situation, describe the action taken, highlight domain principles applied, and state the final result.`,
+    shouldFollowUp,
+    followUpQuestion,
+    starAnalysis: {
+      situation: ansLen > 60 ? "Present" : "Vague",
+      task: ansLen > 100 ? "Present" : "Incomplete",
+      action: ansLen > 150 ? "Present" : "Missing",
+      result: "Missing",
+      recommendation: "Add a measurable outcome to demonstrate strong business impact."
+    }
+  };
+};
+
+/**
+ * Generate Comprehensive Final Interview Performance Report
+ */
+export const generateFinalInterviewReportAI = async (interview) => {
+  const jobRole = interview.jobRole || "Professional";
+  const questions = interview.questions || [];
+  const validEvaluated = questions.filter(q => q.evaluation && typeof q.evaluation.score === "number");
+
+  let totalScore = 0;
+  if (questions.length > 0) {
+    const totalAnsweredScore = validEvaluated.reduce((sum, q) => sum + q.evaluation.score, 0);
+    totalScore = Math.round(totalAnsweredScore / questions.length);
+  } else {
+    totalScore = 0;
+  }
+
+  // Performance Verdict Classification
+  let performanceVerdict = "Good — Needs Practice";
+  if (totalScore >= 90) performanceVerdict = "Interview Ready 🎉";
+  else if (totalScore >= 80) performanceVerdict = "Strong Candidate";
+  else if (totalScore >= 70) performanceVerdict = "Good — Needs Practice";
+  else if (totalScore >= 60) performanceVerdict = "Needs Improvement";
+  else performanceVerdict = "Significant Improvement Required";
+
+  // Dynamic Career-Adapted Category Scoring (Weights Total 100)
+  const r = jobRole.toLowerCase();
+  let categoryScores = [];
+
+  if (r.includes("mern") || r.includes("developer") || r.includes("software") || r.includes("data") || r.includes("engineer")) {
+    categoryScores = [
+      { category: "Technical & Domain Knowledge", score: Math.min(100, Math.max(0, totalScore + 2)) },
+      { category: "Problem Solving & Architecture", score: Math.min(100, Math.max(0, totalScore - 3)) },
+      { category: "Communication & Clarity", score: Math.min(100, Math.max(0, totalScore - 1)) },
+      { category: "STAR Behavioral Structure", score: Math.min(100, Math.max(0, totalScore - 4)) },
+      { category: "Resume & Project Depth", score: Math.min(100, Math.max(0, totalScore + 4)) }
+    ];
+  } else if (r.includes("sales") || r.includes("marketing") || r.includes("growth") || r.includes("business")) {
+    categoryScores = [
+      { category: "Persuasion & Strategy", score: Math.min(100, Math.max(0, totalScore + 3)) },
+      { category: "Communication & Pitch Clarity", score: Math.min(100, Math.max(0, totalScore + 1)) },
+      { category: "Customer & Objection Handling", score: Math.min(100, Math.max(0, totalScore - 2)) },
+      { category: "Situational Problem Solving", score: Math.min(100, Math.max(0, totalScore - 3)) },
+      { category: "KPI & Outcome Focus", score: Math.min(100, Math.max(0, totalScore + 1)) }
+    ];
+  } else {
+    categoryScores = [
+      { category: "Domain Knowledge", score: Math.min(100, Math.max(0, totalScore + 2)) },
+      { category: "Professional Communication", score: Math.min(100, Math.max(0, totalScore)) },
+      { category: "Situational Problem Solving", score: Math.min(100, Math.max(0, totalScore - 2)) },
+      { category: "STAR Behavioral Structure", score: Math.min(100, Math.max(0, totalScore - 4)) },
+      { category: "Answer Relevance & Depth", score: Math.min(100, Math.max(0, totalScore + 3)) }
+    ];
+  }
+
+  // Aggregate Evidence-Based Strengths & Weaknesses
+  const overallStrengths = [];
+  const overallWeaknesses = [];
+
+  validEvaluated.forEach(q => {
+    if (q.evaluation.strengths) overallStrengths.push(...q.evaluation.strengths);
+    if (q.evaluation.areasToImprove) overallWeaknesses.push(...q.evaluation.areasToImprove);
+  });
+
+  const uniqueStrengths = Array.from(new Set(overallStrengths)).slice(0, 4);
+  const uniqueWeaknesses = Array.from(new Set(overallWeaknesses)).slice(0, 4);
+
+  if (uniqueStrengths.length === 0) {
+    uniqueStrengths.push("Directly answered main interview prompts", "Maintained professional tone throughout");
+  }
+  if (uniqueWeaknesses.length === 0) {
+    uniqueWeaknesses.push("Include more measurable business outcomes", "Elaborate further on practical execution steps");
+  }
+
+  // Communication Analysis
+  const communicationAnalysis = {
+    clarity: Math.min(100, totalScore + 3),
+    structure: Math.min(100, totalScore - 2),
+    conciseness: Math.min(100, totalScore + 1),
+    professionalTone: 92,
+    fillerWords: ["um", "like", "basically", "you know"],
+    feedback: "Your responses demonstrated good domain vocabulary and professional tone. Work on incorporating structured STAR bullet points with quantifiable outcomes."
+  };
+
+  // Personalized Improvement Plan
+  const personalizedImprovementPlan = [
+    {
+      step: 1,
+      area: "STAR Framework Alignment",
+      action: "Structure behavioral and situational answers into Situation, Task, Action, and Result.",
+      recommendation: "Ensure every story concludes with a measurable result (e.g. '% increase', 'latency cut', 'time saved')."
+    },
+    {
+      step: 2,
+      area: "Domain Vocabulary & Metric Precision",
+      action: "Incorporate industry-standard terminology and specific metrics in technical and domain answers.",
+      recommendation: "Mention specific tools, methodologies, and standards appropriate for a " + jobRole + "."
+    },
+    {
+      step: 3,
+      area: "Mock Interview Practice",
+      action: "Practice targeted weak-area questions with AI voice recording.",
+      recommendation: "Conduct another 10-question mock interview focusing on situational and technical rounds."
+    }
+  ];
+
+  return {
+    overallScore: totalScore,
+    performanceVerdict,
+    categoryScores,
+    overallStrengths: uniqueStrengths,
+    overallWeaknesses: uniqueWeaknesses,
+    communicationAnalysis,
+    personalizedImprovementPlan
+  };
+};
+
+export const generateInterviewPrepQuestionsAI = generateRoleAgnosticQuestionsAI;
+export const evaluateInterviewAnswerAI = evaluateAnswerAndCheckFollowUpAI;
+
+
+

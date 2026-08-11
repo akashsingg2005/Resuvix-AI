@@ -1,18 +1,21 @@
-# ========================================
 # Dependencies
-# ========================================
 node_modules/
+server/node_modules/
 
-# ========================================
-# Environment Variables
-# ========================================
+# Environment Files & Secrets
 .env
 .env.*
 !.env.example
+server/.env
+server/.env.*
+!server/.env.example
 
-# ========================================
-# Logs
-# ========================================
+# Production & Build Outputs
+dist/
+build/
+out/
+
+# Runtime Logs & Diagnostics
 logs/
 *.log
 npm-debug.log*
@@ -20,68 +23,36 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# ========================================
-# Runtime Files
-# ========================================
-pids
-*.pid
-*.seed
-*.pid.lock
-
-# ========================================
-# Coverage
-# ========================================
-coverage/
-.nyc_output/
-
-# ========================================
-# Build Output
-# ========================================
-dist/
-build/
-
-# ========================================
-# Uploads
-# ========================================
+# Server Uploads & Storage (Keep .gitkeep)
 server/src/uploads/*
 !server/src/uploads/.gitkeep
 
-# ========================================
-# Cache
-# ========================================
-.cache/
-.parcel-cache/
-.eslintcache
-
-# ========================================
-# VS Code
-# ========================================
-.vscode/*
-!.vscode/extensions.json
-!.vscode/settings.json
-
-# ========================================
-# JetBrains
-# ========================================
-.idea/
-
-# ========================================
-# Operating System
-# ========================================
-.DS_Store
-Thumbs.db
-Desktop.ini
-
-# ========================================
-# Temporary Files
-# ========================================
+# Temporary & Scratch Files
+scratch/
+server/scratch/
 tmp/
 temp/
 
-# ========================================
-# Misc
-# ========================================
-*.tgz
-*.bak
+# Testing & Coverage Reports
+coverage/
+.nyc_output/
+
+# IDE & Editor Settings
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
 *.swp
 *.swo
+
+# Operating System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini

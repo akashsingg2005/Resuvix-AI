@@ -493,13 +493,13 @@
                 <a href="ats-checker.html" class="drawer-item active" id="navItemATS">
                     <i class="ri-bar-chart-box-line"></i> ATS Checker
                 </a>
-                <a href="dashboard.html" class="drawer-item" id="navItemInterview">
+                <a href="interview-prep.html" class="drawer-item" id="navItemInterview">
                     <i class="ri-user-voice-line"></i> Interview Prep
                 </a>
                 <a href="cover-letter.html" class="drawer-item" id="navItemCoverLetter">
                     <i class="ri-draft-line"></i> Cover Letters
                 </a>
-                <a href="dashboard.html" class="drawer-item" id="navItemBilling">
+                <a href="dashboard.html?openBilling=true" class="drawer-item" id="navItemBilling">
                     <i class="ri-bank-card-line"></i> Payment Details
                 </a>
                 <a href="admin.html" class="drawer-item" id="navItemAdmin" style="display: none !important;">
@@ -745,7 +745,12 @@
                         <h2 style="font-size: 2.2rem; font-weight: 800; margin: 12px 0 8px;">
                             Current: <span id="currentScoreBadgeText" style="color: #EF4444;">86/100</span> ➔ Potential: <span id="potentialScoreBadgeText" style="color: #22C55E;">96/100</span>
                         </h2>
-                        <p style="font-size: 14.5px; color: #CBD5E1; max-width: 600px; margin: 0 auto 24px;">Applying these recommendations will increase your ATS compatibility score by <strong id="potentialScoreBoostText" style="color: #38BDF8;">+10 Points</strong>, maximizing interview callback chances.</p>
+                        <p style="font-size: 14.5px; color: #CBD5E1; max-width: 600px; margin: 0 auto 20px;">Applying these recommendations will increase your ATS compatibility score by <strong id="potentialScoreBoostText" style="color: #38BDF8;">+10 Points</strong>, maximizing interview callback chances.</p>
+                        <div style="margin-top: 18px;">
+                            <button class="btn-gradient" id="btnPrepareForInterview" style="padding: 14px 28px; font-weight: 800; border-radius: 14px; font-size: 15px;">
+                                <i class="ri-user-voice-line"></i> Prepare for Interview with this Resume & JD <i class="ri-arrow-right-line"></i>
+                            </button>
+                        </div>
                     </div>
 
                 </div>

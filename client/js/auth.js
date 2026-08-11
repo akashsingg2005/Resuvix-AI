@@ -812,25 +812,13 @@ class AuthController {
 
         try {
             const response = await AuthAPI.me();
-            if (response && (response.user || response._id)) {
-                Storage.saveUser(response.user || response);
+            const freshUser = response?.user || response?.data?.user || response?.data || response;
+            if (freshUser && (freshUser._id || freshUser.id || freshUser.email)) {
+                Storage.saveUser(freshUser);
             }
         }
         catch (error) {
-            const refreshed = await this.refreshAccessToken();
-            if (!refreshed) {
-                return;
-            }
-
-            try {
-                const response = await AuthAPI.me();
-                if (response && (response.user || response._id)) {
-                    Storage.saveUser(response.user || response);
-                }
-            }
-            catch (err) {
-                console.warn("Restore user profile warning:", err.message);
-            }
+            console.warn("Restore user profile warning:", error.message);
         }
     }
 

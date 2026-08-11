@@ -1220,7 +1220,11 @@ class BuilderApp {
                         if (verifyRes) {
                             toast.success("🎉 Payment Successful! Resume Unlocked!");
                             this.isWatermarked = false;
-                            this.user.premium = true;
+                            if (verifyRes.user) {
+                                this.user = { ...this.user, ...verifyRes.user };
+                            } else {
+                                this.user.premium = true;
+                            }
                             Storage.saveUser(this.user);
                             this.syncLivePreview();
                             this.closePremiumModal();

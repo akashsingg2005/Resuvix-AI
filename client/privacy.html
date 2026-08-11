@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy • Resuvix AI</title>
+    <meta name="description" content="Resuvix AI Privacy Policy — learn how we collect, use, and protect your personal information when using our AI-powered career tools.">
+    <link rel="icon" href="./assets/logo/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/global.css">
+    <link rel="stylesheet" href="./css/components.css">
+    <style>
+        body { background: var(--bg); min-height: 100vh; }
+
+        .legal-nav {
+            display: flex; justify-content: space-between; align-items: center;
+            max-width: 860px; margin: 0 auto; padding: 24px 24px 0;
+        }
+        .legal-logo {
+            display: flex; align-items: center; gap: 10px;
+            text-decoration: none; font-weight: 800; font-size: 20px; color: var(--primary);
+        }
+        .legal-logo i { font-size: 26px; }
+        .legal-back {
+            display: inline-flex; align-items: center; gap: 6px;
+            text-decoration: none; font-weight: 600; font-size: 13.5px;
+            color: var(--text-light); padding: 8px 16px; border-radius: 999px;
+            border: 1px solid var(--border); transition: all 0.2s ease;
+        }
+        .legal-back:hover { color: var(--primary); border-color: var(--primary); }
+
+        .legal-hero {
+            max-width: 860px; margin: 32px auto 0; padding: 0 24px; text-align: center;
+        }
+        .legal-hero h1 {
+            font-size: 2.2rem; font-weight: 800; color: var(--text);
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        .legal-hero .meta {
+            font-size: 13.5px; color: var(--text-muted); font-weight: 500;
+        }
+
+        .legal-card {
+            max-width: 860px; margin: 28px auto 60px; padding: 0 24px;
+        }
+        .legal-card-inner {
+            background: var(--surface); border-radius: 20px;
+            border: 1px solid var(--border); box-shadow: var(--shadow);
+            padding: 48px 52px;
+        }
+
+        .legal-card-inner h2 {
+            font-size: 1.25rem; font-weight: 800; color: var(--text);
+            margin-top: 36px; margin-bottom: 12px; padding-bottom: 8px;
+            border-bottom: 2px solid rgba(108, 99, 255, 0.12);
+            display: flex; align-items: center; gap: 10px;
+        }
+        .legal-card-inner h2 i {
+            color: var(--primary); font-size: 20px;
+        }
+        .legal-card-inner h2:first-child { margin-top: 0; }
+
+        .legal-card-inner h3 {
+            font-size: 1rem; font-weight: 700; color: var(--text);
+            margin-top: 20px; margin-bottom: 8px;
+        }
+
+        .legal-card-inner p, .legal-card-inner li {
+            font-size: 14.5px; line-height: 1.75; color: var(--text-light); font-weight: 400;
+        }
+        .legal-card-inner ul {
+            padding-left: 20px; margin: 10px 0;
+        }
+        .legal-card-inner li { margin-bottom: 6px; }
+        .legal-card-inner li::marker { color: var(--primary); }
+
+        .legal-card-inner strong { color: var(--text); font-weight: 700; }
+
+        .legal-card-inner a {
+            color: var(--primary); text-decoration: none; font-weight: 600;
+        }
+        .legal-card-inner a:hover { text-decoration: underline; }
+
+        .legal-highlight {
+            background: rgba(108, 99, 255, 0.06); border-left: 4px solid var(--primary);
+            padding: 14px 20px; border-radius: 0 12px 12px 0; margin: 16px 0;
+            font-size: 13.5px; color: var(--text); font-weight: 500;
+        }
+
+        .data-table {
+            width: 100%; border-collapse: collapse; margin: 16px 0; border-radius: 12px;
+            overflow: hidden; border: 1px solid var(--border);
+        }
+        .data-table th, .data-table td {
+            padding: 12px 16px; text-align: left; font-size: 13.5px;
+            border-bottom: 1px solid var(--border);
+        }
+        .data-table th {
+            background: rgba(108, 99, 255, 0.06); font-weight: 700;
+            color: var(--text); font-size: 13px;
+        }
+        .data-table td { color: var(--text-light); }
+        .data-table tr:last-child td { border-bottom: none; }
+
+        .legal-footer {
+            max-width: 860px; margin: 0 auto 40px; padding: 0 24px;
+            text-align: center; font-size: 13px; color: var(--text-muted);
+        }
+        .legal-footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
+        .legal-footer a:hover { text-decoration: underline; }
+
+        @media (max-width: 640px) {
+            .legal-card-inner { padding: 28px 22px; }
+            .legal-hero h1 { font-size: 1.6rem; }
+            .data-table th, .data-table td { padding: 8px 10px; font-size: 12.5px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="legal-nav">
+        <a href="./index.html" class="legal-logo">
+            <i class="ri-file-text-line"></i> RESUVIX
+        </a>
+        <a href="./register.html" class="legal-back">
+            <i class="ri-arrow-left-s-line"></i> Back to Register
+        </a>
+    </nav>
+
+    <!-- Hero -->
+    <div class="legal-hero">
+        <h1>Privacy Policy</h1>
+        <p class="meta"><i class="ri-calendar-line"></i> Last Updated: August 12, 2025 &nbsp;•&nbsp; <i class="ri-shield-check-line"></i> Your Data, Your Control</p>
+    </div>
+
+    <!-- Content Card -->
+    <div class="legal-card">
+        <div class="legal-card-inner">
+
+            <h2><i class="ri-information-line"></i> 1. Introduction</h2>
+            <p>At <strong>Resuvix AI</strong> ("we", "our", "us"), we take your privacy seriously. This Privacy Policy explains how we collect, use, store, and protect your personal information when you use our AI-powered career tools at <strong>resuvix.com</strong>.</p>
+            <p>By using Resuvix AI, you consent to the practices described in this policy.</p>
+
+            <h2><i class="ri-database-2-line"></i> 2. Information We Collect</h2>
+
+            <h3>2.1 Personal Information (Provided by You)</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Data Type</th>
+                        <th>Examples</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Account Details</strong></td>
+                        <td>Full name, email address, phone number</td>
+                        <td>Account creation, OTP verification, login</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Resume Content</strong></td>
+                        <td>Work experience, education, skills, projects</td>
+                        <td>Resume building, ATS scanning, interview prep</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Uploaded Documents</strong></td>
+                        <td>PDF/DOCX resumes, job descriptions</td>
+                        <td>ATS analysis, cover letter generation</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Interview Responses</strong></td>
+                        <td>Text/voice answers to mock interview questions</td>
+                        <td>AI evaluation and performance scoring</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>2.2 Payment Information</h3>
+            <p>We use <strong>Razorpay</strong> as our payment gateway. We do <strong>NOT</strong> store your credit card number, CVV, or full banking details on our servers. Razorpay handles all payment data under PCI-DSS compliance. We only store:</p>
+            <ul>
+                <li>Razorpay Payment ID and Order ID (for transaction records)</li>
+                <li>Plan type purchased (Pro Pass / Single Pass)</li>
+                <li>Transaction timestamp and amount</li>
+            </ul>
+
+            <h3>2.3 Automatically Collected Information</h3>
+            <ul>
+                <li><strong>Usage Analytics:</strong> Pages visited, features used, session duration</li>
+                <li><strong>Device Information:</strong> Browser type, operating system, screen resolution</li>
+                <li><strong>IP Address:</strong> For security monitoring and abuse prevention</li>
+            </ul>
+
+            <h2><i class="ri-settings-3-line"></i> 3. How We Use Your Information</h2>
+            <p>We use your data exclusively for the following purposes:</p>
+            <ul>
+                <li><strong>Service Delivery:</strong> To generate resumes, analyze ATS compatibility, create cover letters, and conduct mock interviews.</li>
+                <li><strong>AI Processing:</strong> Your resume text and interview responses are sent to Google Gemini AI for analysis. This data is processed in real-time and is not stored by the AI model after processing.</li>
+                <li><strong>Account Management:</strong> To authenticate your identity, manage your subscription, and track your entitlement usage (free vs. paid features).</li>
+                <li><strong>Communication:</strong> To send OTP codes, transaction confirmations, and important service announcements.</li>
+                <li><strong>Platform Improvement:</strong> Aggregated, anonymized usage data helps us improve our AI models and user experience.</li>
+            </ul>
+
+            <div class="legal-highlight">
+                <strong>We Never:</strong> Sell your personal data to third parties, use your resume content for advertising, or share your information with recruiters or employers without your explicit consent.
+            </div>
+
+            <h2><i class="ri-lock-line"></i> 4. Data Storage & Security</h2>
+            <ul>
+                <li><strong>Database:</strong> Your data is stored on <strong>MongoDB Atlas</strong> cloud infrastructure with encryption at rest and in transit (TLS 1.2+).</li>
+                <li><strong>Passwords:</strong> All passwords are securely hashed using <strong>bcrypt</strong> with salt rounds. We never store plain-text passwords.</li>
+                <li><strong>Authentication:</strong> We use JWT (JSON Web Tokens) with HTTP-only secure cookies for session management.</li>
+                <li><strong>File Uploads:</strong> Uploaded PDFs/DOCXs are processed in memory and are <strong>not permanently stored</strong> on our servers after processing.</li>
+                <li><strong>Access Control:</strong> Server-side access is restricted to authorized personnel only with role-based permissions.</li>
+            </ul>
+
+            <h2><i class="ri-window-line"></i> 5. Cookies & Local Storage</h2>
+            <p>Resuvix AI uses the following browser storage mechanisms:</p>
+            <ul>
+                <li><strong>HTTP-Only Cookies:</strong> For secure authentication tokens (JWT). These cannot be accessed by JavaScript.</li>
+                <li><strong>Local Storage:</strong> For caching user preferences (theme settings, last used template) and session state.</li>
+                <li><strong>Session Storage:</strong> For temporary data transfers between pages (e.g., ATS-to-Interview transfer data).</li>
+            </ul>
+            <p>We do <strong>not</strong> use third-party tracking cookies or advertising pixels.</p>
+
+            <h2><i class="ri-share-forward-line"></i> 6. Third-Party Services</h2>
+            <p>We integrate with the following third-party services to power our platform:</p>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Service</th>
+                        <th>Purpose</th>
+                        <th>Data Shared</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Google Gemini AI</strong></td>
+                        <td>Resume analysis, question generation, answer evaluation</td>
+                        <td>Resume text, interview Q&A (processed in real-time, not retained)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Razorpay</strong></td>
+                        <td>Payment processing</td>
+                        <td>Payment details (handled entirely by Razorpay under PCI-DSS)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>MongoDB Atlas</strong></td>
+                        <td>Cloud database hosting</td>
+                        <td>All user data (encrypted at rest and in transit)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Nodemailer (SMTP)</strong></td>
+                        <td>OTP delivery and transactional emails</td>
+                        <td>Email address, OTP code</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2><i class="ri-time-line"></i> 7. Data Retention</h2>
+            <ul>
+                <li><strong>Active Accounts:</strong> Your data is retained for as long as your account is active.</li>
+                <li><strong>Deleted Accounts:</strong> Upon account deletion request, all personal data is permanently removed within <strong>30 days</strong>.</li>
+                <li><strong>Payment Records:</strong> Transaction records may be retained for up to <strong>7 years</strong> as required by tax and financial regulations.</li>
+                <li><strong>Interview Sessions:</strong> Mock interview history is retained until you manually delete it or request account deletion.</li>
+            </ul>
+
+            <h2><i class="ri-user-heart-line"></i> 8. Your Rights</h2>
+            <p>You have the following rights regarding your personal data:</p>
+            <ul>
+                <li><strong>Right to Access:</strong> Request a copy of all personal data we hold about you.</li>
+                <li><strong>Right to Rectification:</strong> Correct any inaccurate or incomplete personal data.</li>
+                <li><strong>Right to Deletion:</strong> Request permanent deletion of your account and all associated data.</li>
+                <li><strong>Right to Data Portability:</strong> Request your resume and profile data in a standard machine-readable format.</li>
+                <li><strong>Right to Withdraw Consent:</strong> You may withdraw consent for data processing at any time by deleting your account.</li>
+            </ul>
+            <p>To exercise any of these rights, contact us at <a href="mailto:akashsingg23@gmail.com">akashsingg23@gmail.com</a>.</p>
+
+            <h2><i class="ri-parent-line"></i> 9. Children's Privacy</h2>
+            <p>Resuvix AI is not intended for children under the age of <strong>16</strong>. We do not knowingly collect personal data from children. If you believe a child has provided us with personal information, please contact us immediately and we will delete the data.</p>
+
+            <h2><i class="ri-global-line"></i> 10. International Data Transfers</h2>
+            <p>Your data may be processed and stored in data centers located outside your country of residence (including cloud infrastructure in the United States, Europe, and Asia). We ensure that all transfers comply with applicable data protection laws and that appropriate safeguards are in place.</p>
+
+            <h2><i class="ri-refresh-line"></i> 11. Changes to This Policy</h2>
+            <p>We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated "Last Updated" date. We encourage you to review this policy periodically. Continued use of Resuvix AI after changes constitutes acceptance of the revised policy.</p>
+
+            <h2><i class="ri-mail-send-line"></i> 12. Contact Us</h2>
+            <p>If you have questions, concerns, or requests regarding your privacy or this policy, please reach out to us:</p>
+            <div class="legal-highlight">
+                <strong>Email:</strong> <a href="mailto:akashsingg23@gmail.com">akashsingg23@gmail.com</a><br>
+                <strong>Platform:</strong> Resuvix AI — resuvix.com<br>
+                <strong>Response Time:</strong> We aim to respond to all privacy inquiries within 48 hours.
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="legal-footer">
+        <p>&copy; 2025 Resuvix AI. All rights reserved. &nbsp;|&nbsp; <a href="./terms.html">Terms of Service</a> &nbsp;|&nbsp; <a href="./register.html">Create Account</a></p>
+    </div>
+
+</body>
+</html>

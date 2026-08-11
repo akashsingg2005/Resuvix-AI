@@ -67,6 +67,11 @@ const userSchema = new mongoose.Schema(
       default: false,
     },
 
+    hasUsedFreeInterview: {
+      type: Boolean,
+      default: false,
+    },
+
     refreshToken: {
       type: String,
       default: null,

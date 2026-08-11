@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Interview Preparation & Mock Simulator | Resuvix AI</title>
+    <meta name="description" content="Prepare for tech, marketing, sales, finance, civil engineering, teaching, HR, and custom career interviews with real-time AI feedback and dynamic follow-up questions.">
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Remix Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../assets/logo/favicon.png">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/home.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+
+    <style>
+        .prep-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .prep-glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 15px 35px rgba(15, 23, 42, 0.05);
+        }
+
+        .preset-role-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+            margin-bottom: 14px;
+        }
+
+        .role-pill {
+            padding: 6px 14px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: #FFFFFF;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .role-pill:hover, .role-pill.active {
+            border-color: #6C63FF;
+            background: rgba(108, 99, 255, 0.08);
+            color: #6C63FF;
+        }
+
+        .sim-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding-bottom: 20px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+        }
+
+        .sim-avatar-box {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .sim-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6C63FF, #06B6D4);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            box-shadow: 0 8px 20px rgba(108, 99, 255, 0.3);
+        }
+
+        .progress-bar-wrap {
+            width: 100%;
+            height: 8px;
+            background: rgba(226, 232, 240, 0.8);
+            border-radius: 999px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #6C63FF, #06B6D4);
+            width: 10%;
+            transition: width 0.4s ease;
+        }
+
+        .question-card-box {
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.04), rgba(6, 182, 212, 0.05));
+            border: 1.5px solid rgba(108, 99, 255, 0.2);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .concept-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            background: rgba(108, 99, 255, 0.1);
+            color: #6C63FF;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-right: 6px;
+            margin-bottom: 6px;
+        }
+
+        .answer-textarea {
+            width: 100%;
+            min-height: 160px;
+            border-radius: 16px;
+            border: 1.5px solid var(--border);
+            padding: 16px 20px;
+            font-family: inherit;
+            font-size: 14.5px;
+            line-height: 1.6;
+            outline: none;
+            transition: all 0.3s ease;
+            resize: vertical;
+            background: #FAFAFA;
+        }
+
+        .answer-textarea:focus {
+            border-color: #6C63FF;
+            background: #FFFFFF;
+            box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.1);
+        }
+
+        .follow-up-card {
+            background: #FFFBEB;
+            border: 1.5px solid #FCD34D;
+            border-radius: 18px;
+            padding: 20px;
+            margin-bottom: 20px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        /* Comprehensive Report Styles */
+        .report-score-hero {
+            background: linear-gradient(135deg, #0F172A, #1E293B);
+            border-radius: 24px;
+            padding: 36px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            margin-bottom: 32px;
+            box-shadow: 0 20px 45px rgba(15, 23, 42, 0.15);
+            flex-wrap: wrap;
+        }
+
+        .report-score-gauge {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #22C55E, #166534);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 800;
+            box-shadow: 0 10px 25px rgba(34, 197, 94, 0.35);
+            flex-shrink: 0;
+        }
+
+        .verdict-tag {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 999px;
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ADE80;
+            font-weight: 800;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .cat-bar-item {
+            margin-bottom: 16px;
+        }
+
+        .cat-bar-head {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13.5px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--text);
+        }
+
+        .cat-bar-bg {
+            height: 10px;
+            background: rgba(226, 232, 240, 0.9);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .cat-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #6C63FF, #06B6D4);
+            border-radius: 999px;
+        }
+
+        .review-q-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 24px;
+            margin-bottom: 16px;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .history-table th, .history-table td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .history-table th {
+            background: #F8FAFC;
+            font-weight: 700;
+            color: var(--text);
+        }
+        /* Premium Styled Form Inputs, Selects & File Uploads */
+        .form-control {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            font-family: inherit;
+            font-size: 14.5px;
+            outline: none;
+            transition: all 0.2s ease;
+            background: #ffffff;
+            color: var(--text);
+            box-shadow: 0 2px 4px rgba(15, 23, 42, 0.02);
+        }
+        .form-control:focus {
+            border-color: #6C63FF;
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.15);
+            background: #ffffff;
+        }
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='20' height='20' fill='%2364748b'%3E%3Cpath d='M12 16L6 10H18L12 16Z'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            background-size: 20px;
+            padding-right: 40px;
+            cursor: pointer;
+        }
+        input[type="file"].form-control {
+            padding: 10px 14px;
+            font-size: 13px;
+            color: var(--text-light);
+            cursor: pointer;
+        }
+        input[type="file"].form-control::file-selector-button {
+            border: none;
+            background: rgba(108, 99, 255, 0.1);
+            color: #6C63FF;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-right: 12px;
+            transition: all 0.2s ease;
+        }
+        input[type="file"].form-control::file-selector-button:hover {
+            background: rgba(108, 99, 255, 0.2);
+        }
+    </style>
+</head>
+
+<body class="dashboard-body">
+
+    <!-- Animated Background -->
+    <div class="gradient-bg"></div>
+    <div class="gradient-bg bg2"></div>
+    <div class="gradient-bg bg3"></div>
+
+    <!-- Header Navigation -->
+    <header class="dash-header">
+        <div class="dash-nav">
+            <div class="dash-nav-left">
+                <button class="drawer-trigger" id="drawerTrigger" title="Open Navigation Menu">
+                    <i class="ri-menu-2-line"></i>
+                </button>
+                <a href="../index.html" class="dash-logo">
+                    <img src="../assets/logo/logo.png" alt="Resuvix AI">
+                </a>
+            </div>
+
+            <div class="dash-nav-right">
+                <div id="planBadgeContainer">
+                    <span class="dash-badge-free" id="userPlanBadge"><i class="ri-sparkling-fill"></i> Free Tier</span>
+                </div>
+
+                <div class="icon-btn-wrap" style="position: relative;">
+                    <button class="dash-icon-btn" id="notifBellBtn" title="Notifications">
+                        <i class="ri-notification-3-line"></i>
+                        <span class="unread-dot" id="notifUnreadBadge"></span>
+                    </button>
+
+                    <div class="notif-dropdown-menu" id="notifDropdownMenu">
+                        <div class="notif-header">
+                            <h4><i class="ri-notification-3-line" style="color: var(--primary);"></i> Notifications</h4>
+                            <button class="btn-mark-read" id="btnMarkAllRead">Mark all read</button>
+                        </div>
+                        <div class="notif-list">
+                            <div class="notif-item">
+                                <div class="notif-icon purple"><i class="ri-user-voice-line"></i></div>
+                                <div class="notif-content">
+                                    <div class="notif-title">Role-Agnostic AI Interview Engine</div>
+                                    <div class="notif-text">Practice mock interviews for Software, Marketing, Sales, HR, Civil Engineering, Finance, Teaching, or any custom profession.</div>
+                                    <div class="notif-time">Just now</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="position: relative;">
+                    <div class="user-profile-menu" id="userProfilePill">
+                        <div class="user-avatar-small" id="userAvatarText">A</div>
+                        <span class="user-name-abbr" id="userNameText">Account</span>
+                        <i class="ri-arrow-down-s-line"></i>
+                    </div>
+
+                    <div class="user-dropdown-menu" id="userDropdownMenu">
+                        <button class="dropdown-item-btn" id="dropBtnBilling">
+                            <i class="ri-bank-card-line"></i> Payment Details
+                        </button>
+                        <button class="dropdown-item-btn" id="dropBtnAdmin" style="display: none; color: var(--primary);">
+                            <i class="ri-shield-flash-line"></i> Admin Panel
+                        </button>
+                        <button class="dropdown-item-btn" id="dropBtnLogout" style="color: #EF4444;">
+                            <i class="ri-logout-box-r-line"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Drawer -->
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+    <aside class="chatgpt-drawer" id="chatgptDrawer">
+        <div class="drawer-top">
+            <div class="drawer-brand">
+                <a href="../index.html" class="logo">
+                    <img src="../assets/logo/logo.png" alt="Resuvix AI">
+                </a>
+                <button class="drawer-close" id="drawerClose">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+
+            <nav class="drawer-menu-list">
+                <a href="dashboard.html" class="drawer-item" id="navItemDash">
+                    <i class="ri-dashboard-3-line"></i> Dashboard
+                </a>
+                <a href="builder.html" class="drawer-item" id="navItemResumes">
+                    <i class="ri-file-list-3-line"></i> AI Resume Builder
+                </a>
+                <a href="ats-checker.html" class="drawer-item" id="navItemATS">
+                    <i class="ri-bar-chart-box-line"></i> ATS Checker
+                </a>
+                <a href="interview-prep.html" class="drawer-item active" id="navItemInterview">
+                    <i class="ri-user-voice-line"></i> Interview Prep
+                </a>
+                <a href="cover-letter.html" class="drawer-item" id="navItemCoverLetter">
+                    <i class="ri-draft-line"></i> Cover Letters
+                </a>
+                <a href="#" class="drawer-item" id="navItemBilling">
+                    <i class="ri-bank-card-line"></i> Payment Details
+                </a>
+                <a href="admin.html" class="drawer-item" id="navItemAdmin" style="display: none;">
+                    <i class="ri-shield-user-line"></i> Admin Panel
+                </a>
+            </nav>
+        </div>
+
+        <div class="drawer-bottom">
+            <div class="drawer-pro-card" id="drawerUpgradeCard">
+                <h4>🚀 Upgrade to Pro</h4>
+                <p>Unlock unlimited AI resume generation and advanced ATS reports.</p>
+                <button class="btn-drawer-upgrade" id="btnDrawerUpgrade">Upgrade Now</button>
+            </div>
+
+            <button class="drawer-item" id="drawerLogoutBtn" style="width: 100%; margin-top: 16px; color: #EF4444;">
+                <i class="ri-logout-box-r-line" style="color: #EF4444;"></i> Logout
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Workspace Container -->
+    <main class="dash-main">
+        <div class="dash-container">
+            
+            <div class="dash-welcome" style="margin-bottom: 28px;">
+                <div>
+                    <h1>AI Interview Preparation & Mock Simulator 🎙️</h1>
+                    <p>Practice realistic, dynamic mock interviews tailored for <strong>ANY profession</strong> (Tech & Non-Tech) with real-time scoring & follow-ups.</p>
+                </div>
+            </div>
+
+            <!-- Auto Transfer Alert Banner from ATS Checker -->
+            <div id="atsTransferAlert" style="display: none; background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(6, 182, 212, 0.1)); border: 1.5px solid #22C55E; border-radius: 16px; padding: 16px 20px; margin-bottom: 24px; animation: fadeIn 0.4s ease;">
+                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <i class="ri-sparkling-fill" style="font-size: 24px; color: #22C55E;"></i>
+                        <div>
+                            <strong style="font-size: 14.5px; color: var(--text);">Auto-Loaded from ATS Checker Audit</strong>
+                            <div style="font-size: 13px; color: var(--text-light);" id="atsTransferText">Resume & Job Description findings imported smoothly.</div>
+                        </div>
+                    </div>
+                    <span class="concept-badge" style="background: #22C55E; color: white;" id="atsTransferScoreBadge">ATS Score: 86/100</span>
+                </div>
+            </div>
+
+            <div class="prep-layout">
+                
+                <!-- VIEW 1: INTERVIEW SETUP CARD -->
+                <div class="prep-glass-card" id="viewSetupCard">
+                    <h2 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 20px; color: var(--text); display: flex; align-items: center; gap: 10px;">
+                        <i class="ri-settings-4-line" style="color: var(--primary);"></i> 1. Setup Your Role-Tailored AI Mock Interview
+                    </h2>
+
+                    <form id="interviewSetupForm">
+                        
+                        <!-- Role Selector -->
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label style="font-weight: 800; font-size: 13.5px; margin-bottom: 6px; display: block;">Target Job Role / Profession <span style="color: #EF4444;">*</span></label>
+                            <input type="text" id="setupJobRole" class="form-control" placeholder="e.g. Software Engineer, Marketing Executive, Accountant, Civil Engineer, Teacher" required style="font-size: 15px; padding: 12px 16px;">
+                            
+                            <div class="preset-role-pills">
+                                <span style="font-size: 12px; font-weight: 700; color: var(--text-light); align-self: center; margin-right: 4px;">Quick Select:</span>
+                                <button type="button" class="role-pill" data-role="Software Engineer">Software Engineer</button>
+                                <button type="button" class="role-pill" data-role="Full Stack Developer">Full Stack Developer</button>
+                                <button type="button" class="role-pill" data-role="Marketing Executive">Marketing Executive</button>
+                                <button type="button" class="role-pill" data-role="Sales Manager">Sales Manager</button>
+                                <button type="button" class="role-pill" data-role="Accountant / Finance">Accountant / Finance</button>
+                                <button type="button" class="role-pill" data-role="Civil Engineer">Civil Engineer</button>
+                                <button type="button" class="role-pill" data-role="Teacher / Educator">Teacher / Educator</button>
+                                <button type="button" class="role-pill" data-role="HR Specialist">HR Specialist</button>
+                                <button type="button" class="role-pill" data-role="Data Analyst">Data Analyst</button>
+                            </div>
+                        </div>
+
+                        <!-- Grid 2 Cols: Company & Experience -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+                            <div class="form-group">
+                                <label style="font-weight: 700; font-size: 13px; margin-bottom: 6px; display: block;">Company Name (Optional)</label>
+                                <input type="text" id="setupCompany" class="form-control" placeholder="e.g. Google, Deloitte, Local Firm">
+                            </div>
+                            <div class="form-group">
+                                <label style="font-weight: 700; font-size: 13px; margin-bottom: 6px; display: block;">Experience Level</label>
+                                <select id="setupExpLevel" class="form-control">
+                                    <option value="Fresher">Fresher (0 Yrs)</option>
+                                    <option value="0-1 Years">0–1 Years</option>
+                                    <option value="1-3 Years" selected>1–3 Years</option>
+                                    <option value="3-5 Years">3–5 Years</option>
+                                    <option value="5-10 Years">5–10 Years</option>
+                                    <option value="10+ Years">10+ Years (Lead / Executive)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Grid 3 Cols: Category, Difficulty, Count -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+                            <div class="form-group">
+                                <label style="font-weight: 700; font-size: 13px; margin-bottom: 6px; display: block;">Interview Round Category</label>
+                                <select id="setupCategory" class="form-control">
+                                    <option value="Full Mock" selected>🎭 Full Mock Interview (All Round Mix)</option>
+                                    <option value="HR">🗣️ HR Interview</option>
+                                    <option value="Behavioral">⭐ Behavioral STAR Method</option>
+                                    <option value="Situational">📊 Situational & Scenarios</option>
+                                    <option value="Role-Specific">🎯 Role-Specific Practice</option>
+                                    <option value="Technical">💻 Technical / Domain Deep-Dive</option>
+                                    <option value="Communication">💬 Communication Analysis</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label style="font-weight: 700; font-size: 13px; margin-bottom: 6px; display: block;">Difficulty</label>
+                                <select id="setupDifficulty" class="form-control">
+                                    <option value="Easy">Easy</option>
+                                    <option value="Medium" selected>Medium</option>
+                                    <option value="Hard">Hard</option>
+                                    <option value="Expert">Expert</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label style="font-weight: 700; font-size: 13px; margin-bottom: 6px; display: block;">Number of Questions</label>
+                                <select id="setupQuestionCount" class="form-control">
+                                    <option value="5">Quick — 5 Questions</option>
+                                    <option value="10" selected>Standard — 10 Questions (Free Default)</option>
+                                    <option value="15">Complete — 15 Questions</option>
+                                    <option value="20">Deep — 20 Questions</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Optional Inputs: Resume & Job Description -->
+                        <div style="background: rgba(248, 250, 252, 0.8); border: 1px solid var(--border); border-radius: 18px; padding: 20px; margin-bottom: 24px;">
+                            <h4 style="font-size: 14px; font-weight: 800; color: var(--text); margin-top: 0; margin-bottom: 14px;">
+                                📄 Optional Resume & Job Description Integration
+                            </h4>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                                <div>
+                                    <label style="font-weight: 700; font-size: 12.5px; margin-bottom: 4px; display: block;">Upload Resume (PDF/DOCX) or Select Saved</label>
+                                    <input type="file" id="setupResumeFile" class="form-control" accept=".pdf,.docx" style="font-size: 12.5px; margin-bottom: 6px;">
+                                    <select id="selectSavedResume" class="form-control" style="font-size: 12.5px;">
+                                        <option value="">-- Select Saved Resuvix Resume --</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label style="font-weight: 700; font-size: 12.5px; margin-bottom: 4px; display: block;">Upload Job Description or Paste Text</label>
+                                    <input type="file" id="setupJdFile" class="form-control" accept=".pdf,.docx,.txt" style="font-size: 12.5px; margin-bottom: 6px;">
+                                    <textarea id="setupJdText" class="form-control" rows="2" placeholder="Paste JD requirements text..." style="font-size: 12px;"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Start Button -->
+                        <button type="submit" class="btn-gradient" id="btnStartInterview" style="width: 100%; padding: 16px; border-radius: 14px; font-weight: 800; font-size: 16px;">
+                            <i class="ri-play-circle-line"></i> Start AI Mock Interview
+                        </button>
+                    </form>
+                </div>
+
+                <!-- VIEW 2: LIVE INTERVIEW SESSION SIMULATOR -->
+                <div class="prep-glass-card" id="viewLiveCard" style="display: none;">
+                    
+                    <div class="sim-header">
+                        <div class="sim-avatar-box">
+                            <div class="sim-avatar"><i class="ri-robot-2-line"></i></div>
+                            <div>
+                                <h3 style="font-size: 1.15rem; font-weight: 800; margin: 0; color: var(--text);" id="liveRoleTitle">Software Engineer Interview</h3>
+                                <span style="font-size: 12.5px; color: #22C55E; font-weight: 700; display: flex; align-items: center; gap: 4px;">
+                                    <i class="ri-pulse-line"></i> Live Session Active
+                                </span>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="font-size: 14px; font-weight: 800; color: var(--primary);" id="liveProgressText">Question 1 of 10</span>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="progress-bar-wrap">
+                        <div class="progress-bar-fill" id="liveProgressBarFill"></div>
+                    </div>
+
+                    <!-- Question Card -->
+                    <div class="question-card-box">
+                        <div style="font-size: 1.25rem; font-weight: 800; color: var(--text); line-height: 1.5; margin-bottom: 12px;" id="liveQuestionText">
+                            Loading your tailored question...
+                        </div>
+                        <div id="liveConceptsContainer">
+                            <span class="concept-badge"><i class="ri-price-tag-3-line"></i> Core Competency</span>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Follow-Up Dialog (Popped dynamically) -->
+                    <div class="follow-up-card" id="liveFollowUpCard" style="display: none;">
+                        <div style="display: flex; align-items: center; gap: 8px; font-weight: 800; color: #D97706; font-size: 14px; margin-bottom: 6px;">
+                            <i class="ri-chat-follow-up-line"></i> Dynamic Interviewer Follow-Up Question
+                        </div>
+                        <div style="font-size: 14px; color: var(--text); font-weight: 700; margin-bottom: 10px;" id="liveFollowUpText">
+                            You mentioned project deployment. How did you handle token expiration?
+                        </div>
+                        <input type="text" id="liveFollowUpAnswerText" class="form-control" placeholder="Type quick follow-up response..." style="font-size: 13.5px; background: white;">
+                    </div>
+
+                    <!-- Candidate Response Input -->
+                    <div style="margin-bottom: 24px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <label style="font-weight: 800; font-size: 14px; color: var(--text);">Your Response</label>
+                            
+                            <div style="display: flex; gap: 8px;">
+                                <button type="button" id="btnVoiceToggle" class="btn-outline" style="padding: 6px 14px; font-size: 12.5px; border-radius: 999px;">
+                                    <i class="ri-mic-line" id="micIcon" style="color: #EF4444;"></i> <span id="micText">Voice Input</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <textarea id="liveAnswerText" class="answer-textarea" placeholder="Type or speak your answer clearly... (Tip: Structure your response using Situation, Task, Action, and Result)"></textarea>
+                    </div>
+
+                    <!-- Action Controls -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
+                        <button type="button" class="btn-outline" id="btnEndInterviewEarly" style="padding: 12px 20px; border-radius: 12px; color: #EF4444; border-color: #EF4444;">
+                            <i class="ri-stop-circle-line"></i> End & Generate Report
+                        </button>
+
+                        <div style="display: flex; gap: 10px;">
+                            <button type="button" class="btn-gradient" id="btnSubmitLiveAnswer" style="padding: 12px 26px; border-radius: 12px; font-weight: 800;">
+                                Submit Answer & Next <i class="ri-arrow-right-line"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- VIEW 3: COMPREHENSIVE FINAL INTERVIEW REPORT -->
+                <div class="prep-glass-card" id="viewReportCard" style="display: none;">
+                    
+                    <!-- Hero Score Card -->
+                    <div class="report-score-hero">
+                        <div>
+                            <span class="verdict-tag" id="reportVerdictTag">Strong Performance</span>
+                            <h2 style="font-size: 1.8rem; font-weight: 800; margin: 0 0 6px; color: white;" id="reportJobRoleTitle">Software Engineer Mock Interview Report</h2>
+                            <p style="font-size: 14px; color: #94A3B8; margin: 0;">AI-Estimated Interview Readiness Score based on domain accuracy, structure, and communication.</p>
+                        </div>
+                        <div class="report-score-gauge" id="reportScoreCircle">
+                            82%
+                        </div>
+                    </div>
+
+                    <!-- Category Competency Scores Grid -->
+                    <div style="margin-bottom: 32px;">
+                        <h3 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 16px; color: var(--text);">
+                            📊 Career-Adapted Competency Breakdown
+                        </h3>
+                        <div id="reportCategoryBarsContainer" style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px;">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Strengths & Weaknesses Grid -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 32px;">
+                        <div style="background: rgba(34, 197, 94, 0.05); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 20px; padding: 24px;">
+                            <h4 style="font-size: 15px; font-weight: 800; color: #166534; margin-top: 0; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                                <i class="ri-checkbox-circle-fill"></i> Key Professional Strengths
+                            </h4>
+                            <ul id="reportStrengthsList" style="list-style: none; padding: 0; margin: 0; font-size: 13.5px; line-height: 1.7; color: var(--text);">
+                                <!-- Populated -->
+                            </ul>
+                        </div>
+
+                        <div style="background: rgba(245, 158, 11, 0.05); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 20px; padding: 24px;">
+                            <h4 style="font-size: 15px; font-weight: 800; color: #B45309; margin-top: 0; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                                <i class="ri-error-warning-fill"></i> Targeted Improvement Areas
+                            </h4>
+                            <ul id="reportWeaknessesList" style="list-style: none; padding: 0; margin: 0; font-size: 13.5px; line-height: 1.7; color: var(--text);">
+                                <!-- Populated -->
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Communication Analysis Card -->
+                    <div style="background: rgba(108, 99, 255, 0.04); border: 1px solid rgba(108, 99, 255, 0.2); border-radius: 20px; padding: 24px; margin-bottom: 32px;">
+                        <h4 style="font-size: 15px; font-weight: 800; color: #6C63FF; margin-top: 0; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                            <i class="ri-message-3-line"></i> Professional Communication Analysis
+                        </h4>
+                        <p style="font-size: 13.5px; color: var(--text-light); line-height: 1.6;" id="reportCommFeedback">
+                            Good clarity and tone. Focus on adding quantifiable metric outcomes to every story.
+                        </p>
+                    </div>
+
+                    <!-- Question-by-Question Deep Dive Review -->
+                    <div style="margin-bottom: 32px;">
+                        <h3 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 18px; color: var(--text);">
+                            📝 Question-by-Question Detailed Review & Model Answers
+                        </h3>
+                        <div id="reportQuestionsReviewContainer">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons Row -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap;">
+                        <button type="button" class="btn-outline" id="btnRestartNewSetup" style="padding: 14px 24px; border-radius: 14px; font-weight: 700;">
+                            <i class="ri-refresh-line"></i> Practice Another Interview
+                        </button>
+
+                        <button type="button" class="btn-gradient" id="btnPracticeWeakArea" style="padding: 14px 28px; border-radius: 14px; font-weight: 800;">
+                            <i class="ri-flashlight-line"></i> Practice Weak Areas (Pro)
+                        </button>
+                    </div>
+
+                </div>
+
+                <!-- VIEW 4: INTERVIEW HISTORY & PROGRESS TRACKING (PREMIUM) -->
+                <div class="prep-glass-card" id="viewHistoryCard">
+                    <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 18px; color: var(--text); display: flex; align-items: center; gap: 8px;">
+                        <i class="ri-history-line" style="color: var(--primary);"></i> Past Interview History & Progress Tracking
+                    </h3>
+
+                    <div style="overflow-x: auto;">
+                        <table class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Target Role</th>
+                                    <th>Category</th>
+                                    <th>Questions</th>
+                                    <th>Overall Score</th>
+                                    <th>Verdict</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyTableBody">
+                                <tr>
+                                    <td colspan="7" style="text-align: center; color: var(--text-light); padding: 24px;">
+                                        Loading past interview records...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- PREMIUM GLASS MODAL (Reusing standard payment options) -->
+    <div class="modal-overlay" id="premiumModalOverlay">
+        <div class="premium-modal">
+            <button class="modal-close-btn" id="premiumModalClose">
+                <i class="ri-close-line"></i>
+            </button>
+
+            <div class="premium-modal-header">
+                <div class="premium-icon-badge">
+                    <i class="ri-vip-crown-fill"></i>
+                </div>
+                <h2>Unlock Unlimited AI Resume & Interview Practice</h2>
+                <p>Your 1st AI Mock Interview is 100% FREE. Upgrade to Pro to generate unlimited AI resumes, practice unlimited mock interviews, and access advanced ATS reports.</p>
+            </div>
+
+            <!-- Plans Grid -->
+            <div class="plans-grid" id="modalPlansGrid">
+                <!-- Loaded dynamically -->
+            </div>
+
+            <!-- Coupon Box -->
+            <div class="coupon-box-row">
+                <input type="text" class="coupon-input" id="couponCodeInput" placeholder="Enter Coupon Code (e.g. RESUVIX50)">
+                <button class="btn-outline" id="btnApplyCoupon" style="padding: 12px 22px;">Apply</button>
+            </div>
+            <div id="couponMessage" style="font-size: 13px; font-weight: 600; margin-bottom: 16px; display: none;"></div>
+
+            <!-- Modal Action Buttons -->
+            <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+                <button class="btn-gradient" id="btnPayUpgrade" style="flex: 1; padding: 16px;">
+                    Upgrade Now & Unlock
+                </button>
+                <button class="btn-outline" id="btnCancelModal" style="padding: 16px 24px;">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAYMENT & BILLING DETAILS MODAL -->
+    <div class="modal-overlay" id="billingModalOverlay">
+        <div class="premium-modal" style="max-width: 620px;">
+            <button class="modal-close-btn" onclick="document.getElementById('billingModalOverlay').classList.remove('active')">
+                <i class="ri-close-line"></i>
+            </button>
+            <div class="premium-modal-header">
+                <div class="premium-icon-badge" style="background: linear-gradient(135deg, #6C63FF, #06B6D4);">
+                    <i class="ri-bank-card-line"></i>
+                </div>
+                <h2>Payment & Plan Details</h2>
+                <p>View your active subscription plan, validity, and account benefits.</p>
+            </div>
+
+            <div class="modal-body-content">
+                <!-- Active Plan Box -->
+                <div style="background: linear-gradient(135deg, #0F172A, #1E293B); border-radius: 20px; padding: 24px; color: white; margin-bottom: 24px; position: relative;">
+                    <div style="font-size: 11.5px; font-weight: 800; color: #38BDF8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">CURRENT ACTIVE PASS</div>
+                    <h3 style="font-size: 1.5rem; font-weight: 800; color: white; margin: 0 0 8px;" id="billingPlanTitle">Free Starter Pass</h3>
+                    <div style="font-size: 13.5px; color: #CBD5E1; display: flex; align-items: center; gap: 8px;" id="billingPlanValidity">
+                        <i class="ri-time-line" style="color: #38BDF8;"></i> <span>Validity: Unlimited Free Tier</span>
+                    </div>
+                </div>
+
+                <!-- Benefits List -->
+                <h4 style="font-size: 15px; font-weight: 800; margin-bottom: 12px; color: var(--text);">Included Plan Benefits</h4>
+                <ul style="list-style: none; padding: 0; margin-bottom: 24px; font-size: 13.5px; display: flex; flex-direction: column; gap: 10px;" id="billingBenefitsList">
+                    <li style="display: flex; align-items: center; gap: 10px;"><i class="ri-checkbox-circle-fill" style="color: #22C55E;"></i> Unlimited Free ATS Score Checks</li>
+                    <li style="display: flex; align-items: center; gap: 10px;"><i class="ri-checkbox-circle-fill" style="color: #22C55E;"></i> Unlimited Free AI Cover Letters</li>
+                    <li style="display: flex; align-items: center; gap: 10px;"><i class="ri-checkbox-circle-fill" style="color: #22C55E;"></i> 1-Time Free AI Resume Build</li>
+                    <li style="display: flex; align-items: center; gap: 10px;"><i class="ri-checkbox-circle-fill" style="color: #22C55E;"></i> 1-Time Free AI Mock Interview</li>
+                </ul>
+
+                <button class="btn-gradient" id="btnBillingUpgrade" style="width: 100%; padding: 14px; border-radius: 14px;">
+                    <i class="ri-sparkling-fill"></i> Upgrade / Manage Plan Access
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/config.js"></script>
+    <script src="../js/storage.js"></script>
+    <script src="../js/toast.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="../js/interview-prep.js"></script>
+</body>
+
+</html>

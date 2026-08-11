@@ -186,7 +186,12 @@ export const verifyPayment = async (req, res, next) => {
     // Set user as Premium and update plan access in database
     const User = (await import("../models/user.model.js")).default;
     let settings = await Settings.findOne();
-    const isProPlan = order.originalAmount === (settings?.bulkDownloadPrice || 499);
+    if (!settings) {
+      settings = await Settings.create({});
+    }
+
+    const proPrice = settings.bulkDownloadPrice || 499;
+    const isProPlan = (order && order.originalAmount === proPrice) || req.body.plan === "unlimited" || req.body.planType === "pro";
 
     const updateData = {
       premium: true,

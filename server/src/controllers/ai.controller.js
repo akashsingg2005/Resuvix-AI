@@ -7,6 +7,8 @@ import {
   isResumeText,
   generateInterviewQuestionsAI,
   generateCoverLetterAI,
+  generateInterviewPrepQuestionsAI,
+  evaluateInterviewAnswerAI,
 } from "../services/ai.service.js";
 
 /**
@@ -97,5 +99,27 @@ export const generateCoverLetter = asyncHandler(async (req, res) => {
   const coverLetter = await generateCoverLetterAI(payload);
   res.status(200).json(
     new ApiResponse(200, "Cover letter generated successfully", { coverLetter })
+  );
+});
+
+/**
+ * Generate Advanced AI Interview Prep Questions
+ */
+export const generateInterviewPrep = asyncHandler(async (req, res) => {
+  const { role, experienceLevel, roundType } = req.body;
+  const questions = await generateInterviewPrepQuestionsAI({ role, experienceLevel, roundType });
+  res.status(200).json(
+    new ApiResponse(200, "Interview questions generated successfully", questions)
+  );
+});
+
+/**
+ * Evaluate Candidate Answer with Gemini AI
+ */
+export const evaluateInterviewAnswer = asyncHandler(async (req, res) => {
+  const { role, question, answer, roundType } = req.body;
+  const evaluation = await evaluateInterviewAnswerAI({ role, question, answer, roundType });
+  res.status(200).json(
+    new ApiResponse(200, "Answer evaluation completed successfully", evaluation)
   );
 });

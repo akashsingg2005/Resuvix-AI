@@ -101,7 +101,7 @@ class AdminApp {
 
                 try {
                     toast.info("Saving updated pricing to database...");
-                    await api.patch("/api/v1/settings", {
+                    await api.put("/api/v1/settings", {
                         siteName,
                         premiumDownloadPrice,
                         bulkDownloadPrice,

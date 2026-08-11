@@ -6,6 +6,8 @@ import {
   scanATS,
   getInterviewQuestions,
   generateCoverLetter,
+  generateInterviewPrep,
+  evaluateInterviewAnswer,
 } from "../controllers/ai.controller.js";
 
 const storage = multer.memoryStorage();
@@ -23,5 +25,7 @@ router.post("/ats-scan", upload.single("file"), scanATS);
 router.post("/generate-resume", protect, generateResumeAI);
 router.get("/interview-questions", protect, getInterviewQuestions);
 router.post("/cover-letter", upload.single("file"), protect, generateCoverLetter);
+router.post("/interview-prep/generate", protect, generateInterviewPrep);
+router.post("/interview-prep/evaluate", protect, evaluateInterviewAnswer);
 
 export default router;

@@ -188,6 +188,13 @@ class APIClient {
         });
     }
 
+    async patch(endpoint, body = {}) {
+        return this.request(endpoint, {
+            method: "PATCH",
+            body: JSON.stringify(body)
+        });
+    }
+
     async delete(endpoint) {
         return this.request(endpoint, {
             method: "DELETE"
