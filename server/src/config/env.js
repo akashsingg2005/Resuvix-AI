@@ -29,6 +29,11 @@ const env = {
   RESEND_FROM: process.env.RESEND_FROM,
 
   // ==========================
+  // BREVO EMAIL CONFIGURATION (Primary - no domain verification needed)
+  // ==========================
+  BREVO_API_KEY: process.env.BREVO_API_KEY,
+
+  // ==========================
   // MAIL CONFIGURATION
   // ==========================
 

@@ -1,77 +1,71 @@
-import { Resend } from "resend";
 import env from "../config/env.js";
 
-// Fallback: use Nodemailer as backup if Resend key is not set
-import nodemailer from "nodemailer";
-import dns from "dns";
-import { promisify } from "util";
+// ===================================================================
+// EMAIL SERVICE — Uses Brevo (HTTPS API, not blocked by Render)
+// Fallback: Resend if BREVO_API_KEY not set
+// ===================================================================
 
-const resolve4 = promisify(dns.resolve4);
+const sendViaBrevo = async ({ to, subject, html }) => {
+    const apiKey = env.BREVO_API_KEY || process.env.BREVO_API_KEY;
+    const senderEmail = env.MAIL_USER || process.env.MAIL_USER || "akashsingg23@gmail.com";
+    const senderName = "Resuvix AI";
 
-const getResendClient = () => {
-    const key = env.RESEND_API_KEY || process.env.RESEND_API_KEY;
-    if (!key) return null;
-    return new Resend(key);
-};
-
-const getIPv4Host = async (host) => {
-    if (/^[0-9.]+$/.test(host)) return host;
-    try {
-        const ips = await resolve4(host);
-        if (ips && ips.length > 0) return ips[0];
-    } catch (e) {
-        console.warn(`⚠️ DNS resolve4 failed for ${host}:`, e.message);
-    }
-    return host;
-};
-
-const sendViaNodemailer = async ({ to, subject, html }) => {
-    const host = (env.MAIL_HOST || process.env.MAIL_HOST || "smtp.gmail.com").trim();
-    const port = Number(env.MAIL_PORT || process.env.MAIL_PORT) || 587;
-    const user = (env.MAIL_USER || process.env.MAIL_USER || "").trim();
-    const pass = (env.MAIL_PASS || process.env.MAIL_PASS || "").replace(/\s+/g, "");
-    const from = env.MAIL_FROM || process.env.MAIL_FROM || `"Resuvix AI" <${user}>`;
-
-    const isGmail = host.includes("gmail") || user.endsWith("@gmail.com");
-    const actualHost = isGmail ? await getIPv4Host("smtp.gmail.com") : await getIPv4Host(host);
-    const actualPort = isGmail ? 465 : port;
-
-    const transporter = nodemailer.createTransport({
-        host: actualHost,
-        port: actualPort,
-        secure: actualPort === 465,
-        auth: { user, pass },
-        tls: { rejectUnauthorized: false, servername: isGmail ? "smtp.gmail.com" : host }
+    const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: {
+            "accept": "application/json",
+            "api-key": apiKey,
+            "content-type": "application/json"
+        },
+        body: JSON.stringify({
+            sender: { name: senderName, email: senderEmail },
+            to: [{ email: to }],
+            subject,
+            htmlContent: html
+        })
     });
 
-    const info = await transporter.sendMail({ from, to, subject, html });
-    console.log(`✉️ [Nodemailer] Email sent to ${to} (${info.messageId})`);
-    return info;
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(data.message || `Brevo API error (${response.status})`);
+    }
+
+    console.log(`✉️ [Brevo] Email sent to ${to} (Message ID: ${data.messageId})`);
+    return data;
+};
+
+const sendViaResend = async ({ to, subject, html }) => {
+    const { Resend } = await import("resend");
+    const resend = new Resend(env.RESEND_API_KEY || process.env.RESEND_API_KEY);
+    const fromAddress = env.RESEND_FROM || process.env.RESEND_FROM || "Resuvix AI <onboarding@resend.dev>";
+
+    const { data, error } = await resend.emails.send({ from: fromAddress, to, subject, html });
+    if (error) throw new Error(error.message);
+
+    console.log(`✉️ [Resend] Email sent to ${to} (ID: ${data?.id})`);
+    return data;
 };
 
 export const sendMail = async ({ to, subject, html }) => {
-    const resend = getResendClient();
+    const brevoKey = env.BREVO_API_KEY || process.env.BREVO_API_KEY;
+    const resendKey = env.RESEND_API_KEY || process.env.RESEND_API_KEY;
 
-    // PRIMARY: Use Resend (HTTPS API, not blocked by Render)
-    if (resend) {
-        const fromAddress = env.RESEND_FROM || process.env.RESEND_FROM || "Resuvix AI <onboarding@resend.dev>";
-        try {
-            const { data, error } = await resend.emails.send({
-                from: fromAddress,
-                to,
-                subject,
-                html,
-            });
-            if (error) throw new Error(error.message);
-            console.log(`✉️ [Resend] Email sent to ${to} (ID: ${data?.id})`);
-            return data;
-        } catch (error) {
-            console.error("❌ Resend Error:", error.message);
-            throw new Error(`Email delivery failed: ${error.message}`);
+    try {
+        // PRIMARY: Brevo — no domain verification needed, sends to any email
+        if (brevoKey) {
+            return await sendViaBrevo({ to, subject, html });
         }
-    }
 
-    // FALLBACK: Use Nodemailer (may fail on Render if SMTP ports blocked)
-    console.warn("⚠️ RESEND_API_KEY not set, falling back to Nodemailer...");
-    return sendViaNodemailer({ to, subject, html });
+        // SECONDARY: Resend — needs domain verified for non-owner emails
+        if (resendKey) {
+            console.warn("⚠️  Using Resend — only owner email receives OTP in test mode");
+            return await sendViaResend({ to, subject, html });
+        }
+
+        throw new Error("No email provider configured. Set BREVO_API_KEY or RESEND_API_KEY.");
+    } catch (error) {
+        console.error("❌ Email delivery failed:", error.message);
+        throw new Error(`Email delivery failed: ${error.message}`);
+    }
 };
