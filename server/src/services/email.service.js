@@ -9,7 +9,9 @@ const getTransporter = () => {
 
     if (host.includes("gmail") || user.endsWith("@gmail.com")) {
         return nodemailer.createTransport({
-            service: "gmail",
+            host: "smtp.gmail.com",
+            port: 465,
+            secure: true, // true for 465, false for other ports
             auth: { user, pass },
             tls: { rejectUnauthorized: false }
         });
