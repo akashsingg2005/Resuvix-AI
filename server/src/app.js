@@ -10,6 +10,9 @@ import routes from "./routes/index.js";
 
 const app = express();
 
+// Trust first proxy (required for Render, Heroku, Cloudflare, etc.)
+app.set("trust proxy", 1);
+
 /*
 |--------------------------------------------------------------------------
 | Security & CORS Config
