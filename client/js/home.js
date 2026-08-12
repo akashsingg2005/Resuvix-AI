@@ -645,7 +645,9 @@ function initFAQAccordion() {
 
 async function fetchDatabasePricing() {
     try {
-        const baseUrl = typeof API_CONFIG !== "undefined" ? API_CONFIG.BASE_URL : "http://localhost:5000";
+        const baseUrl = (typeof CONFIG !== "undefined" && CONFIG.API && CONFIG.API.BASE_URL)
+            ? CONFIG.API.BASE_URL
+            : ((window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") ? "http://localhost:5000" : "https://resuvix-ai.onrender.com");
         const res = await fetch(`${baseUrl}/api/v1/payment/pricing`);
         if (!res.ok) return;
 
