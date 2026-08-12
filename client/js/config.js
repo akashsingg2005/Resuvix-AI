@@ -25,7 +25,7 @@ const CONFIG = Object.freeze({
 
     REQUEST: {
 
-        TIMEOUT: 15000,
+        TIMEOUT: 60000,
 
         HEADERS: {
 
