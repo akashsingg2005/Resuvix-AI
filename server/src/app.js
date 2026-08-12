@@ -64,9 +64,21 @@ app.use("/api/v1", routes);
 
 /*
 |--------------------------------------------------------------------------
-| Health Check Route
+| Root & Health Check Routes
 |--------------------------------------------------------------------------
 */
+
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "🚀 Resuvix AI Backend API is live and operational!",
+    version: "3.0.0",
+    endpoints: {
+      health: "/health",
+      api: "/api/v1"
+    }
+  });
+});
 
 app.get("/health", (req, res) => {
   res.status(200).json({
