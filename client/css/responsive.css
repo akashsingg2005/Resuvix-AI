@@ -144,7 +144,7 @@
 
         gap:25px;
 
-        flex-wrap:wrap;
+        flex-wrap:nowrap;
 
     }
 
@@ -418,8 +418,23 @@
     }
 
     .hero-stats{
-        flex-direction:column;
-        gap:16px;
+        flex-direction:row;
+        flex-wrap:nowrap;
+        justify-content:center;
+        gap:12px;
+    }
+
+    .hero-stats h3{
+        font-size:1.25rem;
+    }
+
+    .hero-stats span{
+        font-size:0.7rem;
+    }
+
+    .hero-stats div:not(:last-child)::after{
+        right:-6px;
+        height:35px;
     }
 
     .feature-card,
