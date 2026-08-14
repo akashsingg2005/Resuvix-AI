@@ -184,22 +184,22 @@ class BuilderApp {
                 }
 
                 if (data.experience && Array.isArray(data.experience)) {
-                    this.experiences = data.experience.map((e, idx) => ({ ...e, id: e.id || Date.now() + idx }));
+                    this.experiences = data.experience.map((e, idx) => ({ ...e, id: e.id || e._id || `exp_${Date.now()}_${idx}` }));
                     this.renderExperienceInputs();
                 }
 
                 if (data.projects && Array.isArray(data.projects)) {
-                    this.projects = data.projects.map((p, idx) => ({ ...p, id: p.id || Date.now() + idx + 10 }));
+                    this.projects = data.projects.map((p, idx) => ({ ...p, id: p.id || p._id || `proj_${Date.now()}_${idx}` }));
                     this.renderProjectInputs();
                 }
 
                 if (data.education && Array.isArray(data.education)) {
-                    this.educations = data.education.map((e, idx) => ({ ...e, id: e.id || Date.now() + idx + 20 }));
+                    this.educations = data.education.map((e, idx) => ({ ...e, id: e.id || e._id || `edu_${Date.now()}_${idx}` }));
                     this.renderEducationInputs();
                 }
 
                 if (data.customSections && Array.isArray(data.customSections)) {
-                    this.customSections = data.customSections.map((c, idx) => ({ ...c, id: c.id || Date.now() + idx + 30 }));
+                    this.customSections = data.customSections.map((c, idx) => ({ ...c, id: c.id || c._id || `custom_${Date.now()}_${idx}` }));
                     this.renderCustomSectionInputs();
                 }
 
@@ -318,9 +318,10 @@ class BuilderApp {
         container.querySelectorAll(".btn-ai-role-bullets").forEach(btn => {
             btn.addEventListener("click", async (e) => {
                 this.readFormValues();
-                const id = Number(e.currentTarget.dataset.id);
-                const pos = document.querySelector(`.exp-position[data-id="${id}"]`)?.value.trim() || document.getElementById("inpJobTitle")?.value.trim() || "Professional";
-                const comp = document.querySelector(`.exp-company[data-id="${id}"]`)?.value.trim() || "Company";
+                const id = String(e.currentTarget.dataset.id);
+                const item = this.experiences.find(x => String(x.id) === id);
+                const pos = item?.position?.trim() || document.getElementById("inpJobTitle")?.value.trim() || "Professional";
+                const comp = item?.company?.trim() || "Company";
 
                 try {
                     toast.info(`Generating Gemini AI ATS Bullets for ${pos}...`);
@@ -328,7 +329,7 @@ class BuilderApp {
                         jobTitle: `${pos} at ${comp}`
                     });
 
-                    const descInput = document.querySelector(`.exp-desc[data-id="${id}"]`);
+                    const descInput = container.querySelector(`.exp-desc[data-id="${id}"]`);
                     if (descInput && res.experience && res.experience[0]?.description) {
                         descInput.value = res.experience[0].description;
                         this.readFormValues();
@@ -344,8 +345,8 @@ class BuilderApp {
         container.querySelectorAll(".btn-del-exp").forEach(btn => {
             btn.addEventListener("click", (e) => {
                 this.readFormValues();
-                const id = Number(e.currentTarget.dataset.id);
-                this.experiences = this.experiences.filter(x => x.id !== id);
+                const id = String(e.currentTarget.dataset.id);
+                this.experiences = this.experiences.filter(x => String(x.id) !== id);
                 this.renderExperienceInputs();
                 this.syncLivePreview();
             });
@@ -356,7 +357,7 @@ class BuilderApp {
             btnAdd.onclick = () => {
                 this.readFormValues();
                 this.experiences.push({
-                    id: Date.now(),
+                    id: `exp_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
                     company: "",
                     position: "",
                     startDate: "",
@@ -407,8 +408,8 @@ class BuilderApp {
         container.querySelectorAll(".btn-del-edu").forEach(btn => {
             btn.addEventListener("click", (e) => {
                 this.readFormValues();
-                const id = Number(e.currentTarget.dataset.id);
-                this.educations = this.educations.filter(x => x.id !== id);
+                const id = String(e.currentTarget.dataset.id);
+                this.educations = this.educations.filter(x => String(x.id) !== id);
                 this.renderEducationInputs();
                 this.syncLivePreview();
             });
@@ -419,7 +420,7 @@ class BuilderApp {
             btnAdd.onclick = () => {
                 this.readFormValues();
                 this.educations.push({
-                    id: Date.now(),
+                    id: `edu_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
                     degree: "",
                     college: "",
                     year: "",
@@ -474,8 +475,9 @@ class BuilderApp {
         container.querySelectorAll(".btn-ai-project-bullets").forEach(btn => {
             btn.addEventListener("click", async (e) => {
                 this.readFormValues();
-                const id = Number(e.currentTarget.dataset.id);
-                const projTitle = document.querySelector(`.proj-title[data-id="${id}"]`)?.value.trim() || "Project Initiative";
+                const id = String(e.currentTarget.dataset.id);
+                const item = this.projects.find(x => String(x.id) === id);
+                const projTitle = item?.title?.trim() || "Project Initiative";
                 const targetRole = document.getElementById("inpJobTitle")?.value.trim() || "Professional";
 
                 try {
@@ -484,7 +486,7 @@ class BuilderApp {
                         jobTitle: `${projTitle} for ${targetRole}`
                     });
 
-                    const descInput = document.querySelector(`.proj-desc[data-id="${id}"]`);
+                    const descInput = container.querySelector(`.proj-desc[data-id="${id}"]`);
                     if (descInput && res.projects && res.projects[0]?.description) {
                         descInput.value = res.projects[0].description;
                         this.readFormValues();
@@ -500,8 +502,8 @@ class BuilderApp {
         container.querySelectorAll(".btn-del-proj").forEach(btn => {
             btn.addEventListener("click", (e) => {
                 this.readFormValues();
-                const id = Number(e.currentTarget.dataset.id);
-                this.projects = this.projects.filter(x => x.id !== id);
+                const id = String(e.currentTarget.dataset.id);
+                this.projects = this.projects.filter(x => String(x.id) !== id);
                 this.renderProjectInputs();
                 this.syncLivePreview();
             });
@@ -512,7 +514,7 @@ class BuilderApp {
             btnAdd.onclick = () => {
                 this.readFormValues();
                 this.projects.push({
-                    id: Date.now(),
+                    id: `proj_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
                     title: "",
                     description: "",
                     github: "",
@@ -552,8 +554,8 @@ class BuilderApp {
         container.querySelectorAll(".btn-del-custom").forEach(btn => {
             btn.addEventListener("click", (e) => {
                 this.readFormValues();
-                const id = Number(e.currentTarget.dataset.id);
-                this.customSections = this.customSections.filter(x => x.id !== id);
+                const id = String(e.currentTarget.dataset.id);
+                this.customSections = this.customSections.filter(x => String(x.id) !== id);
                 this.renderCustomSectionInputs();
                 this.syncLivePreview();
             });
@@ -564,7 +566,7 @@ class BuilderApp {
             btnAdd.onclick = () => {
                 this.readFormValues();
                 this.customSections.push({
-                    id: Date.now(),
+                    id: `custom_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
                     heading: "",
                     details: ""
                 });
@@ -575,58 +577,107 @@ class BuilderApp {
     }
 
     initLiveSync() {
-        document.addEventListener("input", () => {
+        const formPane = document.querySelector(".builder-form-pane") || document;
+        const handler = () => {
             this.readFormValues();
             this.syncLivePreview();
-        });
+        };
+
+        formPane.addEventListener("input", handler);
+        formPane.addEventListener("change", handler);
+        formPane.addEventListener("blur", handler, true);
     }
 
     readFormValues() {
-        this.experiences.forEach(item => {
-            const comp = document.querySelector(`.exp-company[data-id="${item.id}"]`);
-            const pos = document.querySelector(`.exp-position[data-id="${item.id}"]`);
-            const st = document.querySelector(`.exp-start[data-id="${item.id}"]`);
-            const en = document.querySelector(`.exp-end[data-id="${item.id}"]`);
-            const desc = document.querySelector(`.exp-desc[data-id="${item.id}"]`);
+        // 1. Experience
+        const expContainer = document.getElementById("experienceEntriesContainer");
+        if (expContainer) {
+            const boxes = expContainer.querySelectorAll(".dynamic-entry-box");
+            boxes.forEach((box, index) => {
+                const boxId = box.dataset.id;
+                let item = this.experiences.find(x => String(x.id) === String(boxId)) || this.experiences[index];
+                if (!item) {
+                    item = { id: boxId || `exp_${Date.now()}_${index}`, company: "", position: "", startDate: "", endDate: "", description: "" };
+                    this.experiences[index] = item;
+                }
+                const comp = box.querySelector(".exp-company");
+                const pos = box.querySelector(".exp-position");
+                const st = box.querySelector(".exp-start");
+                const en = box.querySelector(".exp-end");
+                const desc = box.querySelector(".exp-desc");
 
-            if (comp) item.company = comp.value;
-            if (pos) item.position = pos.value;
-            if (st) item.startDate = st.value;
-            if (en) item.endDate = en.value;
-            if (desc) item.description = desc.value;
-        });
+                if (comp) item.company = comp.value;
+                if (pos) item.position = pos.value;
+                if (st) item.startDate = st.value;
+                if (en) item.endDate = en.value;
+                if (desc) item.description = desc.value;
+            });
+        }
 
-        this.educations.forEach(item => {
-            const deg = document.querySelector(`.edu-degree[data-id="${item.id}"]`);
-            const col = document.querySelector(`.edu-college[data-id="${item.id}"]`);
-            const yr = document.querySelector(`.edu-year[data-id="${item.id}"]`);
-            const mk = document.querySelector(`.edu-marks[data-id="${item.id}"]`);
+        // 2. Education
+        const eduContainer = document.getElementById("educationEntriesContainer");
+        if (eduContainer) {
+            const boxes = eduContainer.querySelectorAll(".dynamic-entry-box");
+            boxes.forEach((box, index) => {
+                const boxId = box.dataset.id;
+                let item = this.educations.find(x => String(x.id) === String(boxId)) || this.educations[index];
+                if (!item) {
+                    item = { id: boxId || `edu_${Date.now()}_${index}`, degree: "", college: "", year: "", marks: "" };
+                    this.educations[index] = item;
+                }
+                const deg = box.querySelector(".edu-degree");
+                const col = box.querySelector(".edu-college");
+                const yr = box.querySelector(".edu-year");
+                const mk = box.querySelector(".edu-marks");
 
-            if (deg) item.degree = deg.value;
-            if (col) item.college = col.value;
-            if (yr) item.year = yr.value;
-            if (mk) item.marks = mk.value;
-        });
+                if (deg) item.degree = deg.value;
+                if (col) item.college = col.value;
+                if (yr) item.year = yr.value;
+                if (mk) item.marks = mk.value;
+            });
+        }
 
-        this.projects.forEach(item => {
-            const ttl = document.querySelector(`.proj-title[data-id="${item.id}"]`);
-            const desc = document.querySelector(`.proj-desc[data-id="${item.id}"]`);
-            const gh = document.querySelector(`.proj-github[data-id="${item.id}"]`);
-            const lv = document.querySelector(`.proj-live[data-id="${item.id}"]`);
+        // 3. Projects
+        const projContainer = document.getElementById("projectEntriesContainer");
+        if (projContainer) {
+            const boxes = projContainer.querySelectorAll(".dynamic-entry-box");
+            boxes.forEach((box, index) => {
+                const boxId = box.dataset.id;
+                let item = this.projects.find(x => String(x.id) === String(boxId)) || this.projects[index];
+                if (!item) {
+                    item = { id: boxId || `proj_${Date.now()}_${index}`, title: "", description: "", github: "", live: "" };
+                    this.projects[index] = item;
+                }
+                const ttl = box.querySelector(".proj-title");
+                const gh = box.querySelector(".proj-github");
+                const lv = box.querySelector(".proj-live");
+                const desc = box.querySelector(".proj-desc");
 
-            if (ttl) item.title = ttl.value;
-            if (desc) item.description = desc.value;
-            if (gh) item.github = gh.value;
-            if (lv) item.live = lv.value;
-        });
+                if (ttl) item.title = ttl.value;
+                if (gh) item.github = gh.value;
+                if (lv) item.live = lv.value;
+                if (desc) item.description = desc.value;
+            });
+        }
 
-        this.customSections.forEach(item => {
-            const hd = document.querySelector(`.custom-heading[data-id="${item.id}"]`);
-            const dt = document.querySelector(`.custom-details[data-id="${item.id}"]`);
+        // 4. Custom Sections
+        const customContainer = document.getElementById("customSectionsContainer");
+        if (customContainer) {
+            const boxes = customContainer.querySelectorAll(".dynamic-entry-box");
+            boxes.forEach((box, index) => {
+                const boxId = box.dataset.id;
+                let item = this.customSections.find(x => String(x.id) === String(boxId)) || this.customSections[index];
+                if (!item) {
+                    item = { id: boxId || `custom_${Date.now()}_${index}`, heading: "", details: "" };
+                    this.customSections[index] = item;
+                }
+                const hd = box.querySelector(".custom-heading");
+                const dt = box.querySelector(".custom-details");
 
-            if (hd) item.heading = hd.value;
-            if (dt) item.details = dt.value;
-        });
+                if (hd) item.heading = hd.value;
+                if (dt) item.details = dt.value;
+            });
+        }
     }
 
     formatHeaderLink(url) {
