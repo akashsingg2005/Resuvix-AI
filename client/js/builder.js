@@ -250,6 +250,7 @@ class BuilderApp {
 
         buttons.forEach(btn => {
             btn.addEventListener("click", () => {
+                this.readFormValues();
                 buttons.forEach(b => b.classList.remove("active"));
                 btn.classList.add("active");
 
@@ -316,6 +317,7 @@ class BuilderApp {
 
         container.querySelectorAll(".btn-ai-role-bullets").forEach(btn => {
             btn.addEventListener("click", async (e) => {
+                this.readFormValues();
                 const id = Number(e.currentTarget.dataset.id);
                 const pos = document.querySelector(`.exp-position[data-id="${id}"]`)?.value.trim() || document.getElementById("inpJobTitle")?.value.trim() || "Professional";
                 const comp = document.querySelector(`.exp-company[data-id="${id}"]`)?.value.trim() || "Company";
@@ -341,15 +343,18 @@ class BuilderApp {
 
         container.querySelectorAll(".btn-del-exp").forEach(btn => {
             btn.addEventListener("click", (e) => {
+                this.readFormValues();
                 const id = Number(e.currentTarget.dataset.id);
                 this.experiences = this.experiences.filter(x => x.id !== id);
                 this.renderExperienceInputs();
+                this.syncLivePreview();
             });
         });
 
         const btnAdd = document.getElementById("btnAddExperience");
         if (btnAdd) {
             btnAdd.onclick = () => {
+                this.readFormValues();
                 this.experiences.push({
                     id: Date.now(),
                     company: "",
@@ -359,6 +364,7 @@ class BuilderApp {
                     description: ""
                 });
                 this.renderExperienceInputs();
+                this.syncLivePreview();
             };
         }
     }
@@ -400,15 +406,18 @@ class BuilderApp {
 
         container.querySelectorAll(".btn-del-edu").forEach(btn => {
             btn.addEventListener("click", (e) => {
+                this.readFormValues();
                 const id = Number(e.currentTarget.dataset.id);
                 this.educations = this.educations.filter(x => x.id !== id);
                 this.renderEducationInputs();
+                this.syncLivePreview();
             });
         });
 
         const btnAdd = document.getElementById("btnAddEducation");
         if (btnAdd) {
             btnAdd.onclick = () => {
+                this.readFormValues();
                 this.educations.push({
                     id: Date.now(),
                     degree: "",
@@ -417,6 +426,7 @@ class BuilderApp {
                     marks: ""
                 });
                 this.renderEducationInputs();
+                this.syncLivePreview();
             };
         }
     }
@@ -463,6 +473,7 @@ class BuilderApp {
 
         container.querySelectorAll(".btn-ai-project-bullets").forEach(btn => {
             btn.addEventListener("click", async (e) => {
+                this.readFormValues();
                 const id = Number(e.currentTarget.dataset.id);
                 const projTitle = document.querySelector(`.proj-title[data-id="${id}"]`)?.value.trim() || "Project Initiative";
                 const targetRole = document.getElementById("inpJobTitle")?.value.trim() || "Professional";
@@ -488,15 +499,18 @@ class BuilderApp {
 
         container.querySelectorAll(".btn-del-proj").forEach(btn => {
             btn.addEventListener("click", (e) => {
+                this.readFormValues();
                 const id = Number(e.currentTarget.dataset.id);
                 this.projects = this.projects.filter(x => x.id !== id);
                 this.renderProjectInputs();
+                this.syncLivePreview();
             });
         });
 
         const btnAdd = document.getElementById("btnAddProject");
         if (btnAdd) {
             btnAdd.onclick = () => {
+                this.readFormValues();
                 this.projects.push({
                     id: Date.now(),
                     title: "",
@@ -505,6 +519,7 @@ class BuilderApp {
                     live: ""
                 });
                 this.renderProjectInputs();
+                this.syncLivePreview();
             };
         }
     }
@@ -536,21 +551,25 @@ class BuilderApp {
 
         container.querySelectorAll(".btn-del-custom").forEach(btn => {
             btn.addEventListener("click", (e) => {
+                this.readFormValues();
                 const id = Number(e.currentTarget.dataset.id);
                 this.customSections = this.customSections.filter(x => x.id !== id);
                 this.renderCustomSectionInputs();
+                this.syncLivePreview();
             });
         });
 
         const btnAdd = document.getElementById("btnAddCustomSection");
         if (btnAdd) {
             btnAdd.onclick = () => {
+                this.readFormValues();
                 this.customSections.push({
                     id: Date.now(),
                     heading: "",
                     details: ""
                 });
                 this.renderCustomSectionInputs();
+                this.syncLivePreview();
             };
         }
     }
