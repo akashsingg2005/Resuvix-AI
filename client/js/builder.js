@@ -716,30 +716,15 @@ class BuilderApp {
         const githubLink = github ? this.formatHeaderLink(github) : '';
         const websiteLink = website ? this.formatHeaderLink(website) : '';
 
-        const totalItemsCount = this.projects.length + this.experiences.length + this.educations.length + this.customSections.length;
-        const needsMultiPage = totalItemsCount >= 5 || (this.projects.length >= 3 && this.experiences.length >= 3);
-
         const dataObj = { name, subtitle, loc, phoneLink, emailLink, linkedinLink, githubLink, websiteLink, summary, skillsStr, projects: this.projects, experiences: this.experiences, educations: this.educations, customSections: this.customSections };
 
         const showWatermark = this.isWatermarked && !this.user.premium;
 
-        if (!needsMultiPage) {
-            pagesContainer.innerHTML = `
-                <div class="paper-resume template-${this.selectedTemplate} ${showWatermark ? 'watermarked' : ''}" id="paperResume">
-                    ${this.renderTemplateHTML(this.selectedTemplate, dataObj, 'all')}
-                </div>
-            `;
-        } else {
-            pagesContainer.innerHTML = `
-                <div class="paper-resume template-${this.selectedTemplate} ${showWatermark ? 'watermarked' : ''}">
-                    ${this.renderTemplateHTML(this.selectedTemplate, dataObj, 'page1')}
-                </div>
-
-                <div class="paper-resume template-${this.selectedTemplate} ${showWatermark ? 'watermarked' : ''}">
-                    ${this.renderTemplateHTML(this.selectedTemplate, dataObj, 'page2')}
-                </div>
-            `;
-        }
+        pagesContainer.innerHTML = `
+            <div class="paper-resume template-${this.selectedTemplate} ${showWatermark ? 'watermarked' : ''}" id="paperResume">
+                ${this.renderTemplateHTML(this.selectedTemplate, dataObj)}
+            </div>
+        `;
 
         document.querySelectorAll(".paper-resume").forEach(paper => {
             paper.style.setProperty("--resume-font-size", `${this.fontSize}px`);
@@ -820,7 +805,7 @@ class BuilderApp {
         };
 
         const buildProjects = () => {
-            const validProjs = d.projects.filter(p => p.title || p.description);
+            const validProjs = d.projects.filter(p => p.title || p.description || p.github || p.live);
             if (!validProjs.length) return '';
             return `
                 <div class="resume-sec">
@@ -842,7 +827,7 @@ class BuilderApp {
         };
 
         const buildExperience = () => {
-            const validExps = d.experiences.filter(e => e.position || e.company || e.description);
+            const validExps = d.experiences.filter(e => e.position || e.company || e.description || e.startDate || e.endDate);
             if (!validExps.length) return '';
             return `
                 <div class="resume-sec">
@@ -862,7 +847,7 @@ class BuilderApp {
         };
 
         const buildEducation = () => {
-            const validEdus = d.educations.filter(e => e.degree || e.college);
+            const validEdus = d.educations.filter(e => e.degree || e.college || e.year || e.marks);
             if (!validEdus.length) return '';
             return `
                 <div class="resume-sec">
@@ -895,21 +880,9 @@ class BuilderApp {
         };
 
         if (templateName === "silicon-executive") {
-            if (pageMode === 'page1') {
-                return buildHeader() + `<div class="sv-body-pane">` + buildSummary() + buildSkills() + buildProjects() + `</div>`;
-            } else if (pageMode === 'page2') {
-                return `<div class="sv-body-pane" style="padding-top:24px;">` + buildExperience() + buildEducation() + buildCustomSections() + `</div>`;
-            } else {
-                return buildHeader() + `<div class="sv-body-pane">` + buildSummary() + buildSkills() + buildProjects() + buildExperience() + buildEducation() + buildCustomSections() + `</div>`;
-            }
+            return buildHeader() + `<div class="sv-body-pane">` + buildSummary() + buildSkills() + buildExperience() + buildProjects() + buildEducation() + buildCustomSections() + `</div>`;
         } else {
-            if (pageMode === 'page1') {
-                return buildHeader() + buildSummary() + buildSkills() + buildProjects();
-            } else if (pageMode === 'page2') {
-                return buildExperience() + buildEducation() + buildCustomSections();
-            } else {
-                return buildHeader() + buildSummary() + buildSkills() + buildProjects() + buildExperience() + buildEducation() + buildCustomSections();
-            }
+            return buildHeader() + buildSummary() + buildSkills() + buildExperience() + buildProjects() + buildEducation() + buildCustomSections();
         }
     }
 
