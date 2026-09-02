@@ -1,13 +1,33 @@
 # 🚀 Resuvix AI — AI-Powered Resume Builder, ATS Checker & Career Platform
 
 [![Live Frontend](https://img.shields.io/badge/Live%20Demo-Cloudflare%20Pages-orange?style=for-the-badge&logo=cloudflare)](https://resuvix-ai.pages.dev/)
-[![Backend API](https://img.shields.io/badge/Backend%20API-Render-blue?style=for-the-badge&logo=render)](https://resuvix-ai.onrender.com)
+[![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
+[![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
+[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![Node.js](https://img.shields.io/badge/Node.js-v18+-green?style=for-the-badge&logo=nodedotjs)](https://nodejs.org/)
 [![Express.js](https://img.shields.io/badge/Express.js-4.x-lightgrey?style=for-the-badge&logo=express)](https://expressjs.com/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-brightgreen?style=for-the-badge&logo=mongodb)](https://www.mongodb.com/)
 [![Gemini AI](https://img.shields.io/badge/Google%20Gemini-AI%20Engine-purple?style=for-the-badge&logo=google)](https://ai.google.dev/)
 
-**Resuvix AI** is a full-stack, enterprise-grade AI career platform designed to help job seekers land 3x more interviews. It features a free ATS resume checker, an interactive AI resume builder with live A4 auto-pagination, a job-tailored AI cover letter generator, and an AI technical & HR mock interview simulator.
+**Resuvix AI** is a full-stack, enterprise-grade AI career platform built using **HTML5, CSS3, JavaScript (ES6+), Node.js, Express, and MongoDB Atlas**. It is designed to help job seekers land 3x more interviews with a free ATS resume checker, an interactive AI resume builder with live A4 auto-pagination, a job-tailored AI cover letter generator, and an AI technical & HR mock interview simulator.
+
+---
+
+## 🛠️ Tech Stack & Technologies
+
+### 🎨 Frontend
+- **HTML5**: Semantic markup, accessible forms, structured modals, Open Graph / JSON-LD schema metadata.
+- **CSS3**: Custom design architecture (`global.css`, `components.css`, `builder.css`, `dashboard.css`), Flexbox/Grid layouts, CSS variables, glassmorphism UI, keyframe animations, and 100% mobile-responsive breakpoints.
+- **JavaScript (ES6+)**: Modular client architecture, Async/Await fetch/axios services, DOM-scoped state synchronization, live A4 document engine, dynamic event delegation, and real-time PDF generation.
+
+### ⚙️ Backend & Infrastructure
+- **Node.js**: Asynchronous event-driven server runtime environment.
+- **Express.js**: REST API server framework handling authentication, rate-limiting, and AI prompt engineering.
+- **MongoDB Atlas & Mongoose**: Distributed cloud NoSQL database storing user profiles, resumes, and audit history.
+- **Google Gemini AI API**: Advanced generative AI models powering resume summary generation, bullet points, cover letters, and interview feedback.
+- **Brevo & Resend HTTPS APIs**: HTTPS-based transactional email APIs bypassing platform SMTP port restrictions.
+- **Razorpay**: Payment gateway integration for subscription billing.
+- **Cloudflare Pages & Render**: Dual-cloud hosting for fast static frontend delivery and backend API execution.
 
 ---
 
