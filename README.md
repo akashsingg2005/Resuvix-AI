@@ -155,8 +155,17 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
 
+## 🎟️ Custom Coupons & Special Offers
+
+For custom promo code creation, student discounts, institutional access, or bulk credits, reach out directly:
+
+- 📩 **Coupon & Discount Enquiries**: [`akashsingg23@gmail.com`](mailto:akashsingg23@gmail.com)
+- 📝 **Subject Line**: `[Resuvix AI] Custom Coupon / Offer Request`
+
+---
+
 ## 💬 Contact & Support
 
-- **Platform**: [Resuvix AI](https://resuvix-ai.pages.dev/)
-- **Support Email**: `akashsingg23@gmail.com`
-- **GitHub**: [@akashsingg2005](https://github.com/akashsingg2005)
+- **Official Platform**: [Resuvix AI](https://resuvix-ai.pages.dev/)
+- **Support Email**: [`akashsingg23@gmail.com`](mailto:akashsingg23@gmail.com)
+- **GitHub Repository**: [@akashsingg2005](https://github.com/akashsingg2005)
