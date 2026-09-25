@@ -9,13 +9,13 @@ const env = {
 
   MONGO_URI: process.env.MONGO_URI,
 
-  JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET,
+  JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET || process.env.JWT_SECRET || "resuvix_jwt_access_secret_key_2026_default",
 
-  JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
+  JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET || "resuvix_jwt_refresh_secret_key_2026_default",
 
-  JWT_ACCESS_EXPIRES: process.env.JWT_ACCESS_EXPIRES,
+  JWT_ACCESS_EXPIRES: process.env.JWT_ACCESS_EXPIRES || "1d",
 
-  JWT_REFRESH_EXPIRES: process.env.JWT_REFRESH_EXPIRES,
+  JWT_REFRESH_EXPIRES: process.env.JWT_REFRESH_EXPIRES || "7d",
 
   RAZORPAY_KEY_ID: process.env.RAZORPAY_KEY_ID,
   RAZORPAY_KEY_SECRET: process.env.RAZORPAY_KEY_SECRET,

@@ -1,23 +1,26 @@
 import jwt from "jsonwebtoken";
 import env from "../config/env.js";
 
+const getAccessSecret = () => env.JWT_ACCESS_SECRET || process.env.JWT_ACCESS_SECRET || process.env.JWT_SECRET || "resuvix_jwt_access_secret_key_2026_default";
+const getRefreshSecret = () => env.JWT_REFRESH_SECRET || process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET || "resuvix_jwt_refresh_secret_key_2026_default";
+const getAccessExpires = () => env.JWT_ACCESS_EXPIRES || "1d";
+const getRefreshExpires = () => env.JWT_REFRESH_EXPIRES || "7d";
+
 /**
  * Generate Access Token
- * Used for authenticating API requests.
  */
 export const generateAccessToken = (payload) => {
-  return jwt.sign(payload, env.JWT_ACCESS_SECRET, {
-    expiresIn: env.JWT_ACCESS_EXPIRES,
+  return jwt.sign(payload, getAccessSecret(), {
+    expiresIn: getAccessExpires(),
   });
 };
 
 /**
  * Generate Refresh Token
- * Used to issue a new access token.
  */
 export const generateRefreshToken = (payload) => {
-  return jwt.sign(payload, env.JWT_REFRESH_SECRET, {
-    expiresIn: env.JWT_REFRESH_EXPIRES,
+  return jwt.sign(payload, getRefreshSecret(), {
+    expiresIn: getRefreshExpires(),
   });
 };
 
@@ -25,12 +28,12 @@ export const generateRefreshToken = (payload) => {
  * Verify Access Token
  */
 export const verifyAccessToken = (token) => {
-  return jwt.verify(token, env.JWT_ACCESS_SECRET);
+  return jwt.verify(token, getAccessSecret());
 };
 
 /**
  * Verify Refresh Token
  */
 export const verifyRefreshToken = (token) => {
-  return jwt.verify(token, env.JWT_REFRESH_SECRET);
+  return jwt.verify(token, getRefreshSecret());
 };

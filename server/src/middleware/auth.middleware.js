@@ -1,6 +1,4 @@
-import jwt from "jsonwebtoken";
-
-import env from "../config/env.js";
+import { verifyAccessToken } from "../utils/jwt.js";
 import ApiError from "../utils/ApiError.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
@@ -29,7 +27,7 @@ export const protect = asyncHandler(async (req, res, next) => {
     throw new ApiError(401, "Unauthorized. Please login.");
   }
 
-  const decoded = jwt.verify(token, env.JWT_ACCESS_SECRET);
+  const decoded = verifyAccessToken(token);
 
   const user = await findUserById(decoded.id);
 
