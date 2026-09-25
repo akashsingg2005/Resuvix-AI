@@ -165,7 +165,7 @@ Open `http://localhost:3000` in your browser.
 | Component | Platform | Deployment URL |
 |---|---|---|
 | **Frontend Client** | Cloudflare Pages | [https://resuvix-ai.pages.dev/](https://resuvix-ai.pages.dev/) |
-| **Backend REST API** | Render | [https://resuvix-ai.onrender.com](https://resuvix-ai.onrender.com) |
+| **Backend REST API** | Render | [https://resuvix-ai-6ztq.onrender.com](https://resuvix-ai-6ztq.onrender.com) |
 
 ---
 
